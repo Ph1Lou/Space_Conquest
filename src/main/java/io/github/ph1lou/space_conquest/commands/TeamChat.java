@@ -1,0 +1,58 @@
+package io.github.ph1lou.space_conquest.commands;
+
+import io.github.ph1lou.space_conquest.Main;
+import io.github.ph1lou.space_conquest.game.GameManager;
+import io.github.ph1lou.space_conquest.game.Team;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
+
+public class TeamChat implements CommandExecutor {
+
+    Main main;
+
+    public TeamChat(Main main) {
+        this.main=main;
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+
+        GameManager game = main.getCurrentGame();
+
+        if(!(sender instanceof Player)) return true;
+
+        Player player = (Player) sender;
+
+        Team team = game.getTeam(player);
+
+        if(team==null) {
+            player.sendMessage("[Space §bConquest§r] Vous n'êtes dans aucune équipe");
+            return true;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(team.getColorTeam().getChatColor()).append("[Team Chat]§r ");
+        if(team.getFounder().equals(player.getUniqueId())){
+            sb.append("⭐ ");
+        }
+        sb.append(player.getName()).append(" : ");
+        for(String string:args){
+            sb.append(string).append(" ");
+        }
+
+        for(UUID uuid:team.getMembers()){
+            Player player1 = Bukkit.getPlayer(uuid);
+            if(player1!=null){
+                player1.sendMessage(sb.toString());
+            }
+        }
+
+        return true;
+    }
+}
