@@ -96,6 +96,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder addEnchant(Enchantment enchantment, int level) {
+        if(level==0) return this;
         ItemMeta meta = getItemMeta();
         meta.addEnchant(enchantment, level, true);
         setItemMeta(meta);

@@ -1,4 +1,4 @@
-package io.github.ph1lou.space_conquest.game.gui;
+package io.github.ph1lou.space_conquest.gui;
 
 import fr.minuskube.inv.ClickableItem;
 import fr.minuskube.inv.SmartInventory;
@@ -50,9 +50,9 @@ public class Boutique implements InventoryProvider {
 
         if(team==null) return;
 
-        if(team.getUpgrade().isSharpness()){
-            woodenSword.addEnchant(Enchantment.DAMAGE_ALL,1);
-        }
+
+        woodenSword.addEnchant(Enchantment.DAMAGE_ALL,team.getUpgrade().isSharpness());
+
 
         ItemStack tempWoodenSword = woodenSword.build().clone();
 
@@ -66,9 +66,8 @@ public class Boutique implements InventoryProvider {
         }));
 
         ItemBuilder ironSword = new ItemBuilder(Material.IRON_SWORD);
-        if(team.getUpgrade().isSharpness()){
-            ironSword.addEnchant(Enchantment.DAMAGE_ALL,1);
-        }
+
+        ironSword.addEnchant(Enchantment.DAMAGE_ALL,team.getUpgrade().isSharpness());
 
         ItemStack temp = ironSword.build().clone();
 
@@ -83,9 +82,7 @@ public class Boutique implements InventoryProvider {
 
         ItemBuilder diamondSword = new ItemBuilder(Material.DIAMOND_SWORD);
 
-        if(team.getUpgrade().isSharpness()){
-            diamondSword.addEnchant(Enchantment.DAMAGE_ALL,1);
-        }
+        diamondSword.addEnchant(Enchantment.DAMAGE_ALL,team.getUpgrade().isSharpness());
 
         ItemStack tempSword = diamondSword.build().clone();
 
@@ -100,9 +97,8 @@ public class Boutique implements InventoryProvider {
 
         ItemBuilder bow = new ItemBuilder(Material.BOW);
 
-        if(team.getUpgrade().isPunch()){
-            bow.addEnchant(Enchantment.ARROW_DAMAGE,1);
-        }
+
+        bow.addEnchant(Enchantment.ARROW_DAMAGE,team.getUpgrade().isPunch());
 
         ItemStack tempBow = bow.build().clone();
 

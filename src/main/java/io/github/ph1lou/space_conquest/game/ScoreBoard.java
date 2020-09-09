@@ -2,6 +2,8 @@ package io.github.ph1lou.space_conquest.game;
 
 import fr.mrmicky.fastboard.FastBoard;
 import io.github.ph1lou.space_conquest.enums.State;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -39,7 +41,6 @@ public class ScoreBoard {
             "Joueurs §b&players&",
             "Nombre d'équipes §b&teamSize&",
             "§3§m---↠§8score§3§m↞----",
-            "Crying Obsidian §b&co&/&coo&",
             "Joueur(s) tué(s) §b&kill&",
             "§3§m-----↠§8game§3§m↞------",
             "§b&name&");
@@ -84,8 +85,6 @@ public class ScoreBoard {
         for(String line:scoreBoard){
             line=line.replace("&team&",team.getName());
             line=line.replace("&color&",team.getColorTeam().getName());
-            line=line.replace("&co&",team.getResource().getOrDefault(Material.CRYING_OBSIDIAN,0)+"");
-            line=line.replace("&coo&",game.getObjective()+"");
             scoreBoardResult.add(line);
         }
 
@@ -123,6 +122,7 @@ public class ScoreBoard {
             }
             else {
                 updatePlayerGameBoard(fastBoard);
+                fastBoard.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.format("Crying Obsidian §b%d/%d",game.getTeam(fastBoard.getPlayer()).getResource().getOrDefault(Material.CRYING_OBSIDIAN,0),game.getObjective())));
             }
         }
     }

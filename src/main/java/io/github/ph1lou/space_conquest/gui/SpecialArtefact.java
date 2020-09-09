@@ -1,4 +1,4 @@
-package io.github.ph1lou.space_conquest.game.gui;
+package io.github.ph1lou.space_conquest.gui;
 
 import fr.minuskube.inv.ClickableItem;
 import fr.minuskube.inv.SmartInventory;
@@ -84,11 +84,44 @@ public class SpecialArtefact implements InventoryProvider {
         }));
 
         ItemBuilder stick = new ItemBuilder(Material.STICK);
-        stick.setDisplayName(String.format("§bKnock Back§r Coût 500 Emeraudes (§b%d en banque)",team.getResource().getOrDefault(Material.EMERALD_BLOCK,0)));
+        stick.setDisplayName(String.format("§bKnockBack§r Coût 3000 Emeraudes (§b%d en banque)",team.getResource().getOrDefault(Material.EMERALD_BLOCK,0)));
         contents.set(1,7, ClickableItem.of((stick.build()), e -> {
             if(team.getResource().containsKey(Material.EMERALD_BLOCK)){
+                if(team.getResource().get(Material.EMERALD_BLOCK)>=3000){
+                    player.getInventory().addItem(new ItemBuilder(Material.STICK).addEnchant(Enchantment.KNOCKBACK,1).build());
+                    team.getResource().put(Material.EMERALD_BLOCK,team.getResource().get(Material.EMERALD_BLOCK)-3000);
+                }
+            }
+        }));
+
+        ItemBuilder snowBall = new ItemBuilder(Material.EGG);
+        snowBall.setDisplayName(String.format("§bPont Automatique§r Coût 1000 Fers (§b%d en banque)",team.getResource().getOrDefault(Material.IRON_BLOCK,0)));
+        contents.set(3,1, ClickableItem.of((snowBall.build()), e -> {
+            if(team.getResource().containsKey(Material.IRON_BLOCK)){
+                if(team.getResource().get(Material.IRON_BLOCK)>=1000){
+                    player.getInventory().addItem(new ItemBuilder(Material.EGG).setDisplayName("Pont Automatique").build());
+                    team.getResource().put(Material.IRON_BLOCK,team.getResource().get(Material.IRON_BLOCK)-1000);
+                }
+            }
+        }));
+
+        ItemBuilder bigTnt = new ItemBuilder(Material.STONE_BUTTON);
+        bigTnt.setDisplayName(String.format("§bExplosion du centre§r Coût 500 Emeraudes (§b%d en banque)",team.getResource().getOrDefault(Material.EMERALD_BLOCK,0)));
+        contents.set(3,3, ClickableItem.of((bigTnt.build()), e -> {
+            if(team.getResource().containsKey(Material.EMERALD_BLOCK)){
                 if(team.getResource().get(Material.EMERALD_BLOCK)>=500){
-                    player.getInventory().addItem(new ItemBuilder(Material.STICK).addEnchant(Enchantment.KNOCKBACK,3).build());
+                    player.getInventory().addItem(new ItemBuilder(Material.STONE_BUTTON).setDisplayName("Explosion Centrale").build());
+                    team.getResource().put(Material.EMERALD_BLOCK,team.getResource().get(Material.EMERALD_BLOCK)-500);
+                }
+            }
+        }));
+
+        ItemBuilder fireCharge = new ItemBuilder(Material.FIRE_CHARGE);
+        fireCharge.setDisplayName(String.format("§bBoule de Feu§r Coût 500 Emeraudes (§b%d en banque)",team.getResource().getOrDefault(Material.EMERALD_BLOCK,0)));
+        contents.set(3,5, ClickableItem.of((fireCharge.build()), e -> {
+            if(team.getResource().containsKey(Material.EMERALD_BLOCK)){
+                if(team.getResource().get(Material.EMERALD_BLOCK)>=500){
+                    player.getInventory().addItem(new ItemBuilder(Material.FIRE_CHARGE).setDisplayName("Boule de Feu").build());
                     team.getResource().put(Material.EMERALD_BLOCK,team.getResource().get(Material.EMERALD_BLOCK)-500);
                 }
             }

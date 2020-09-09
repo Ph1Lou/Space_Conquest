@@ -1,4 +1,4 @@
-package io.github.ph1lou.space_conquest.game.gui;
+package io.github.ph1lou.space_conquest.gui;
 
 import fr.minuskube.inv.ClickableItem;
 import fr.minuskube.inv.SmartInventory;

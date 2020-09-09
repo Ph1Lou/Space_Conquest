@@ -17,6 +17,7 @@ public class Area {
 
     private int size;
 
+    @Nullable
     public Material getGeneratorType() {
         return generatorType;
     }
@@ -77,7 +78,7 @@ public class Area {
     private final List<Location> blocks = new ArrayList<>();
 
 
-    public Area(GameManager game,boolean isBase , Location middle){
+    public Area(boolean isBase , Location middle){
         this.isBase=isBase;
         this.middle=middle;
     }
@@ -132,7 +133,6 @@ public class Area {
         for(Location location:getBlocks()){
             if(location.getBlock().getType().equals(Material.WHITE_STAINED_GLASS)){
                 controlSize+=1;
-                assert isCapture != null;
                 assert isCapture != null;
                 location.getBlock().setType(isCapture.getColorTeam().getMaterial());
                 break;

@@ -1,4 +1,4 @@
-package io.github.ph1lou.space_conquest.game.gui;
+package io.github.ph1lou.space_conquest.gui;
 
 import fr.minuskube.inv.ClickableItem;
 import fr.minuskube.inv.SmartInventory;
@@ -44,24 +44,37 @@ public class Upgrade implements InventoryProvider {
 
         if(team==null) return;
 
-        if(!team.getUpgrade().isIronChestPlate()){
+        if(team.getUpgrade().getChestPlate()==0){
 
             ItemBuilder chestPlate = new ItemBuilder(Material.IRON_CHESTPLATE).setDisplayName(String.format("§bUpgrade Iron ChestPlate§r Coût 5000 Fers (§b%d en banque)",team.getResource().getOrDefault(Material.IRON_BLOCK,0)));
-
             
             contents.set(1,1, ClickableItem.of((chestPlate.build()), e -> {
                 if(team.getResource().containsKey(Material.IRON_BLOCK)){
                     if(team.getResource().get(Material.IRON_BLOCK)>=5000){
-                        team.getUpgrade().setIronChestPlate(true);
+                        team.getUpgrade().setChestPlate(1);
                         player.sendMessage("Upgrade iron chestplate unlock");
                         team.getResource().put(Material.IRON_BLOCK,team.getResource().get(Material.IRON_BLOCK)-5000);
                     }
                 }
             }));
         }
+        else if(team.getUpgrade().getChestPlate()==1){
+            
+            ItemBuilder chestPlate = new ItemBuilder(Material.DIAMOND_CHESTPLATE).setDisplayName(String.format("§bUpgrade Diamond ChestPlate§r Coût 5000 Diamants (§b%d en banque)",team.getResource().getOrDefault(Material.DIAMOND_BLOCK,0)));
+
+            contents.set(1,1, ClickableItem.of((chestPlate.build()), e -> {
+                if(team.getResource().containsKey(Material.DIAMOND_BLOCK)){
+                    if(team.getResource().get(Material.DIAMOND_BLOCK)>=5000){
+                        team.getUpgrade().setChestPlate(2);
+                        player.sendMessage("Upgrade Diamond Chestplate unlock");
+                        team.getResource().put(Material.DIAMOND_BLOCK,team.getResource().get(Material.DIAMOND_BLOCK)-5000);
+                    }
+                }
+            }));
+        }
         else contents.set(1,1, null);
 
-        if(!team.getUpgrade().isProtection()){
+        if(team.getUpgrade().isProtection()==0){
 
             ItemBuilder anvil = new ItemBuilder(Material.ANVIL);
             anvil.setDisplayName(String.format("§bUpgrade Protection§r Coût 5000 Ors (§b%d en banque)",team.getResource().getOrDefault(Material.GOLD_BLOCK,0)));
@@ -70,16 +83,32 @@ public class Upgrade implements InventoryProvider {
             contents.set(1,3, ClickableItem.of((anvil.build()), e -> {
                 if(team.getResource().containsKey(Material.GOLD_BLOCK)){
                     if(team.getResource().get(Material.GOLD_BLOCK)>=5000){
-                        team.getUpgrade().setProtection(true);
+                        team.getUpgrade().setProtection(1);
                         player.sendMessage("Upgrade protection unlock");
                         team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-5000);
                     }
                 }
             }));
         }
+        else if(team.getUpgrade().isProtection()==1){
+
+            ItemBuilder anvil = new ItemBuilder(Material.ANVIL);
+            anvil.setDisplayName(String.format("§bUpgrade Protection§r Coût 10000 Ors (§b%d en banque)",team.getResource().getOrDefault(Material.GOLD_BLOCK,0)));
+
+
+            contents.set(1,3, ClickableItem.of((anvil.build()), e -> {
+                if(team.getResource().containsKey(Material.GOLD_BLOCK)){
+                    if(team.getResource().get(Material.GOLD_BLOCK)>=10000){
+                        team.getUpgrade().setProtection(2);
+                        player.sendMessage("Upgrade protection II unlock");
+                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-10000);
+                    }
+                }
+            }));
+        }
         else contents.set(1,3, null);
 
-        if(!team.getUpgrade().isSharpness()){
+        if(team.getUpgrade().isSharpness()==0){
 
             ItemBuilder sword = new ItemBuilder(Material.GOLDEN_SWORD);
             sword.setDisplayName(String.format("§bUpgrade Sharpness§r Coût 5000 Ors (§b%d en banque)",team.getResource().getOrDefault(Material.GOLD_BLOCK,0)));
@@ -88,16 +117,32 @@ public class Upgrade implements InventoryProvider {
             contents.set(1,5, ClickableItem.of((sword.build()), e -> {
                 if(team.getResource().containsKey(Material.GOLD_BLOCK)){
                     if(team.getResource().get(Material.GOLD_BLOCK)>=5000){
-                        team.getUpgrade().setSharpness(true);
+                        team.getUpgrade().setSharpness(1);
                         player.sendMessage("Upgrade sharpness unlock");
                         team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-5000);
                     }
                 }
             }));
         }
+        else if(team.getUpgrade().isSharpness()==1){
+
+            ItemBuilder sword = new ItemBuilder(Material.GOLDEN_SWORD);
+            sword.setDisplayName(String.format("§bUpgrade Sharpness§r Coût 10000 Ors (§b%d en banque)",team.getResource().getOrDefault(Material.GOLD_BLOCK,0)));
+
+
+            contents.set(1,5, ClickableItem.of((sword.build()), e -> {
+                if(team.getResource().containsKey(Material.GOLD_BLOCK)){
+                    if(team.getResource().get(Material.GOLD_BLOCK)>=10000){
+                        team.getUpgrade().setSharpness(2);
+                        player.sendMessage("Upgrade sharpness II unlock");
+                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-10000);
+                    }
+                }
+            }));
+        }
         else contents.set(1,5, null);
 
-        if(!team.getUpgrade().isPunch()){
+        if(team.getUpgrade().isPunch()==0){
 
             ItemBuilder bow = new ItemBuilder(Material.BOW);
             bow.setDisplayName(String.format("§bUpgrade Punch§r Coût 5000 Ors (§b%d en banque)",team.getResource().getOrDefault(Material.GOLD_BLOCK,0)));
@@ -105,9 +150,24 @@ public class Upgrade implements InventoryProvider {
             contents.set(1,7, ClickableItem.of((bow.build()), e -> {
                 if(team.getResource().containsKey(Material.GOLD_BLOCK)){
                     if(team.getResource().get(Material.GOLD_BLOCK)>=5000){
-                        team.getUpgrade().setPunch(true);
-                        player.sendMessage("Upgrade bow unlock");
+                        team.getUpgrade().setPunch(1);
+                        player.sendMessage("Upgrade Punch unlock");
                         team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-5000);
+                    }
+                }
+            }));
+        }
+        else if(team.getUpgrade().isPunch()==1){
+
+            ItemBuilder bow = new ItemBuilder(Material.BOW);
+            bow.setDisplayName(String.format("§bUpgrade Punch§r Coût 10000 Ors (§b%d en banque)",team.getResource().getOrDefault(Material.GOLD_BLOCK,0)));
+
+            contents.set(1,7, ClickableItem.of((bow.build()), e -> {
+                if(team.getResource().containsKey(Material.GOLD_BLOCK)){
+                    if(team.getResource().get(Material.GOLD_BLOCK)>=10000){
+                        team.getUpgrade().setPunch(2);
+                        player.sendMessage("Upgrade Punch II unlock");
+                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-10000);
                     }
                 }
             }));

@@ -26,6 +26,16 @@ public class GameManager {
 
     private int objective=1000;
 
+    public int getCenterSize() {
+        return centerSize;
+    }
+
+    public void setCenterSize(int centerSize) {
+        this.centerSize = centerSize;
+    }
+
+    private int centerSize=7;
+
     public String getGameName() {
         return gameName;
     }
@@ -61,6 +71,16 @@ public class GameManager {
     }
 
     private boolean singleColor = true;
+
+    public int getZoneNumber() {
+        return zoneNumber;
+    }
+
+    public void setZoneNumber(int zoneNumber) {
+        this.zoneNumber = zoneNumber;
+    }
+
+    private int zoneNumber =10;
 
     private final Main main;
 

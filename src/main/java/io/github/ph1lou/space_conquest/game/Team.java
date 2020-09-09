@@ -138,28 +138,31 @@ public class Team {
         leatherLeggings.setColor(getColorTeam().getColor());
         leatherLeggings.setDisplayName("Combinaison Spatiale");
         leatherLeggings.setUnbreakable(true);
-        if(upgrade.isProtection()){
-            leatherLeggings.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1);
-        }
+        leatherLeggings.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
+
         inventory.setLeggings(leatherLeggings.build());
 
 
-        if(upgrade.isIronChestPlate()){
+        if(upgrade.getChestPlate()==1){
             ItemBuilder ironChestPlate = new ItemBuilder(Material.IRON_CHESTPLATE);
             ironChestPlate.setDisplayName("Combinaison Spatiale renforcée");
-            if(upgrade.isProtection()){
-                ironChestPlate.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1);
-            }
+            ironChestPlate.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
             ironChestPlate.setUnbreakable(true);
             inventory.setChestplate(ironChestPlate.build());
+        }
+        else if(upgrade.getChestPlate()==2){
+            ItemBuilder leatherChestPlate=new ItemBuilder(Material.DIAMOND_CHESTPLATE);
+            leatherChestPlate.setColor(getColorTeam().getColor());
+            leatherChestPlate.setDisplayName("Combinaison Spatiale Ultra Renforcée");
+            leatherChestPlate.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
+            leatherChestPlate.setUnbreakable(true);
+            inventory.setChestplate(leatherChestPlate.build());
         }
         else{
             ItemBuilder leatherChestPlate=new ItemBuilder(Material.LEATHER_CHESTPLATE);
             leatherChestPlate.setColor(getColorTeam().getColor());
             leatherChestPlate.setDisplayName("Combinaison Spatiale");
-            if(upgrade.isProtection()){
-                leatherChestPlate.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1);
-            }
+            leatherChestPlate.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
             leatherChestPlate.setUnbreakable(true);
             inventory.setChestplate(leatherChestPlate.build());
         }
@@ -171,9 +174,7 @@ public class Team {
         leatherBoots.addEnchant(Enchantment.PROTECTION_FALL,100);
         leatherBoots.addItemFlag(ItemFlag.HIDE_ENCHANTS);
         leatherBoots.setUnbreakable(true);
-        if(upgrade.isProtection()){
-            leatherBoots.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1);
-        }
+        leatherBoots.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
         inventory.setBoots(leatherBoots.build());
 
     }

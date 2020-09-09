@@ -40,7 +40,7 @@ public class MapLoader {
 
         int teamSize = game.getTeams().size();
         int i=0;
-        int radius = 100+teamSize*3;
+        int radius = 100+game.getZoneNumber()*3;
         int height = 50;
         int baseSize=9;
 
@@ -78,7 +78,7 @@ public class MapLoader {
         }
 
         int k=11;
-        i*=2;
+        i=game.getZoneNumber();
         radius-=30-k;
         height-=30-k;
 
@@ -95,7 +95,7 @@ public class MapLoader {
             height-=30-k;
         }
 
-        generateCircle(world.getSpawnLocation(),7,Material.GLOWSTONE,false,true);
+        generateCircle(world.getSpawnLocation(),game.getCenterSize(),Material.GLOWSTONE,false,true);
     }
 
     public void generateCircle(Location location, int size, Material material){
@@ -111,7 +111,7 @@ public class MapLoader {
     public Area generateCircle(Location location, int size, Material material, boolean isBase, boolean isMiddle){
 
         World world = game.getWorld();
-        Area area = new Area(game,isBase,location.clone());
+        Area area = new Area(isBase,location.clone());
 
         for(int i=-size/2;i<Math.ceil(size/2f);i++){
             for(int j=-size/2;j<Math.ceil(size/2f);j++){

@@ -4,7 +4,7 @@ import fr.mrmicky.fastboard.FastBoard;
 import io.github.ph1lou.space_conquest.enums.State;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
-import io.github.ph1lou.space_conquest.game.gui.TeamChoice;
+import io.github.ph1lou.space_conquest.gui.TeamChoice;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.weather.WeatherChangeEvent;
 
 public class LobbyListener implements Listener {
 
@@ -143,5 +144,13 @@ public class LobbyListener implements Listener {
         if(!(event.getDamager() instanceof Player)) return;
 
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void WeatherChangeEvent(WeatherChangeEvent event) {
+
+        event.setCancelled(true);
+        event.getWorld().setWeatherDuration(0);
+        event.getWorld().setThundering(false);
     }
 }

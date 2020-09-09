@@ -1,4 +1,4 @@
-package io.github.ph1lou.space_conquest.game.gui;
+package io.github.ph1lou.space_conquest.gui;
 
 import fr.minuskube.inv.ClickableItem;
 import fr.minuskube.inv.SmartInventory;
@@ -49,6 +49,9 @@ public class TeamChoice implements InventoryProvider {
                             if(game.isState(State.LOBBY)){
                                 if(game.getTeams().size()<game.getTeamNumber()){
                                     text=text.substring(0,Math.min(text.length(),16));
+                                    if(text.length()>0 && text.charAt(0)==' '){
+                                        text=text.replaceFirst(" ","");
+                                    }
                                     Team team = new Team(game,text);
                                     team.addPlayer(player2);
                                     team.setFounder(player2.getUniqueId());
@@ -77,35 +80,6 @@ public class TeamChoice implements InventoryProvider {
             }
         }));
 
-        if(player.isOp()) {
-
-            ItemBuilder teamSize = new ItemBuilder(Material.ACACIA_SIGN);
-
-            teamSize.setDisplayName("Changez le nom de la Partie");
-
-            contents.set(0, 4, ClickableItem.of((teamSize.build()), e -> new AnvilGUI.Builder()
-                    .onComplete((player2, text) -> {
-                        game.setGameName(text);
-                        return AnvilGUI.Response.close();
-                    })
-                    .title("Changez le nom de la Partie")
-                    .item(new ItemStack(Material.GREEN_CONCRETE_POWDER))
-                    .plugin(main)
-                    .text(game.getGameName())
-                    .onClose(player1 -> Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
-                        if(game.isState(State.LOBBY)){
-                            TeamChoice.INVENTORY.open(player1);
-                        }
-                    }))
-                    .open(player)));
-
-            contents.set(3, 4, ClickableItem.of((new ItemBuilder(Material.GREEN_STAINED_GLASS).setDisplayName("Lancez la Partie").build()), e -> Start.INVENTORY.open(player)));
-
-        }
-        else  {
-            contents.set(0, 4, null);
-            contents.set(3, 4, null);
-        }
 
         }
 
@@ -138,7 +112,7 @@ public class TeamChoice implements InventoryProvider {
             j++;
         }
 
-        for(int k=0;k<18-game.getTeams().size();k++){
+        for(int k=j;k<18;k++){
 
             contents.set(j/9+1,j%9,null);
             j++;
@@ -161,6 +135,40 @@ public class TeamChoice implements InventoryProvider {
                 }
                 else if(e.isLeftClick()){
                     game.setTeamSize(game.getTeamSize()+1);
+                }
+
+            }));
+
+            teamSize.setDisplayName(String.format("Taille Base Centrale §b%d",game.getCenterSize()));
+            teamSize.setLore(Arrays.asList("§fClique-§bGauche§f >> +2",
+                    "§fClique-§bDroit§f >> -2"));
+
+            contents.set(3,8,ClickableItem.of((teamSize.build()),e -> {
+                if(e.isRightClick()){
+                    if(game.getCenterSize()>2){
+                        game.setCenterSize(game.getCenterSize()-2);
+                    }
+                }
+                else if(e.isLeftClick()){
+                    game.setCenterSize(game.getCenterSize()+2);
+                }
+
+            }));
+
+            ItemBuilder baseNumber = new ItemBuilder(Material.STONE_BUTTON);
+
+            baseNumber.setDisplayName(String.format("Nombre de bases de fers §b%d",game.getZoneNumber()));
+            baseNumber.setLore(Arrays.asList("§fClique-§bGauche§f >> +",
+                    "§fClique-§bDroit§f >> -"));
+
+            contents.set(0,2,ClickableItem.of((baseNumber.build()),e -> {
+                if(e.isRightClick()){
+                    if(game.getZoneNumber()>1){
+                        game.setZoneNumber(game.getZoneNumber()-1);
+                    }
+                }
+                else if(e.isLeftClick()){
+                    game.setZoneNumber(game.getZoneNumber()+1);
                 }
 
             }));
@@ -208,9 +216,7 @@ public class TeamChoice implements InventoryProvider {
             isSingle.setDisplayName("Couleur unique");
             isSingle.setLore(game.isSingleColor()?"§2Activé":"§4Désactivé");
 
-            contents.set(0, 6, ClickableItem.of((isSingle.build()),e -> {
-                game.setSingleColor(!game.isSingleColor());
-            }));
+            contents.set(0, 6, ClickableItem.of((isSingle.build()),e -> game.setSingleColor(!game.isSingleColor())));
 
             ItemBuilder objective = new ItemBuilder(Material.STONE_BUTTON);
 
@@ -229,13 +235,38 @@ public class TeamChoice implements InventoryProvider {
                 }
 
             }));
+            ItemBuilder gameName = new ItemBuilder(Material.ACACIA_SIGN);
+
+            gameName.setDisplayName("Changez le nom de la Partie");
+
+            contents.set(0, 4, ClickableItem.of((gameName.build()), e -> new AnvilGUI.Builder()
+                    .onComplete((player2, text) -> {
+                        game.setGameName(text);
+                        return AnvilGUI.Response.close();
+                    })
+                    .title("Changez le nom de la Partie")
+                    .item(new ItemStack(Material.GREEN_CONCRETE_POWDER))
+                    .plugin(main)
+                    .text(game.getGameName())
+                    .onClose(player1 -> Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
+                        if(game.isState(State.LOBBY)){
+                            TeamChoice.INVENTORY.open(player1);
+                        }
+                    }))
+                    .open(player)));
+
+            contents.set(3, 4, ClickableItem.of((new ItemBuilder(Material.GREEN_STAINED_GLASS).setDisplayName("Lancez la Partie").build()), e -> Start.INVENTORY.open(player)));
         }
         else {
             contents.set(0,1,null);
+            contents.set(0,2,null);
             contents.set(0,3,null);
+            contents.set(0,4, null);
             contents.set(0,5,null);
             contents.set(0,6, null);
             contents.set(0,7,null);
+            contents.set(3,8,null);
+            contents.set(3,4, null);
         }
 
 
@@ -246,6 +277,9 @@ public class TeamChoice implements InventoryProvider {
                     setDisplayName("Renommez votre équipe").
                     build()),e -> new AnvilGUI.Builder()
                             .onComplete((player2, text) -> {
+                                if(text.length()>0 && text.charAt(0)==' '){
+                                    text=text.replaceFirst(" ","");
+                                }
                                 team.setName(text.substring(0,Math.min(text.length(),16)));
                                 return AnvilGUI.Response.close();
                             })
