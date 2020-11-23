@@ -4,7 +4,8 @@ import fr.minuskube.inv.InventoryManager;
 import io.github.ph1lou.space_conquest.commands.Stop;
 import io.github.ph1lou.space_conquest.commands.TeamChat;
 import io.github.ph1lou.space_conquest.game.GameManager;
-import net.jitse.npclib.NPCLib;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.CitizensPlugin;
 import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,16 +22,10 @@ public class Main extends JavaPlugin {
     private InventoryManager invManager;
     private GameManager currentGame;
 
-    public NPCLib getLibrary() {
-        return library;
-    }
-
-    private NPCLib library;
 
     @Override
     public void onEnable() {
         this.invManager = new InventoryManager(this);
-        this.library = new NPCLib(this);
         this.invManager.init();
         setWorld();
         currentGame= new GameManager(this);

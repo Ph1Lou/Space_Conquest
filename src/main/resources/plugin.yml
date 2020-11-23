@@ -3,6 +3,8 @@ version: "1.0"
 author: Ph1Lou
 main: io.github.ph1lou.space_conquest.Main
 api-version: "1.16"
+depend:
+  - Citizens
 
 commands:
   stop:

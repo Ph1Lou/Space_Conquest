@@ -13,6 +13,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
 
@@ -24,7 +25,7 @@ public class SpecialArtefact implements InventoryProvider {
             .id("special")
             .manager(JavaPlugin.getPlugin(Main.class).getInvManager())
             .provider(new SpecialArtefact())
-            .size(4, 9)
+            .size(6, 9)
             .title("Special Artefact")
             .closeable(true)
             .parent(GuiShop.INVENTORY)
@@ -84,7 +85,7 @@ public class SpecialArtefact implements InventoryProvider {
         }));
 
         ItemBuilder stick = new ItemBuilder(Material.STICK);
-        stick.setDisplayName(String.format("§bKnockBack§r Coût 3000 Emeraudes (§b%d en banque)",team.getResource().getOrDefault(Material.EMERALD_BLOCK,0)));
+        stick.setDisplayName(String.format("§bBaton de Recul§r Coût 3000 Emeraudes (§b%d en banque)",team.getResource().getOrDefault(Material.EMERALD_BLOCK,0)));
         contents.set(1,7, ClickableItem.of((stick.build()), e -> {
             if(team.getResource().containsKey(Material.EMERALD_BLOCK)){
                 if(team.getResource().get(Material.EMERALD_BLOCK)>=3000){
@@ -122,6 +123,32 @@ public class SpecialArtefact implements InventoryProvider {
             if(team.getResource().containsKey(Material.EMERALD_BLOCK)){
                 if(team.getResource().get(Material.EMERALD_BLOCK)>=500){
                     player.getInventory().addItem(new ItemBuilder(Material.FIRE_CHARGE).setDisplayName("Boule de Feu").build());
+                    team.getResource().put(Material.EMERALD_BLOCK,team.getResource().get(Material.EMERALD_BLOCK)-500);
+                }
+            }
+        }));
+
+        ItemBuilder gravityBlock = new ItemBuilder(Material.REDSTONE_LAMP);
+        gravityBlock.setDisplayName(String.format("§bBloc Anti-Gravité§r Coût 1000 Fers (§b%d en banque)",team.getResource().getOrDefault(Material.IRON_BLOCK,0))).setLore("Se Pose dans le vide même si il n'y a pas de blocs autour");
+
+
+        contents.set(3,7, ClickableItem.of((gravityBlock.build()), e -> {
+            if(team.getResource().containsKey(Material.IRON_BLOCK)){
+                if(team.getResource().get(Material.IRON_BLOCK)>=1000){
+                    player.getInventory().addItem(new ItemBuilder(Material.REDSTONE_LAMP).setDisplayName("§bBloc Anti-Gravité").build());
+                    team.getResource().put(Material.IRON_BLOCK,team.getResource().get(Material.IRON_BLOCK)-1000);
+                }
+            }
+        }));
+
+        ItemBuilder swapArrow = new ItemBuilder(Material.TIPPED_ARROW);
+        swapArrow.setDisplayName(String.format("§bFlèche de permutation§r Coût 500 Emeraudes (§b%d en banque)",team.getResource().getOrDefault(Material.EMERALD_BLOCK,0)));
+
+
+        contents.set(5,1, ClickableItem.of((swapArrow.build()), e -> {
+            if(team.getResource().containsKey(Material.EMERALD_BLOCK)){
+                if(team.getResource().get(Material.EMERALD_BLOCK)>=500){
+                    player.getInventory().addItem(new ItemBuilder(Material.TIPPED_ARROW).setDisplayName("§bFlèche de permutation").addPotionEffect(PotionEffectType.BAD_OMEN,0).build());
                     team.getResource().put(Material.EMERALD_BLOCK,team.getResource().get(Material.EMERALD_BLOCK)-500);
                 }
             }

@@ -5,11 +5,15 @@ import java.util.List;
 
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.block.data.Lightable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class ItemBuilder {
 
@@ -102,6 +106,14 @@ public class ItemBuilder {
         setItemMeta(meta);
         return this;
     }
+
+    public ItemBuilder addPotionEffect(PotionEffectType potionEffectType, int amplifier) {
+        PotionMeta potionMeta = (PotionMeta) getItemMeta();
+        potionMeta.addCustomEffect(new PotionEffect(potionEffectType,0,amplifier,false,false),false);
+        setItemMeta(potionMeta);
+        return this;
+    }
+
 
     public ItemBuilder addItemFlag(ItemFlag flag) {
         ItemMeta meta = getItemMeta();

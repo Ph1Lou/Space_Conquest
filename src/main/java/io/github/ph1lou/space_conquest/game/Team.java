@@ -2,7 +2,7 @@ package io.github.ph1lou.space_conquest.game;
 
 import io.github.ph1lou.space_conquest.enums.ColorTeam;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
-import net.jitse.npclib.api.NPC;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -12,6 +12,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scoreboard.Scoreboard;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +42,12 @@ public class Team {
         this.colorTeam=colorTeam;
         team.setPrefix(getColorTeam().getChatColor()+"[Team "+name+"] ");
         this.bossBar = Bukkit.createBossBar(String.format("L'équipe "+getColorTeam().getChatColor()+"%s§r mine la Crying Obsidian",name), getColorTeam().getBarColor(), BarStyle.SOLID);
+        for(UUID uuid:this.getMembers()){
+            Player player = Bukkit.getPlayer(uuid);
+            if(player!=null){
+                player.getInventory().setHelmet(new ItemStack(this.getColorTeam().getBanner()));
+            }
+        }
     }
 
     private BossBar bossBar;
@@ -151,12 +158,12 @@ public class Team {
             inventory.setChestplate(ironChestPlate.build());
         }
         else if(upgrade.getChestPlate()==2){
-            ItemBuilder leatherChestPlate=new ItemBuilder(Material.DIAMOND_CHESTPLATE);
-            leatherChestPlate.setColor(getColorTeam().getColor());
-            leatherChestPlate.setDisplayName("Combinaison Spatiale Ultra Renforcée");
-            leatherChestPlate.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
-            leatherChestPlate.setUnbreakable(true);
-            inventory.setChestplate(leatherChestPlate.build());
+            ItemBuilder diamondChestPlate=new ItemBuilder(Material.DIAMOND_CHESTPLATE);
+
+            diamondChestPlate.setDisplayName("Combinaison Spatiale Ultra Renforcée");
+            diamondChestPlate.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
+            diamondChestPlate.setUnbreakable(true);
+            inventory.setChestplate(diamondChestPlate.build());
         }
         else{
             ItemBuilder leatherChestPlate=new ItemBuilder(Material.LEATHER_CHESTPLATE);
@@ -203,6 +210,7 @@ public class Team {
                 getMembers().add(player.getUniqueId());
                 game.setPlayerSize(game.getPlayerSize()+1);
                 team.addEntry(player.getName());
+                player.getInventory().setHelmet(new ItemStack(this.getColorTeam().getBanner()));
             }
             else player.sendMessage("Le nombre de joueurs max a été atteint");
 
@@ -216,6 +224,8 @@ public class Team {
         getMembers().remove(player.getUniqueId());
         game.setPlayerSize(game.getPlayerSize()-1);
         team.removeEntry(player.getName());
+        player.getInventory().setHelmet(null);
+
         if(getFounder().equals(player.getUniqueId())){
             if(getMembers().size()>0){
                 setFounder(getMembers().get(0));

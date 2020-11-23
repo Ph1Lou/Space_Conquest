@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
 
@@ -38,12 +39,12 @@ public class LobbyListener implements Listener {
 
         Player player = event.getPlayer();
         player.setPlayerListHeaderFooter("Space §bConquest","Plugin et Concept par §bPh1Lou");
-
+/*
         if(game.isState(State.GAME)){
             for(Team team:game.getTeams()){
-                team.getNpc().show(player);
+                team.getNpc().
             }
-        }
+        }*/
         if(game.getTeam(player)!=null || game.isState(State.LOBBY)){
             FastBoard fastboard = new FastBoard(player);
             fastboard.updateTitle("Space §bConquest");
@@ -152,5 +153,12 @@ public class LobbyListener implements Listener {
         event.setCancelled(true);
         event.getWorld().setWeatherDuration(0);
         event.getWorld().setThundering(false);
+    }
+
+    @EventHandler
+    private void onClickEvent(InventoryClickEvent event) {
+        if(event.getSlotType().equals(InventoryType.SlotType.ARMOR)){
+            event.setCancelled(true);
+        }
     }
 }

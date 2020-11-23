@@ -2,7 +2,7 @@ package io.github.ph1lou.space_conquest.game;
 
 public class Upgrades {
 
-    private int punch=0;
+    private int power =0;
 
     private int chestPlate =0;
 
@@ -35,12 +35,12 @@ public class Upgrades {
         this.sharpness = sharpness;
     }
 
-    public int isPunch() {
-        return punch;
+    public int isPower() {
+        return power;
     }
 
-    public void setPunch(int punch) {
-        this.punch = punch;
+    public void setPower(int power) {
+        this.power = power;
     }
 
 

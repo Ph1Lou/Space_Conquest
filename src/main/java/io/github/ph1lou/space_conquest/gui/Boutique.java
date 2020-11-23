@@ -98,13 +98,13 @@ public class Boutique implements InventoryProvider {
         ItemBuilder bow = new ItemBuilder(Material.BOW);
 
 
-        bow.addEnchant(Enchantment.ARROW_DAMAGE,team.getUpgrade().isPunch());
+        bow.addEnchant(Enchantment.ARROW_DAMAGE,team.getUpgrade().isPower());
 
         ItemStack tempBow = bow.build().clone();
 
         contents.set(1,7, ClickableItem.of((bow.setDisplayName(String.format("Coût 2000 Ors (§b%d en banque)",team.getResource().getOrDefault(Material.GOLD_BLOCK,0))).build()), e -> {
-            if(team.getResource().containsKey(Material.GOLD_BLOCK)){
-                if(team.getResource().get(Material.GOLD_BLOCK)>=2000){
+            if(/*team.getResource().containsKey(Material.GOLD_BLOCK)*/true){
+                if(/*team.getResource().get(Material.GOLD_BLOCK)>=2000*/true){
                     player.getInventory().addItem(tempBow);
                     team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-2000);
                 }
@@ -149,5 +149,6 @@ public class Boutique implements InventoryProvider {
                 }
             }
         }));
+
     }
 }

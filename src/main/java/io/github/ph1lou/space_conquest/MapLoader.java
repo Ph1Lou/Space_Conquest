@@ -4,17 +4,23 @@ import io.github.ph1lou.space_conquest.game.Area;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
-import net.jitse.npclib.NPCLib;
-import net.jitse.npclib.api.NPC;
-import net.jitse.npclib.api.skin.MineSkinFetcher;
-import net.jitse.npclib.api.state.NPCSlot;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.trait.Equipment;
+import net.citizensnpcs.npc.skin.Skin;
+import net.citizensnpcs.npc.skin.SkinnableEntity;
+import net.citizensnpcs.trait.SkinLayers;
+import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.StandardWatchEventKinds;
 import java.util.Collections;
 
 public class MapLoader {
@@ -55,23 +61,16 @@ public class MapLoader {
             team.setSpawn(location.clone());
             location.setX(location.getBlockX()-2);
 
-            MineSkinFetcher.fetchSkinFromIdAsync(1980939648, skin -> {
-                NPCLib npcLib = game.getMain().getLibrary();
-                NPC npc = npcLib.createNPC(Collections.singletonList("Commandant Équipe "+team.getColorTeam().getChatColor()+team.getName()));
-                npc.setLocation(location.clone());
-                npc.setSkin(skin);
-                npc.setItem(NPCSlot.HELMET,new ItemStack(team.getColorTeam().getMaterial()));
-                npc.setItem(NPCSlot.LEGGINGS,new ItemBuilder(Material.LEATHER_LEGGINGS).setColor(team.getColorTeam().getColor()).build());
+            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Commandant Équipe "+team.getColorTeam().getChatColor()+team.getName());
 
-                npc.create();
+            //npc.data().setPersistent(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_METADATA, "ewogICJ0aW1lc3RhbXAiIDogMTYwNjEzNzA4MDM4NywKICAicHJvZmlsZUlkIiA6ICIyYzEwNjRmY2Q5MTc0MjgyODRlM2JmN2ZhYTdlM2UxYSIsCiAgInByb2ZpbGVOYW1lIiA6ICJOYWVtZSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zNjc2NTBiMGQ1YzBiZTc4NTk2OTJjYzZmODU5NTNjMDc4ZjBjYzM1OTlhOGI4OGZjMmM1NDUyNDk4MGE0ZDExIgogICAgfQogIH0KfQ==");
+          //  npc.data().setPersistent(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_SIGN_METADATA, "CavlQkPktJfQShsQA0QJz1ADzwvG5tyE6XiPGbSNwbQI7TkUDRGiqZNvZGsEhc2B2Wo4eGPSaoJDfsHahkz9ggbZGFGBnLFIriFHmbGBucR/RqXEegU+eanqHzkLXfFe1pcx836nv1Z7XknwkDdCxj2pZXnNCtBdx7orKgrzQeaJrcOwAxr8bhfG83Cu7nC0kIstS00yKZPkiLl/cEvWD1PRUeHZU6hmoXrdP1spPcTV8/ADsT8Q03WLcMPoSzebIcUv4MVG/m1qV/ukPw0dLSCaZ/rCOdvzTsOssLrd/i3woVO60HOCkqpuGNK3kojFzfFbgKmu+Yya0G6MlGV0jSY/5YjE45jUQxD+Yq7TFulJap81peQggmZrg53rA+scWfdOPTR4Xm0gzskI/2ywpqvSLllg/5SOYHMNJYh5PajZtUOeS1/64Dh/72AMh+E1AsMS0Bn4IyPTQAY2t8T9uHm3GXmB+CVGAnri9TkTs5cXIDOgX0umw8OGR2rB/CCYHy07LiZcFdx8PivlPFzYPrrB8C76kO24+Lkzib0awIl02yjEn0FPrW1tMJOIKz97/DP5CVaiQQsk0UfSv9I8nsfCd3E6pmGKyW2P8Q4X65VShX5/C+qkH11J16xTdgFSK0VhhvurIh/irGhpF7nzDIbbdBh0095WiLtbXlI3pnY=");
+            npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HELMET, new ItemStack(team.getColorTeam().getMaterial()));
+            npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.LEGGINGS, new ItemBuilder(Material.LEATHER_LEGGINGS).setColor(team.getColorTeam().getColor()).build());
+            npc.getOrAddTrait(SkinTrait.class).setSkinPersistent("e","CavlQkPktJfQShsQA0QJz1ADzwvG5tyE6XiPGbSNwbQI7TkUDRGiqZNvZGsEhc2B2Wo4eGPSaoJDfsHahkz9ggbZGFGBnLFIriFHmbGBucR/RqXEegU+eanqHzkLXfFe1pcx836nv1Z7XknwkDdCxj2pZXnNCtBdx7orKgrzQeaJrcOwAxr8bhfG83Cu7nC0kIstS00yKZPkiLl/cEvWD1PRUeHZU6hmoXrdP1spPcTV8/ADsT8Q03WLcMPoSzebIcUv4MVG/m1qV/ukPw0dLSCaZ/rCOdvzTsOssLrd/i3woVO60HOCkqpuGNK3kojFzfFbgKmu+Yya0G6MlGV0jSY/5YjE45jUQxD+Yq7TFulJap81peQggmZrg53rA+scWfdOPTR4Xm0gzskI/2ywpqvSLllg/5SOYHMNJYh5PajZtUOeS1/64Dh/72AMh+E1AsMS0Bn4IyPTQAY2t8T9uHm3GXmB+CVGAnri9TkTs5cXIDOgX0umw8OGR2rB/CCYHy07LiZcFdx8PivlPFzYPrrB8C76kO24+Lkzib0awIl02yjEn0FPrW1tMJOIKz97/DP5CVaiQQsk0UfSv9I8nsfCd3E6pmGKyW2P8Q4X65VShX5/C+qkH11J16xTdgFSK0VhhvurIh/irGhpF7nzDIbbdBh0095WiLtbXlI3pnY=","ewogICJ0aW1lc3RhbXAiIDogMTYwNjEzNzA4MDM4NywKICAicHJvZmlsZUlkIiA6ICIyYzEwNjRmY2Q5MTc0MjgyODRlM2JmN2ZhYTdlM2UxYSIsCiAgInByb2ZpbGVOYW1lIiA6ICJOYWVtZSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zNjc2NTBiMGQ1YzBiZTc4NTk2OTJjYzZmODU5NTNjMDc4ZjBjYzM1OTlhOGI4OGZjMmM1NDUyNDk4MGE0ZDExIgogICAgfQogIH0KfQ==");
 
-                Bukkit.getScheduler().runTask(game.getMain(), () ->{
-                    for(Player p:Bukkit.getOnlinePlayers()){
-                        npc.show(p);
-                    }
-                });
-                team.setNpc(npc);
-            });
+            npc.spawn(location.clone());
+            team.setNpc(npc);
 
 
             i++;

@@ -5,13 +5,11 @@ import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
 import io.github.ph1lou.space_conquest.gui.GuiShop;
 import io.github.ph1lou.space_conquest.gui.Rank;
-import net.jitse.npclib.api.events.NPCInteractEvent;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Lightable;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -80,8 +78,8 @@ public class Capture implements Listener {
     }
 
     @EventHandler
-    public void onEntityInteract(NPCInteractEvent event) {
-        Player player = event.getWhoClicked();
+    public void onEntityInteract(NPCRightClickEvent event) {
+        Player player = event.getClicker();
         player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 10);
         GuiShop.INVENTORY.open(player);
     }
@@ -109,6 +107,8 @@ public class Capture implements Listener {
             event.setCancelled(true);
         }
     }
+
+
 
     @EventHandler
     public void onBlockExplode(BlockExplodeEvent event){
@@ -148,6 +148,31 @@ public class Capture implements Listener {
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,300,0,false,false));
             event.setCancelled(true);
         }
+        else if(itemMeta.getDisplayName().equals("§bBloc Anti-Gravité")){
+
+            if(event.getAction().equals(Action.RIGHT_CLICK_AIR)){
+                int i=6;
+                Block block;
+                do{
+                    i--;
+                    block = player.getTargetBlock(null,i);
+                }while(i>0 && !block.getType().equals(Material.AIR));
+
+                if(i!=0){
+                    block.setType(event.getMaterial());
+                    Lightable data = (Lightable) block.getBlockData();
+                    data.setLit(true);
+                    block.setBlockData(data);
+                    if(itemStack.getAmount()==1){
+                        player.getInventory().removeItem(itemStack);
+                    }
+                    else itemStack.setAmount(itemStack.getAmount()-1);
+                    event.setCancelled(true);
+                }
+            }
+
+        }
+
         else if(itemMeta.getDisplayName().equals("Levitation")){
 
             if(itemStack.getAmount()==1){
