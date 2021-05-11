@@ -4,31 +4,23 @@ import fr.minuskube.inv.InventoryManager;
 import io.github.ph1lou.space_conquest.commands.Stop;
 import io.github.ph1lou.space_conquest.commands.TeamChat;
 import io.github.ph1lou.space_conquest.game.GameManager;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.CitizensPlugin;
+import io.github.ph1lou.space_conquest.game.LanguageManager;
 import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 
-    public GameManager getCurrentGame() {
-        return currentGame;
-    }
-
-    public InventoryManager getInvManager() {
-        return invManager;
-    }
-
     private InventoryManager invManager;
     private GameManager currentGame;
-
+    private LanguageManager languageManager;
 
     @Override
     public void onEnable() {
         this.invManager = new InventoryManager(this);
         this.invManager.init();
         setWorld();
-        currentGame= new GameManager(this);
+        this.languageManager = new LanguageManager(this);
+        this.currentGame= new GameManager(this);
         getCommand("stop").setExecutor(new Stop(this));
         getCommand("t").setExecutor(new TeamChat(this));
     }
@@ -71,7 +63,6 @@ public class Main extends JavaPlugin {
         }
     }
 
-
     @Override
     public void onDisable() {
         currentGame.getMapLoader().deleteMap();
@@ -79,5 +70,17 @@ public class Main extends JavaPlugin {
 
     public void setCurrentGame(GameManager gameManager) {
         this.currentGame=gameManager;
+    }
+
+    public LanguageManager getLangManager() {
+        return this.languageManager;
+    }
+
+    public GameManager getCurrentGame() {
+        return currentGame;
+    }
+
+    public InventoryManager getInvManager() {
+        return invManager;
     }
 }

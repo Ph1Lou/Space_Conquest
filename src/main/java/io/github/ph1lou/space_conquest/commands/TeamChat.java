@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class TeamChat implements CommandExecutor {
 
-    Main main;
+    private final Main main;
 
     public TeamChat(Main main) {
         this.main=main;
@@ -32,12 +32,12 @@ public class TeamChat implements CommandExecutor {
         Team team = game.getTeam(player);
 
         if(team==null) {
-            player.sendMessage("[Space §bConquest§r] Vous n'êtes dans aucune équipe");
+            player.sendMessage("space-conquest.team.no-team");
             return true;
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append(team.getColorTeam().getChatColor()).append("[Team Chat]§r ");
+        sb.append(team.getColorTeam().getChatColor()).append("space-conquest.team.prefix-chat");
         if(team.getFounder().equals(player.getUniqueId())){
             sb.append("⭐ ");
         }

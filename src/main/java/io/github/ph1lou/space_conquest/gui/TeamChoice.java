@@ -119,7 +119,7 @@ public class TeamChoice implements InventoryProvider {
         }
 
 
-        if(player.isOp()){
+        if(player.hasPermission("space-conquest")){
 
             ItemBuilder teamSize = new ItemBuilder(Material.STONE_BUTTON);
 

@@ -185,7 +185,7 @@ public class Capture implements Listener {
                 if(player1.getLocation().distanceSquared(player.getLocation())<=625){
                     if(!player1.equals(player1)){
                         player1.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,200,0,false,false));
-                        player1.sendMessage("[Space §bConquest§r] Votre assistance gravitationnelle a été sabotée");
+                        player1.sendMessage("space-conquest.game.message.sabotage");
                         player1.playSound(player.getLocation(),Sound.BLOCK_GLASS_BREAK,10,10);
 
                     }
@@ -265,12 +265,10 @@ public class Capture implements Listener {
                 else if(area.getGeneratorType().equals(Material.CRYING_OBSIDIAN)){
                     Rank.INVENTORY.open(player1);
                 }
-                else player1.sendMessage("[Space §bConquest§r] Vous n'avez pas le contrôle de cette Balise");
+                else player1.sendMessage(game.translate("space-conquest.game.bacon.no-control"));
             }
         }
     }
-
-
 
     @SuppressWarnings("unchecked")
     @EventHandler
@@ -301,7 +299,7 @@ public class Capture implements Listener {
 
         Player player = (Player) event.getEntity().getShooter();
 
-        int i =Bukkit.getScheduler().scheduleSyncRepeatingTask(game.getMain(),() -> {
+        int i = Bukkit.getScheduler().scheduleSyncRepeatingTask(game.getMain(),() -> {
 
             if(egg.isDead()) {
                 return;
@@ -326,7 +324,5 @@ public class Capture implements Listener {
         Bukkit.getScheduler().scheduleSyncDelayedTask(game.getMain(),() -> Bukkit.getScheduler().cancelTask(i),30);
 
     }
-
-
 
 }

@@ -2,10 +2,9 @@ name: Space_Conquest
 version: "1.0"
 author: Ph1Lou
 main: io.github.ph1lou.space_conquest.Main
-api-version: "1.16"
 depend:
   - Citizens
-
+api-version: 1.16
 commands:
   stop:
     description: pour forcer la fin de game

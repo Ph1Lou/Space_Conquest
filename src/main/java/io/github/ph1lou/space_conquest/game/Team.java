@@ -23,8 +23,6 @@ public class Team {
 
     private final org.bukkit.scoreboard.Team team;
     private List<String> scoreBoard = new ArrayList<>();
-
-
     private final Upgrades upgrade= new Upgrades();
     private final UUID uuid;
     private final GameManager game;
@@ -34,23 +32,8 @@ public class Team {
     private Location spawn;
     private String name;
     private final Map<Material,Integer> resource = new HashMap<>();
-
-    private NPC npc ;
-
-
-    public void setColorTeam(ColorTeam colorTeam){
-        this.colorTeam=colorTeam;
-        team.setPrefix(getColorTeam().getChatColor()+"[Team "+name+"] ");
-        this.bossBar = Bukkit.createBossBar(String.format("L'équipe "+getColorTeam().getChatColor()+"%s§r mine la Crying Obsidian",name), getColorTeam().getBarColor(), BarStyle.SOLID);
-        for(UUID uuid:this.getMembers()){
-            Player player = Bukkit.getPlayer(uuid);
-            if(player!=null){
-                player.getInventory().setHelmet(new ItemStack(this.getColorTeam().getBanner()));
-            }
-        }
-    }
-
     private BossBar bossBar;
+    private NPC npc ;
 
     public Team(GameManager game, String name) {
         this.game=game;
@@ -69,11 +52,25 @@ public class Team {
         if(i==ColorTeam.values().length){
             this.colorTeam = ColorTeam.values()[0];
         }
-        else this.colorTeam = ColorTeam.values()[i];
+        else {
+            this.colorTeam = ColorTeam.values()[i];
+        }
         team.setAllowFriendlyFire(false);
         team.setOption(org.bukkit.scoreboard.Team.Option.COLLISION_RULE, org.bukkit.scoreboard.Team.OptionStatus.NEVER);
         setName(name);
 
+    }
+
+    public void setColorTeam(ColorTeam colorTeam){
+        this.colorTeam=colorTeam;
+        team.setPrefix(getColorTeam().getChatColor()+"[Team "+name+"] ");
+        this.bossBar = Bukkit.createBossBar(String.format("L'équipe "+getColorTeam().getChatColor()+"%s§r mine la Crying Obsidian",name), getColorTeam().getBarColor(), BarStyle.SOLID);
+        for(UUID uuid:this.getMembers()){
+            Player player = Bukkit.getPlayer(uuid);
+            if(player!=null){
+                player.getInventory().setHelmet(new ItemStack(this.getColorTeam().getBanner()));
+            }
+        }
     }
 
     public UUID getFounder() {
@@ -83,9 +80,11 @@ public class Team {
     public void setFounder(UUID founder) {
         this.founder = founder;
     }
+
     public Upgrades getUpgrade() {
         return upgrade;
     }
+
     public ColorTeam getColorTeam() {
         return colorTeam;
     }
@@ -97,8 +96,6 @@ public class Team {
     public void setScoreBoard(List<String> scoreBoard) {
         this.scoreBoard = scoreBoard;
     }
-
-
 
     public Area getBase() {
         return base;

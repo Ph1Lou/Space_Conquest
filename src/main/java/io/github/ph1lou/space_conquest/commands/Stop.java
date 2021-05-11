@@ -26,6 +26,10 @@ public class Stop implements TabExecutor {
 
         if(!game.isState(State.GAME)) return true;
 
+        if(!commandSender.hasPermission("space-conquest")){
+            return true;
+        }
+
         game.restart();
 
         return true;

@@ -19,116 +19,122 @@ import java.util.*;
 
 public class GameManager {
 
+    private int objective=1000;
+    private boolean singleColor = true;
+    private int playerMax=40;
+    private int teamNumber=12;
+    private String gameName="@Ph1Lou_";
+    private int centerSize=7;
+    private int zoneNumber =10;
+    private final Main main;
+    private int teamSize=4;
+    private Capture capture;
+    private final LobbyListener lobbyListener;
+    private PlayerListener playerListener;
+    private State state = State.LOBBY;
+    private final List<Team> teams = new ArrayList<>();
+    private final ScoreBoard scoreBoard;
+    private int timer;
+    private final List<Area> areas = new ArrayList<>();
+    private final Scoreboard scoreboard;
+    private World world;
+    private final Map<UUID, FastBoard> fastBoard = new HashMap<>();
+    private final Map<UUID, Integer> kills = new HashMap<>();
+    private int playerSize=0;
+    private final MapLoader mapLoader;
+
+    public GameManager(Main main){
+        this.main = main;
+        this.mapLoader = new MapLoader(this);
+        this.scoreBoard = new ScoreBoard(this);
+        this.lobbyListener=new LobbyListener(this);
+        Bukkit.getPluginManager().registerEvents(this.lobbyListener,main);
+        this.scoreboard=Bukkit.getScoreboardManager().getMainScoreboard();
+        for(org.bukkit.scoreboard.Team team:this.scoreboard.getTeams()){
+            team.unregister();
+        }
+        Lobby start = new Lobby(this);
+        start.runTaskTimer(main, 0, 5);
+    }
 
     public void setObjective(int objective) {
         this.objective = objective;
     }
 
-    private int objective=1000;
-
     public int getCenterSize() {
-        return centerSize;
+        return this.centerSize;
+    }
+
+    public String translate(String key, Object... args) {
+        LanguageManager languageManager = this.main.getLangManager();
+        String translation = languageManager.getTranslation(key);
+        try {
+            return String.format(translation, args);
+        } catch (IllegalFormatException e) {
+            Bukkit.getConsoleSender().sendMessage(String.format("Error while formatting translation (%s)", key.toLowerCase()));
+            return translation + " (Format error)";
+        }
+    }
+
+    public List<String> translateArray(String key) {
+        LanguageManager languageManager = main.getLangManager();
+        return languageManager.getTranslationList(key);
     }
 
     public void setCenterSize(int centerSize) {
         this.centerSize = centerSize;
     }
 
-    private int centerSize=7;
-
     public String getGameName() {
-        return gameName;
+        return this.gameName;
     }
 
     public void setGameName(String gameName) {
         this.gameName = gameName;
     }
 
-    private String gameName="@Ph1Lou_";
-
     public void setTeamNumber(int teamNumber) {
         this.teamNumber = teamNumber;
     }
 
-    private int teamNumber=12;
-
     public int getPlayerMax() {
-        return playerMax;
+        return this.playerMax;
     }
 
     public void setPlayerMax(int playerMax) {
         this.playerMax = playerMax;
     }
 
-    private int playerMax=40;
-
     public boolean isSingleColor() {
-        return singleColor;
+        return this.singleColor;
     }
 
     public void setSingleColor(boolean singleColor) {
         this.singleColor = singleColor;
     }
 
-    private boolean singleColor = true;
-
     public int getZoneNumber() {
-        return zoneNumber;
+        return this.zoneNumber;
     }
 
     public void setZoneNumber(int zoneNumber) {
         this.zoneNumber = zoneNumber;
     }
 
-    private int zoneNumber =10;
-
-    private final Main main;
-
-    private int teamSize=4;
-
-    private Capture capture;
-
-    private final LobbyListener lobbyListener;
-
-    private PlayerListener playerListener;
-
-    private State state = State.LOBBY;
-
-    private final List<Team> teams = new ArrayList<>();
-
     public Scoreboard getScoreboard() {
-        return scoreboard;
+        return this.scoreboard;
     }
-
-    private final Scoreboard scoreboard;
-
-    private World world;
 
     public List<Area> getAreas() {
-        return areas;
+        return this.areas;
     }
-
-    private final List<Area> areas = new ArrayList<>();
-
-
-    private final Map<UUID, FastBoard> fastBoard = new HashMap<>();
-
-    private final Map<UUID, Integer> kills = new HashMap<>();
-
-    private int playerSize=0;
-
-    private final MapLoader mapLoader;
 
     public ScoreBoard getScoreBoard() {
-        return scoreBoard;
+        return this.scoreBoard;
     }
 
-    private final ScoreBoard scoreBoard;
-
-    private int timer;
-
     public int getTimer() {
-        return timer;
+        return this.timer;
     }
 
     public void setTimer(int timer) {
@@ -144,41 +150,27 @@ public class GameManager {
     }
 
     public Main getMain() {
-        return main;
+        return this.main;
     }
 
     public MapLoader getMapLoader() {
-        return mapLoader;
+        return this.mapLoader;
     }
 
     public int getTeamSize() {
-        return teamSize;
+        return this.teamSize;
     }
 
     public void setTeamSize(int teamSize) {
         this.teamSize = teamSize;
     }
 
-    public GameManager(Main main){
-        this.main = main;
-        mapLoader = new MapLoader(this);
-        scoreBoard = new ScoreBoard(this);
-        this.lobbyListener=new LobbyListener(this);
-        Bukkit.getPluginManager().registerEvents(this.lobbyListener,main);
-        scoreboard=Bukkit.getScoreboardManager().getMainScoreboard();
-        for(org.bukkit.scoreboard.Team team:scoreboard.getTeams()){
-            team.unregister();
-        }
-        Lobby start = new Lobby(this);
-        start.runTaskTimer(main, 0, 5);
-    }
-
     public List<Team> getTeams() {
-        return teams;
+        return this.teams;
     }
 
     public World getWorld() {
-        return world;
+        return this.world;
     }
 
     public void setWorld(World world) {
@@ -187,33 +179,29 @@ public class GameManager {
 
     @Nullable
     public Team getTeam(Player player){
-        for(Team team:getTeams()){
-            if(team.getMembers().contains(player.getUniqueId())){
-                return team;
-            }
-        }
-        return null;
+        return this.getTeams()
+                .stream()
+                .filter(team -> team.getMembers().contains(player.getUniqueId()))
+                .findFirst().orElse(null);
     }
-
 
     public void repartition() {
 
-        world=mapLoader.generateMap();
-        world.setGameRule(GameRule.DO_INSOMNIA,false);
-        world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN,true);
-        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
-        world.setDifficulty(Difficulty.PEACEFUL);
-        world.setTime(19000);
-        mapLoader.generateTeamCamp();
+        this.world = this.mapLoader.generateMap();
+        this.world.setGameRule(GameRule.DO_INSOMNIA,false);
+        this.world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN,true);
+        this.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
+        this.world.setDifficulty(Difficulty.PEACEFUL);
+        this.world.setTime(19000);
+        this.mapLoader.generateTeamCamp();
         this.capture=new Capture(this);
         this.playerListener=new PlayerListener(this);
-        Bukkit.getPluginManager().registerEvents(capture,main);
+        Bukkit.getPluginManager().registerEvents(this.capture,this.main);
         Bukkit.getPluginManager().registerEvents(this.playerListener,main);
-
     }
 
     public int getPlayerSize() {
-        return playerSize;
+        return this.playerSize;
     }
 
     public void setPlayerSize(int playerSize) {
@@ -221,11 +209,11 @@ public class GameManager {
     }
 
     public Map<UUID, FastBoard> getFastBoard() {
-        return fastBoard;
+        return this.fastBoard;
     }
 
     public Map<UUID, Integer> getKills() {
-        return kills;
+        return this.kills;
     }
 
     public int getTeamNumber() {
@@ -234,28 +222,27 @@ public class GameManager {
 
     public void restart() {
 
-        setState(State.END);
+        this.setState(State.END);
         HandlerList.unregisterAll(this.lobbyListener);
         HandlerList.unregisterAll(this.playerListener);
         HandlerList.unregisterAll(this.capture);
-        main.setCurrentGame(new GameManager(main));
+        this.main.setCurrentGame(new GameManager(this.main));
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
             ItemStack itemStack = new ItemStack(Material.WHITE_BANNER);
-            GameManager newGame = main.getCurrentGame();
+            GameManager newGame = this.main.getCurrentGame();
             player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
             FastBoard fastBoard = new FastBoard(player);
-            fastBoard.updateTitle("Space §bConquest");
+            fastBoard.updateTitle(this.translate("space-conquest.title"));
             newGame.getFastBoard().put(player.getUniqueId(),fastBoard);
-
             player.getInventory().addItem(itemStack);
         }
-        getMapLoader().deleteMap();
+        this.getMapLoader().deleteMap();
     }
 
-    public Integer getObjective() {
+    public int getObjective() {
         return this.objective;
     }
 }

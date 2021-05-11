@@ -1,0 +1,51 @@
+{
+  "space-conquest": {
+      "team": {
+        "no-team": "[Space §bConquest§r] Vous n'êtes dans aucune équipe",
+        "prefix-chat": "[Team Chat]§r ",
+        "leader": "Commandant Équipe %s",
+        "choice": "Choix des §bÉquipes"
+      },
+    "title": "Space §bConquest",
+    "credit": "Plugin et Concept par ",
+
+    "game": {
+      "bacon": {
+        "no-control": "[Space §bConquest§r] Vous n'avez pas le contrôle de cette Balise"
+      },
+      "message": {
+        "sabotage": "[Space §bConquest§r] Votre assistance gravitationnelle a été sabotée"
+      },
+      "chat": {
+        "global": "[Global Chat] %s : %s",
+        "format": "[Global Chat] %s [Team %s]§r %s : %s"
+      }
+    },
+    "score-board": {
+      "lobby": [
+        "§3§m-----↠§8infos§3§m↞------",
+        "En attente de joueurs ",
+        "§3§m------------------",
+        "Joueur(s) : §b&players&",
+        "Team(s) : §b&teamSize&",
+        "§3§m------------------",
+        "Joueurs Max : §b&max&",
+        "§3§m-----↠§8game§3§m↞------",
+        "§b&name&"
+      ],
+      "game-board": [
+        "§3§m-----↠§8team§3§m↞-----",
+        "Team §b&team&",
+        "Couleur §b&color&",
+        "§3§m----↠§8infos§3§m↞-----",
+        "Timer §b&timer&",
+        "Joueurs §b&players&",
+        "Nombre d'équipes §b&teamSize&",
+        "§3§m---↠§8score§3§m↞----",
+        "Joueur(s) tué(s) §b&kill&",
+        "§3§m-----↠§8game§3§m↞------",
+        "§b&name&"
+      ]
+    }
+  }
+}

@@ -38,16 +38,11 @@ public class LobbyListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event){
 
         Player player = event.getPlayer();
-        player.setPlayerListHeaderFooter("Space §bConquest","Plugin et Concept par §bPh1Lou");
-/*
-        if(game.isState(State.GAME)){
-            for(Team team:game.getTeams()){
-                team.getNpc().
-            }
-        }*/
+        player.setPlayerListHeaderFooter(game.translate("space-conquest.title"),game.translate("space-conquest.credit")+"§bPh1Lou");
+
         if(game.getTeam(player)!=null || game.isState(State.LOBBY)){
             FastBoard fastboard = new FastBoard(player);
-            fastboard.updateTitle("Space §bConquest");
+            fastboard.updateTitle(game.translate("space-conquest.title"));
             game.getFastBoard().put(player.getUniqueId(), fastboard);
         }
 
@@ -59,7 +54,7 @@ public class LobbyListener implements Listener {
             return;
         }
 
-        ItemBuilder itemStack = new ItemBuilder(Material.WHITE_BANNER).setDisplayName("Choix des §bÉquipes");
+        ItemBuilder itemStack = new ItemBuilder(Material.WHITE_BANNER).setDisplayName(game.translate("space-conquest.team.choice"));
 
         player.getInventory().clear();
         player.setGameMode(GameMode.ADVENTURE);
@@ -130,9 +125,9 @@ public class LobbyListener implements Listener {
         Team team = game.getTeam(player);
 
         if(team==null) {
-            event.setFormat("[Global Chat] %s : %s");
+            event.setFormat(game.translate("space-conquest.game.chat.global"));
         }
-        else event.setFormat("[Global Chat] "+team.getColorTeam().getChatColor()+"[Team "+team.getName()+"]§r %s : %s");
+        else event.setFormat(game.translate("space-conquest.game.chat.format",team.getColorTeam().getChatColor(),team.getName(),"%s"));
     }
 
     @EventHandler

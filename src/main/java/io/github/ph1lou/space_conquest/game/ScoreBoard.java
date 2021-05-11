@@ -13,42 +13,18 @@ import java.util.List;
 
 public class ScoreBoard {
 
-    final GameManager game;
+    private final GameManager game;
+    private final List<String> scoreBoardLobby;
+    private final List<String> scoreBoardGame;
 
     public ScoreBoard(GameManager game){
         this.game=game;
+        this.scoreBoardLobby = game.translateArray("space-conquest.score-board.lobby");
+        this.scoreBoardGame = game.translateArray("space-conquest.score-board.lobby");
     }
 
-    private final List<String> scoreBoardLobby =new ArrayList<>();
-    private final List<String> scoreBoardGame =new ArrayList<>();
-
-
-    final List<String> lobbyBoard = Arrays.asList("§3§m-----↠§8infos§3§m↞------",
-            "En attente de joueurs ",
-            "§3§m------------------",
-            "Joueur(s) : §b&players&",
-            "Team(s) : §b&teamSize&",
-            "§3§m------------------",
-            "Joueurs Max : §b&max&",
-            "§3§m-----↠§8game§3§m↞------",
-            "§b&name&");
-
-    final List<String> gameBoard = Arrays.asList("§3§m-----↠§8team§3§m↞-----",
-            "Team §b&team&",
-             "Couleur §b&color&",
-             "§3§m----↠§8infos§3§m↞-----",
-            "Timer §b&timer&",
-            "Joueurs §b&players&",
-            "Nombre d'équipes §b&teamSize&",
-            "§3§m---↠§8score§3§m↞----",
-            "Joueur(s) tué(s) §b&kill&",
-            "§3§m-----↠§8game§3§m↞------",
-            "§b&name&");
-
-
-
     public void updateGlobalLobby(){
-        List<String> scoreBoard = new ArrayList<>(lobbyBoard);
+        List<String> scoreBoard = new ArrayList<>(scoreBoardLobby);
         scoreBoardLobby.clear();
 
         for(String line: scoreBoard){
@@ -62,7 +38,7 @@ public class ScoreBoard {
 
     public void updateGlobalGameBoard(){
 
-        List<String> scoreBoard = new ArrayList<>(gameBoard);
+        List<String> scoreBoard = new ArrayList<>(scoreBoardGame);
         scoreBoardGame.clear();
 
         for(String line:scoreBoard){
