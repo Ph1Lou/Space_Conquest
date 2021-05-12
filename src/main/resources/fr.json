@@ -194,6 +194,9 @@
         "§3§m-----↠§8game§3§m↞------",
         "§b&name&"
       ]
+    },
+    "action-bar": {
+      "message": "Crying Obsidian §b%d/%d"
     }
   }
 }
