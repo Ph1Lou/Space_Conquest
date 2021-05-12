@@ -143,7 +143,7 @@ public class GameListener implements Listener {
             return;
         }
 
-        if(item.getTag().getBoolean("propulser")){
+        if(item.getTag().getBoolean("propulsion")){
 
             player.setVelocity(new Vector(0,8,0));
             player.getInventory().removeItem(itemStack);
@@ -194,6 +194,7 @@ public class GameListener implements Listener {
                 }
             }
             event.setCancelled(true);
+            player.sendMessage(game.translate("space-conquest.game.message.use"));
         }
         else if(item.getTag().getBoolean("explosion")){
 
@@ -205,7 +206,7 @@ public class GameListener implements Listener {
             Location location=null;
             for(Area area:game.getAreas()){
 
-                if(Material.CRYING_OBSIDIAN.equals(area.getGeneratorType())){
+                if(area.isMiddle()){
 
                     location=area.getMiddle().clone();
                     location.setY(location.getBlockY()+3);
@@ -267,7 +268,7 @@ public class GameListener implements Listener {
                 else if(area.getGeneratorType().equals(Material.CRYING_OBSIDIAN)){
                     Rank.INVENTORY.open(player1);
                 }
-                else player1.sendMessage(game.translate("space-conquest.game.bacon.no-control"));
+                else player1.sendMessage(game.translate("space-conquest.game.beacon.no-control"));
             }
         }
     }

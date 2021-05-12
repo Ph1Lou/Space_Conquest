@@ -21,7 +21,7 @@ public class Rank implements InventoryProvider {
             .manager(JavaPlugin.getPlugin(Main.class).getInvManager())
             .provider(new Rank())
             .size(3, 9)
-            .title("Rank")
+            .title(JavaPlugin.getPlugin(Main.class).getLangManager().getTranslation("space-conquest.gui.rank.message"))
             .closeable(true)
             .build();
 
@@ -39,8 +39,8 @@ public class Rank implements InventoryProvider {
         for(Team team:game.getTeams()){
 
             ItemBuilder banner = new ItemBuilder(team.getColorTeam().getBanner());
-            banner.setDisplayName(team.getColorTeam().getChatColor()+"[Team "+team.getName()+"]");
-            banner.setLore(String.format("Crying Obsidian %d/%d",team.getResource().getOrDefault(Material.CRYING_OBSIDIAN,0),game.getObjective()));
+            banner.setDisplayName(team.getColorTeam().getChatColor()+game.translate("space-conquest.team.name",team.getName()));
+            banner.setLore(game.translate("space-conquest.gui.rank.message",team.getResource().getOrDefault(Material.CRYING_OBSIDIAN,0),game.getObjective()));
 
             contents.set(j/9,j%9,ClickableItem.empty(banner.build()));
             j++;

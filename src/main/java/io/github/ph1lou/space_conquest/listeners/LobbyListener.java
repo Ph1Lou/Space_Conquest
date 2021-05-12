@@ -38,7 +38,9 @@ public class LobbyListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event){
 
         Player player = event.getPlayer();
-        player.setPlayerListHeaderFooter(game.translate("space-conquest.title"),game.translate("space-conquest.credit")+"Ph1Lou");
+        player.setPlayerListHeaderFooter(
+                game.translate("space-conquest.title"),
+                game.translate("space-conquest.credit")+"Ph1Lou");
 
         if(game.getTeam(player)!=null || game.isState(State.LOBBY)){
             FastBoard fastboard = new FastBoard(player);
@@ -54,7 +56,8 @@ public class LobbyListener implements Listener {
             return;
         }
 
-        ItemBuilder itemStack = new ItemBuilder(Material.WHITE_BANNER).setDisplayName(game.translate("space-conquest.team.choice"));
+        ItemBuilder itemStack = new ItemBuilder(Material.WHITE_BANNER)
+                .setDisplayName(game.translate("space-conquest.team.choice"));
 
         player.getInventory().clear();
         player.setGameMode(GameMode.ADVENTURE);
@@ -106,7 +109,8 @@ public class LobbyListener implements Listener {
         if(event.getItem().getType().equals(Material.WHITE_BANNER)){
             ConfigMenu.INVENTORY.open(event.getPlayer());
             event.setCancelled(true);
-            event.getPlayer().getInventory().setHeldItemSlot((1+event.getPlayer().getInventory().getHeldItemSlot())%9);
+            event.getPlayer().getInventory().setHeldItemSlot((1
+                    +event.getPlayer().getInventory().getHeldItemSlot()) % 9);
         }
     }
 
@@ -125,9 +129,15 @@ public class LobbyListener implements Listener {
         Team team = game.getTeam(player);
 
         if(team==null) {
-            event.setFormat(game.translate("space-conquest.game.chat.global"));
+            event.setFormat(game.translate("space-conquest.game.chat.global",
+                    "%s",
+                    "%s"));
         }
-        else event.setFormat(game.translate("space-conquest.game.chat.format",team.getColorTeam().getChatColor(),team.getName(),"%s"));
+        else event.setFormat(game.translate("space-conquest.game.chat.format",
+                team.getColorTeam().getChatColor(),
+                team.getName(),
+                "%s",
+                "%s"));
     }
 
     @EventHandler

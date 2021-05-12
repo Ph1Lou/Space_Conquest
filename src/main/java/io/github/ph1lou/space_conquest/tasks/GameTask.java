@@ -71,6 +71,7 @@ public class GameTask extends BukkitRunnable {
 
         game.getAreas()
                 .stream()
+                .filter(area -> !area.isBase())
                 .map(area -> new Tuple<>(area,area.getOwnerTeam()))
                 .filter(areaTeamTuple -> areaTeamTuple.b()!=null)
         .forEach(areaTeamTuple -> this.mineRessources(areaTeamTuple.a(),areaTeamTuple.b()));

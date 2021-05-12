@@ -46,6 +46,10 @@ public class Boutique implements InventoryProvider {
                 ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.special-artefact.title"))
                         .build()),e -> SpecialArtefact.INVENTORY.open(player)));
 
+        contents.set(0,8,
+                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.beacon.name"))
+                        .build()),e -> Beacon.INVENTORY.open(player)));
+
 
 
     }

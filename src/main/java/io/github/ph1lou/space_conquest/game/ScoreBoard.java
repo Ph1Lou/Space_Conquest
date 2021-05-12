@@ -20,7 +20,7 @@ public class ScoreBoard {
     public ScoreBoard(GameManager game){
         this.game=game;
         this.scoreBoardLobby = game.translateArray("space-conquest.score-board.lobby");
-        this.scoreBoardGame = game.translateArray("space-conquest.score-board.lobby");
+        this.scoreBoardGame = game.translateArray("space-conquest.score-board.game-board");
     }
 
     public void updateGlobalLobby(){
@@ -28,9 +28,9 @@ public class ScoreBoard {
         scoreBoardLobby.clear();
 
         for(String line: scoreBoard){
-            line=line.replace("&players&",game.getPlayerSize()+"");
-            line=line.replace("&teamSize&",game.getTeams().size()+"");
-            line=line.replace("&max&",game.getPlayerMax()+"");
+            line=line.replace("&players&",String.valueOf(game.getPlayerSize()));
+            line=line.replace("&teamSize&",String.valueOf(game.getTeams().size()));
+            line=line.replace("&max&",String.valueOf(game.getPlayerMax()));
             line=line.replace("&name&",game.getGameName());
             scoreBoardLobby.add(line);
         }
@@ -43,9 +43,9 @@ public class ScoreBoard {
 
         for(String line:scoreBoard){
             line=line.replace("&timer&", BukkitUtils.conversion(game.getTimer()));
-            line=line.replace("&players&",game.getPlayerSize()+"");
-            line=line.replace("&teamSize&",game.getTeams().size()+"");
-            line=line.replace("&name&",game.getGameName());
+            line=line.replace("&players&",String.valueOf(game.getPlayerSize()));
+            line=line.replace("&teamSize&",String.valueOf(game.getTeams().size()));
+            line=line.replace("&name&",String.valueOf(game.getGameName()));
             scoreBoardGame.add(line);
         }
 

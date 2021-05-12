@@ -1,5 +1,6 @@
 package io.github.ph1lou.space_conquest.game;
 
+import io.github.ph1lou.space_conquest.enums.TowerMode;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,18 +27,21 @@ public class Area {
 
     private int controlSize;
 
+    private TowerMode mode;
+
     @Nullable
     private Team isCapture;
 
     private final boolean isBase;
 
-    private PotionEffect bonus=new PotionEffect(PotionEffectType.SPEED,40,1,false,false);
+    private final boolean isMiddle;
 
     private final List<Location> blocks = new ArrayList<>();
 
-    public Area(boolean isBase , Location middle, Material generatorType){
+    public Area(boolean isBase, boolean isMiddle , Location middle, Material generatorType){
         this.isBase=isBase;
         this.middle=middle;
+        this.isMiddle=isMiddle;
         this.generatorType = generatorType;
     }
 
@@ -72,7 +76,7 @@ public class Area {
                     this.removeControl();
                 }
                 else {
-                    this.ownerTeam=team;
+                    this.setOwnerTeam(team);
                     for(Player player: getPlayerOn()){
                         player.setVelocity(new Vector(0,3,0));
                         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,300,0,false,false));
@@ -121,14 +125,6 @@ public class Area {
         this.isCapture = isCapture;
     }
 
-    public PotionEffect getBonus() {
-        return bonus;
-    }
-
-    public void setBonus(PotionEffect bonus) {
-        this.bonus = bonus;
-    }
-
     public Material getGeneratorType() {
         return this.generatorType;
     }
@@ -147,6 +143,7 @@ public class Area {
 
     public void setOwnerTeam(@Nullable Team ownerTeam) {
         this.ownerTeam = ownerTeam;
+        mode = TowerMode.MINE;
     }
 
     public int getControlSize() {
@@ -163,4 +160,17 @@ public class Area {
     public void setGeneratorType(Material generatorType) {
         this.generatorType=generatorType;
     }
+
+    public boolean isMiddle() {
+        return isMiddle;
+    }
+
+    public TowerMode getMode() {
+        return mode;
+    }
+
+    public void setMode(TowerMode mode) {
+        this.mode = mode;
+    }
+
 }

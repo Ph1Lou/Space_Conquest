@@ -5,7 +5,16 @@
         "prefix-chat": "[Team Chat]§r ",
         "leader": "Commandant Équipe %s",
         "choice": "Choix des §bÉquipes",
-        "name": "[Team %s]",
+        "name": "[Team %s] ",
+        "equipment": {
+          "helmet":"Casque Spatial",
+          "leggings": "Combinaison Spatiale",
+          "iron-chest-plate": "Combinaison Spatiale renforcée",
+          "diamond-chest-plate": "Combinaison Spatiale Ultra Renforcée",
+          "leather-chest-plate": "Combinaison Spatiale",
+          "boots": "Bottes Spatiales"
+        },
+        "mining": "L'équipe %s%s§r mine la Crying Obsidian",
         "color": {
           "blue": "Bleu",
           "cyan": "Cyan",
@@ -25,9 +34,29 @@
         }
       },
     "gui": {
+      "beacon": {
+        "name": "Gestion §bTourelles",
+        "modes": {
+          "mine": "Minage",
+          "attack": "Attaque des Joueurs",
+          "conquest": "Conquête",
+          "mine_and_conquest": "Minage et conquête",
+          "mine_and_defend": "Minage et défense",
+          "conquest_and_defend": "Conquête et Défense",
+          "previous": "Précédent §b%d §r»§b %d ",
+          "next": "Suivant §b%d §r»§b %d",
+          "current": "Page §b%d§r/§b%d",
+          "mode_1": "Tourelles prochain niveau (§b%d§f) Coût 10000 fers :  (§b%d en banque)",
+          "mode_2": "Tourelles prochain niveau (§b%d§f) Coût 10000 ors :  (§b%d en banque)",
+          "mode_3": "Tourelles prochain niveau (§b%d§f) Coût 10000 diamants :  (§b%d en banque)"
+        }
+      },
       "team-color": "Couleur Team",
       "ressources": {
         "title": "Vos Ressources"
+      },
+      "rank": {
+        "message": "Crying Obsidian §b%d/%d"
       },
       "start": {
         "name": "Lancer la Partie",
@@ -37,35 +66,35 @@
         "name": "Menu des Améliorations",
         "iron-chest-plate": {
           "name": "§bUpgrade Iron ChestPlate§r Coût 5000 Fers (§b%d en banque)",
-          "message": "Amélioration iron chestplate unlock"
+          "message": "[Space §bConquest§r] Amélioration iron Chestplate débloquée"
         },
         "diamond-chest-plate": {
           "name": "§bAmélioration Diamond ChestPlate§r Coût 5000 Diamants (§b%d en banque)",
-          "message": "Amélioration Diamond Chestplate unlock"
+          "message": "[Space §bConquest§r] Amélioration Diamond Chestplate débloquée"
         },
         "protection-1": {
           "name": "§bAmélioration Protection§r Coût 5000 Ors (§b%d en banque)",
-          "message": "Amélioration protection unlock"
+          "message": "[Space §bConquest§r] Amélioration protection débloquée"
         },
         "protection-2": {
           "name": "§bAmélioration Protection§r Coût 10000 Ors (§b%d en banque)",
-          "message": "Amélioration protection II unlock"
+          "message": "[Space §bConquest§r] Amélioration protection II débloquée"
         },
         "sharpness-1": {
           "name": "§bAmélioration Sharpness§r Coût 5000 Ors (§b%d en banque)",
-          "message": "Amélioration Tranchant débloquée"
+          "message": "[Space §bConquest§r] Amélioration Tranchant débloquée"
         },
         "sharpness-2": {
           "name": "§bAmélioration Sharpness§r Coût 10000 Ors (§b%d en banque)",
-          "message": "Amélioration Tranchant II débloquée"
+          "message": "[Space §bConquest§r] Amélioration Tranchant II débloquée"
         },
         "power-1": {
           "name": "§bAmélioration Power§r Coût 5000 Ors (§b%d en banque)",
-          "message": "Amélioration Power unlock"
+          "message": "[Space §bConquest§r] Amélioration Power débloquée"
         },
         "power-2": {
           "name": "§bAmélioration Power§r Coût 10000 Ors (§b%d en banque)",
-          "message": "Amélioration Power II unlock"
+          "message": "[Space §bConquest§r] Amélioration Power II débloquée"
         }
       },
       "config-menu": {
@@ -157,12 +186,14 @@
     "credit": "Plugin et Concept par §b",
 
     "game": {
-      "bacon": {
+      "beacon": {
         "no-control": "[Space §bConquest§r] Vous n'avez pas le contrôle de cette Balise"
       },
       "message": {
         "sabotage": "[Space §bConquest§r] Votre assistance gravitationnelle a été sabotée",
-        "no-team": "[Space §bConquest] Il n'y a pas d'équipes enregistrées"
+        "no-team": "[Space §bConquest] Il n'y a pas d'équipes enregistrées",
+        "use": "[Space §bConquest§r] Vous venez de saboter les assistance gravitationnelle de votre périmètre",
+        "max": "[Space §bConquest] Le nombre de joueurs max a été atteint"
       },
       "chat": {
         "global": "[Global Chat] %s : %s",

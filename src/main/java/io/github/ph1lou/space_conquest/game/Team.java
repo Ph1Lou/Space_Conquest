@@ -3,6 +3,7 @@ package io.github.ph1lou.space_conquest.game;
 import io.github.ph1lou.space_conquest.enums.ColorTeam;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.trait.Equipment;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -23,7 +24,7 @@ public class Team {
 
     private final org.bukkit.scoreboard.Team team;
     private List<String> scoreBoard = new ArrayList<>();
-    private final Upgrades upgrade= new Upgrades();
+    private final Upgrades upgrade= new Upgrades(this);
     private final UUID uuid;
     private final GameManager game;
     private ColorTeam colorTeam;
@@ -55,16 +56,16 @@ public class Team {
         else {
             this.colorTeam = ColorTeam.values()[i];
         }
-        team.setAllowFriendlyFire(false);
-        team.setOption(org.bukkit.scoreboard.Team.Option.COLLISION_RULE, org.bukkit.scoreboard.Team.OptionStatus.NEVER);
-        setName(name);
+        this.team.setAllowFriendlyFire(false);
+        this.team.setOption(org.bukkit.scoreboard.Team.Option.COLLISION_RULE, org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+        this.setName(name);
 
     }
 
     public void setColorTeam(ColorTeam colorTeam){
         this.colorTeam=colorTeam;
-        team.setPrefix(getColorTeam().getChatColor()+"[Team "+name+"] ");
-        this.bossBar = Bukkit.createBossBar(String.format("L'équipe "+getColorTeam().getChatColor()+"%s§r mine la Crying Obsidian",name), getColorTeam().getBarColor(), BarStyle.SOLID);
+        this.team.setPrefix(getColorTeam().getChatColor()+game.translate("space-conquest.team.name",this.name));
+        this.bossBar = Bukkit.createBossBar(game.translate("space-conquest.team.mining",getColorTeam().getChatColor(),name), getColorTeam().getBarColor(), BarStyle.SOLID);
         for(UUID uuid:this.getMembers()){
             Player player = Bukkit.getPlayer(uuid);
             if(player!=null){
@@ -134,60 +135,63 @@ public class Team {
         player.setGameMode(GameMode.SURVIVAL);
 
         PlayerInventory inventory = player.getInventory();
-        ItemBuilder helmet = new ItemBuilder(getColorTeam().getMaterial());
-        helmet.setDisplayName("Casque Spatial");
+        ItemBuilder helmet = new ItemBuilder(getColorTeam().getMaterial())
+                .setDisplayName(game.translate("space-conquest.team.equipment.helmet"));
         inventory.setHelmet(helmet.build());
 
         ItemBuilder leatherLeggings=new ItemBuilder(Material.LEATHER_LEGGINGS);
-        leatherLeggings.setColor(getColorTeam().getColor());
-        leatherLeggings.setDisplayName("Combinaison Spatiale");
-        leatherLeggings.setUnbreakable(true);
-        leatherLeggings.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
+        leatherLeggings.setColor(getColorTeam().getColor())
+                .setDisplayName(game.translate("space-conquest.team.equipment.leggings"))
+                .setUnbreakable(true)
+                .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,this.upgrade.isProtection());
 
         inventory.setLeggings(leatherLeggings.build());
 
 
-        if(upgrade.getChestPlate()==1){
-            ItemBuilder ironChestPlate = new ItemBuilder(Material.IRON_CHESTPLATE);
-            ironChestPlate.setDisplayName("Combinaison Spatiale renforcée");
-            ironChestPlate.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
-            ironChestPlate.setUnbreakable(true);
-            inventory.setChestplate(ironChestPlate.build());
-        }
-        else if(upgrade.getChestPlate()==2){
-            ItemBuilder diamondChestPlate=new ItemBuilder(Material.DIAMOND_CHESTPLATE);
-
-            diamondChestPlate.setDisplayName("Combinaison Spatiale Ultra Renforcée");
-            diamondChestPlate.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
-            diamondChestPlate.setUnbreakable(true);
-            inventory.setChestplate(diamondChestPlate.build());
-        }
-        else{
-            ItemBuilder leatherChestPlate=new ItemBuilder(Material.LEATHER_CHESTPLATE);
-            leatherChestPlate.setColor(getColorTeam().getColor());
-            leatherChestPlate.setDisplayName("Combinaison Spatiale");
-            leatherChestPlate.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
-            leatherChestPlate.setUnbreakable(true);
-            inventory.setChestplate(leatherChestPlate.build());
-        }
 
 
-        ItemBuilder leatherBoots=new ItemBuilder(Material.LEATHER_BOOTS);
-        leatherBoots.setColor(getColorTeam().getColor());
-        leatherBoots.setDisplayName("Combinaison Spatiale");
-        leatherBoots.addEnchant(Enchantment.PROTECTION_FALL,100);
-        leatherBoots.addItemFlag(ItemFlag.HIDE_ENCHANTS);
-        leatherBoots.setUnbreakable(true);
-        leatherBoots.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
+        inventory.setChestplate(this.getChestPlate());
+
+
+        ItemBuilder leatherBoots=new ItemBuilder(Material.LEATHER_BOOTS)
+                .setColor(getColorTeam().getColor())
+                .setDisplayName(game.translate("space-conquest.team.equipment.boots"))
+                .addEnchant(Enchantment.PROTECTION_FALL,100)
+                .addItemFlag(ItemFlag.HIDE_ENCHANTS)
+                .setUnbreakable(true)
+                .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
         inventory.setBoots(leatherBoots.build());
 
     }
-    public BossBar getBossBar() {
-        return bossBar;
+
+    private ItemStack getChestPlate() {
+
+        if(this.upgrade.getChestPlate()==1){
+            return  new ItemBuilder(Material.IRON_CHESTPLATE)
+                    .setDisplayName(game.translate("space-conquest.team.equipment.iron-chest-plate"))
+                    .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection())
+                    .setUnbreakable(true).build();
+
+        }
+        else if(this.upgrade.getChestPlate()==2){
+            return new ItemBuilder(Material.DIAMOND_CHESTPLATE)
+                    .setDisplayName(game.translate("space-conquest.team.equipment.diamond-chest-plate"))
+                    .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,this.upgrade.isProtection())
+                    .setUnbreakable(true).build();
+
+        }
+        else{
+            return new ItemBuilder(Material.LEATHER_CHESTPLATE)
+                    .setColor(getColorTeam().getColor())
+                    .setDisplayName(game.translate("space-conquest.team.equipment.leather-chest-plate"))
+                    .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,this.upgrade.isProtection())
+                    .setUnbreakable(true).build();
+
+        }
     }
 
-    public NPC getNpc() {
-        return npc;
+    public BossBar getBossBar() {
+        return bossBar;
     }
 
     public void setNpc(NPC npc) {
@@ -209,7 +213,9 @@ public class Team {
                 team.addEntry(player.getName());
                 player.getInventory().setHelmet(new ItemStack(this.getColorTeam().getBanner()));
             }
-            else player.sendMessage("Le nombre de joueurs max a été atteint");
+            else {
+                player.sendMessage(game.translate("space-conquest.game.message.max"));
+            }
 
         }
     }
@@ -237,12 +243,16 @@ public class Team {
 
     public void setName(String name) {
         this.name=name;
-        team.setPrefix(getColorTeam().getChatColor()+"[Team "+name+"] ");
-        this.bossBar = Bukkit.createBossBar(String.format("L'équipe "+getColorTeam().getChatColor()+"%s§r mine la Crying Obsidian",name), getColorTeam().getBarColor(), BarStyle.SOLID);
+        team.setPrefix(getColorTeam().getChatColor()+game.translate("space-conquest.team.name",name));
+        this.bossBar = Bukkit.createBossBar(game.translate("space-conquest.team.mining",getColorTeam().getChatColor(),name), getColorTeam().getBarColor(), BarStyle.SOLID);
         bossBar.setVisible(false);
     }
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public void updateNpcChestPlate() {
+        this.npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.CHESTPLATE, this.getChestPlate());
     }
 }

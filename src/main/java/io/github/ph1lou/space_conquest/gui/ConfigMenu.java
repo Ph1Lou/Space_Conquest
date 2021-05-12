@@ -25,7 +25,7 @@ public class ConfigMenu implements InventoryProvider {
 
 
     public static final SmartInventory INVENTORY = SmartInventory.builder()
-            .id("TeamChoice")
+            .id("ConfigMenu")
             .manager(JavaPlugin.getPlugin(Main.class).getInvManager())
             .provider(new ConfigMenu())
             .size(4, 9)

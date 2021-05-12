@@ -134,6 +134,8 @@ public class ItemBuilder {
         compound.setBoolean(key,value);
 
         nmsItem.setTag(compound);
+
+        this.stack = CraftItemStack.asBukkitCopy(nmsItem);
         return this;
     }
 }
