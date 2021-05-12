@@ -27,9 +27,9 @@ public class Start implements InventoryProvider {
             .manager(JavaPlugin.getPlugin(Main.class).getInvManager())
             .provider(new Start())
             .size(3, 9)
-            .title("Start")
+            .title(JavaPlugin.getPlugin(Main.class).getLangManager().getTranslation("space-conquest.gui.start.name"))
             .closeable(true)
-            .parent(TeamChoice.INVENTORY)
+            .parent(ConfigMenu.INVENTORY)
             .build();
 
     @Override
@@ -65,13 +65,13 @@ public class Start implements InventoryProvider {
                     game.setState(State.GAME);
                 }
                 else {
-                    player.sendMessage("[Space §bConquest] Il n'y a pas d'équipes enregistrées");
+                    player.sendMessage(game.translate("space-conquest.game.message.no-team"));
                 }
             }
 
 
         }));
-        contents.set(1,5,ClickableItem.of((new ItemBuilder(Material.RED_STAINED_GLASS).setDisplayName("Revenir au menu des équipes").build()),e -> TeamChoice.INVENTORY.open(player)));
+        contents.set(1,5,ClickableItem.of((new ItemBuilder(Material.RED_STAINED_GLASS).setDisplayName(game.translate("space-conquest.gui.start.back")).build()),e -> ConfigMenu.INVENTORY.open(player)));
 
         contents.fillBorders(ClickableItem.empty(new ItemStack(Material.ORANGE_STAINED_GLASS)));
     }

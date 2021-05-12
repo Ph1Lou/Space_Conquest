@@ -35,9 +35,10 @@ public class Area {
 
     private final List<Location> blocks = new ArrayList<>();
 
-    public Area(boolean isBase , Location middle){
+    public Area(boolean isBase , Location middle, Material generatorType){
         this.isBase=isBase;
         this.middle=middle;
+        this.generatorType = generatorType;
     }
 
     public List<Location> getBlocks() {
@@ -128,13 +129,8 @@ public class Area {
         this.bonus = bonus;
     }
 
-    @Nullable
     public Material getGeneratorType() {
         return this.generatorType;
-    }
-
-    public void setGeneratorType(Material generatorType) {
-        this.generatorType = generatorType;
     }
 
     public boolean isBase() {
@@ -162,5 +158,9 @@ public class Area {
         return players.stream()
                 .filter(player -> team.getMembers().contains(player.getUniqueId()))
                 .count()/(float)Math.max(1,players.size());
+    }
+
+    public void setGeneratorType(Material generatorType) {
+        this.generatorType=generatorType;
     }
 }

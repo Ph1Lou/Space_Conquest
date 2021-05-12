@@ -23,18 +23,28 @@ public class Boutique implements InventoryProvider {
             .manager(JavaPlugin.getPlugin(Main.class).getInvManager())
             .provider(new Boutique())
             .size(4, 9)
-            .title("Boutique")
+            .title(JavaPlugin.getPlugin(Main.class).getLangManager().getTranslation("space-conquest.gui.boutique.title"))
             .closeable(true)
-            .parent(GuiShop.INVENTORY)
+            .parent(Ressources.INVENTORY)
             .build();
 
     @Override
     public void init(Player player, InventoryContents contents) {
 
-        contents.set(0,0,ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName("Vos Ressources").build()),e -> GuiShop.INVENTORY.open(player)));
-        contents.set(0,2,ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName("Boutique").build()),e -> Boutique.INVENTORY.open(player)));
-        contents.set(0,4,ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName("Améliorations").build()),e -> Upgrade.INVENTORY.open(player)));
-        contents.set(0,6,ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName("Objets Spéciaux").build()),e -> SpecialArtefact.INVENTORY.open(player)));
+        GameManager game = JavaPlugin.getPlugin(Main.class).getCurrentGame();
+
+        contents.set(0,0,
+                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.ressources.title"))
+                        .build()),e -> Ressources.INVENTORY.open(player)));
+        contents.set(0,2,
+                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.boutique.title"))
+                        .build()),e -> Boutique.INVENTORY.open(player)));
+        contents.set(0,4,
+                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.upgrade.name"))
+                        .build()),e -> Upgrade.INVENTORY.open(player)));
+        contents.set(0,6,
+                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.special-artefact.title"))
+                        .build()),e -> SpecialArtefact.INVENTORY.open(player)));
 
 
 
@@ -56,7 +66,7 @@ public class Boutique implements InventoryProvider {
 
         ItemStack tempWoodenSword = woodenSword.build().clone();
 
-        contents.set(1,1, ClickableItem.of((woodenSword.setDisplayName(String.format("Coût 500 Fers (§b%d en banque)",team.getResource().getOrDefault(Material.IRON_BLOCK,0))).build()), e -> {
+        contents.set(1,1, ClickableItem.of((woodenSword.setDisplayName(game.translate("space-conquest.gui.boutique.wooden-sword",team.getResource().getOrDefault(Material.IRON_BLOCK,0))).build()), e -> {
             if(team.getResource().containsKey(Material.IRON_BLOCK)){
                 if(team.getResource().get(Material.IRON_BLOCK)>=500){
                     player.getInventory().addItem(tempWoodenSword);
@@ -71,7 +81,7 @@ public class Boutique implements InventoryProvider {
 
         ItemStack temp = ironSword.build().clone();
 
-        contents.set(1,3, ClickableItem.of((ironSword.setDisplayName(String.format("Coût 1500 Fers (§b%d en banque)",team.getResource().getOrDefault(Material.IRON_BLOCK,0))).build()), e -> {
+        contents.set(1,3, ClickableItem.of((ironSword.setDisplayName(game.translate("space-conquest.gui.boutique.iron-sword",team.getResource().getOrDefault(Material.IRON_BLOCK,0))).build()), e -> {
             if(team.getResource().containsKey(Material.IRON_BLOCK)){
                 if(team.getResource().get(Material.IRON_BLOCK)>=1500){
                     player.getInventory().addItem(temp);
@@ -86,7 +96,7 @@ public class Boutique implements InventoryProvider {
 
         ItemStack tempSword = diamondSword.build().clone();
 
-        contents.set(1,5, ClickableItem.of((diamondSword.setDisplayName(String.format("Coût 3000 Diamants (§b%d en banque)",team.getResource().getOrDefault(Material.DIAMOND_BLOCK,0))).build()), e -> {
+        contents.set(1,5, ClickableItem.of((diamondSword.setDisplayName(game.translate("space-conquest.gui.boutique.diamond-sword",team.getResource().getOrDefault(Material.DIAMOND_BLOCK,0))).build()), e -> {
             if(team.getResource().containsKey(Material.DIAMOND_BLOCK)){
                 if(team.getResource().get(Material.DIAMOND_BLOCK)>=3000){
                     player.getInventory().addItem(tempSword);
@@ -102,7 +112,7 @@ public class Boutique implements InventoryProvider {
 
         ItemStack tempBow = bow.build().clone();
 
-        contents.set(1,7, ClickableItem.of((bow.setDisplayName(String.format("Coût 2000 Ors (§b%d en banque)",team.getResource().getOrDefault(Material.GOLD_BLOCK,0))).build()), e -> {
+        contents.set(1,7, ClickableItem.of((bow.setDisplayName(game.translate("space-conquest.gui.boutique.bow",team.getResource().getOrDefault(Material.GOLD_BLOCK,0))).build()), e -> {
             if(team.getResource().containsKey(Material.GOLD_BLOCK)){
                 if(team.getResource().get(Material.GOLD_BLOCK)>=2000){
                     player.getInventory().addItem(tempBow);
@@ -113,7 +123,7 @@ public class Boutique implements InventoryProvider {
 
         ItemBuilder arrow = new ItemBuilder(Material.ARROW);
         arrow.setAmount(16);
-        arrow.setDisplayName(String.format("Coût 500 Diamants (§b%d en banque)",team.getResource().getOrDefault(Material.DIAMOND_BLOCK,0)));
+        arrow.setDisplayName(game.translate("space-conquest.gui.boutique.arrow",team.getResource().getOrDefault(Material.DIAMOND_BLOCK,0)));
         contents.set(3,1, ClickableItem.of((arrow.build()), e -> {
             if(team.getResource().containsKey(Material.DIAMOND_BLOCK)){
                 if(team.getResource().get(Material.DIAMOND_BLOCK)>=500){
@@ -125,7 +135,7 @@ public class Boutique implements InventoryProvider {
 
         ItemBuilder wool = new ItemBuilder(team.getColorTeam().getConstructionMaterial());
         wool.setAmount(32);
-        wool.setDisplayName(String.format("Coût 64 Fers (§b%d en banque)",team.getResource().getOrDefault(Material.IRON_BLOCK,0)));
+        wool.setDisplayName(game.translate("space-conquest.gui.boutique.wool",team.getResource().getOrDefault(Material.IRON_BLOCK,0)));
 
 
         contents.set(3,3, ClickableItem.of((wool.build()), e -> {
@@ -138,7 +148,7 @@ public class Boutique implements InventoryProvider {
         }));
 
         ItemBuilder shear = new ItemBuilder(Material.SHEARS);
-        shear.setDisplayName(String.format("Coût 200 Fers (§b%d en banque)",team.getResource().getOrDefault(Material.IRON_BLOCK,0)));
+        shear.setDisplayName(game.translate("space-conquest.gui.boutique.shear",team.getResource().getOrDefault(Material.IRON_BLOCK,0)));
 
 
         contents.set(3,5, ClickableItem.of((shear.build()), e -> {

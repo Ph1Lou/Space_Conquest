@@ -32,12 +32,12 @@ public class TeamChat implements CommandExecutor {
         Team team = game.getTeam(player);
 
         if(team==null) {
-            player.sendMessage("space-conquest.team.no-team");
+            player.sendMessage(game.translate("space-conquest.team.no-team"));
             return true;
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append(team.getColorTeam().getChatColor()).append("space-conquest.team.prefix-chat");
+        sb.append(team.getColorTeam().getChatColor()).append(game.translate("space-conquest.team.prefix-chat"));
         if(team.getFounder().equals(player.getUniqueId())){
             sb.append("⭐ ");
         }

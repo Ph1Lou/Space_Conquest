@@ -3,6 +3,7 @@ package io.github.ph1lou.space_conquest.events;
 import io.github.ph1lou.space_conquest.game.Team;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class WinEvent extends Event {
 
@@ -18,7 +19,7 @@ public class WinEvent extends Event {
         this.team=team;
     }
 
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 

@@ -3,13 +3,14 @@ package io.github.ph1lou.space_conquest.listeners;
 import io.github.ph1lou.space_conquest.game.Area;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
-import io.github.ph1lou.space_conquest.gui.GuiShop;
+import io.github.ph1lou.space_conquest.gui.Ressources;
 import io.github.ph1lou.space_conquest.gui.Rank;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Lightable;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,7 +25,6 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
@@ -32,12 +32,12 @@ import org.bukkit.util.Vector;
 
 import java.util.UUID;
 
-public class Capture implements Listener {
+public class GameListener implements Listener {
 
     final GameManager game;
 
 
-    public Capture(GameManager game){
+    public GameListener(GameManager game){
         this.game=game;
 
     }
@@ -81,7 +81,7 @@ public class Capture implements Listener {
     public void onEntityInteract(NPCRightClickEvent event) {
         Player player = event.getClicker();
         player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 10);
-        GuiShop.INVENTORY.open(player);
+        Ressources.INVENTORY.open(player);
     }
 
     @EventHandler
@@ -137,18 +137,20 @@ public class Capture implements Listener {
 
         if(itemStack==null) return;
 
-        ItemMeta itemMeta = itemStack.getItemMeta();
+        net.minecraft.server.v1_16_R3.ItemStack item = CraftItemStack.asNMSCopy(itemStack);
 
-        if(itemMeta==null) return;
+        if(item.getTag()==null){
+            return;
+        }
 
-        if(itemMeta.getDisplayName().equals("Propulsion")){
+        if(item.getTag().getBoolean("propulser")){
 
             player.setVelocity(new Vector(0,8,0));
             player.getInventory().removeItem(itemStack);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,300,0,false,false));
             event.setCancelled(true);
         }
-        else if(itemMeta.getDisplayName().equals("§bBloc Anti-Gravité")){
+        else if(item.getTag().getBoolean("no-gravity")){
 
             if(event.getAction().equals(Action.RIGHT_CLICK_AIR)){
                 int i=6;
@@ -173,7 +175,7 @@ public class Capture implements Listener {
 
         }
 
-        else if(itemMeta.getDisplayName().equals("Levitation")){
+        else if(item.getTag().getBoolean("levitation")){
 
             if(itemStack.getAmount()==1){
                 player.getInventory().removeItem(itemStack);
@@ -183,7 +185,7 @@ public class Capture implements Listener {
 
             for(Player player1:Bukkit.getOnlinePlayers()){
                 if(player1.getLocation().distanceSquared(player.getLocation())<=625){
-                    if(!player1.equals(player1)){
+                    if(!player1.equals(player)){
                         player1.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,200,0,false,false));
                         player1.sendMessage("space-conquest.game.message.sabotage");
                         player1.playSound(player.getLocation(),Sound.BLOCK_GLASS_BREAK,10,10);
@@ -193,7 +195,7 @@ public class Capture implements Listener {
             }
             event.setCancelled(true);
         }
-        else if(itemMeta.getDisplayName().equals("Explosion Centrale")){
+        else if(item.getTag().getBoolean("explosion")){
 
             if(itemStack.getAmount()==1){
                 player.getInventory().removeItem(itemStack);
@@ -219,17 +221,17 @@ public class Capture implements Listener {
             }
             event.setCancelled(true);
         }
-        else if(itemMeta.getDisplayName().equals("Boule de Feu")){
+        else if(item.getTag().getBoolean("fire-charge")){
 
             if(itemStack.getAmount()==1){
                 player.getInventory().removeItem(itemStack);
             }
             else itemStack.setAmount(itemStack.getAmount()-1);
             Action action = event.getAction();
-            if ((action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) && player.getInventory().getItemInHand().getType() == Material.FIRE_CHARGE) {
+            if ((action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) && player.getInventory().getItemInMainHand().getType() == Material.FIRE_CHARGE) {
                 Location eye = player.getEyeLocation();
                 Location loc = eye.add(eye.getDirection().multiply(1.2));
-                Fireball fireball = (Fireball)loc.getWorld().spawnEntity(loc, EntityType.FIREBALL);
+                Fireball fireball = (Fireball)player.getWorld().spawnEntity(loc, EntityType.FIREBALL);
                 fireball.setVelocity(loc.getDirection().normalize().multiply(2));
                 fireball.setShooter(player);
                 player.playSound(player.getLocation(), Sound.ENTITY_ARROW_SHOOT, 10.0f, 1.0f);
@@ -260,7 +262,7 @@ public class Capture implements Listener {
         for(Area area:game.getAreas()){
             if(area.getMiddle().equals(location)){
                 if(area.getOwnerTeam()!=null && area.getOwnerTeam().equals(game.getTeam(player1))){
-                    GuiShop.INVENTORY.open(player1);
+                    Ressources.INVENTORY.open(player1);
                 }
                 else if(area.getGeneratorType().equals(Material.CRYING_OBSIDIAN)){
                     Rank.INVENTORY.open(player1);
@@ -270,13 +272,12 @@ public class Capture implements Listener {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
 
         if (event.getBlock().getType() == Material.TNT) {
             event.getBlock().getWorld().getBlockAt(event.getBlock().getLocation()).setType(Material.AIR);
-            TNTPrimed tnt = (TNTPrimed)event.getBlock().getWorld().spawn(event.getBlock().getLocation(), (Class)TNTPrimed.class);
+            TNTPrimed tnt = event.getBlock().getWorld().spawn(event.getBlock().getLocation(), TNTPrimed.class);
             tnt.setFuseTicks(40);
         }
     }

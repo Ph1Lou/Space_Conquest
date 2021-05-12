@@ -4,7 +4,7 @@ import fr.mrmicky.fastboard.FastBoard;
 import io.github.ph1lou.space_conquest.enums.State;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
-import io.github.ph1lou.space_conquest.gui.TeamChoice;
+import io.github.ph1lou.space_conquest.gui.ConfigMenu;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -38,7 +38,7 @@ public class LobbyListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event){
 
         Player player = event.getPlayer();
-        player.setPlayerListHeaderFooter(game.translate("space-conquest.title"),game.translate("space-conquest.credit")+"§bPh1Lou");
+        player.setPlayerListHeaderFooter(game.translate("space-conquest.title"),game.translate("space-conquest.credit")+"Ph1Lou");
 
         if(game.getTeam(player)!=null || game.isState(State.LOBBY)){
             FastBoard fastboard = new FastBoard(player);
@@ -70,7 +70,7 @@ public class LobbyListener implements Listener {
         if(event.getCurrentItem()==null) return;
         if(event.getCurrentItem().getType().equals(Material.WHITE_BANNER)){
             Player player = (Player) event.getView().getPlayer();
-            TeamChoice.INVENTORY.open(player);
+            ConfigMenu.INVENTORY.open(player);
             event.setCancelled(true);
             player.getInventory().setHeldItemSlot((1+player.getInventory().getHeldItemSlot())%9);
         }
@@ -104,7 +104,7 @@ public class LobbyListener implements Listener {
 
         if(event.getItem()==null) return;
         if(event.getItem().getType().equals(Material.WHITE_BANNER)){
-            TeamChoice.INVENTORY.open(event.getPlayer());
+            ConfigMenu.INVENTORY.open(event.getPlayer());
             event.setCancelled(true);
             event.getPlayer().getInventory().setHeldItemSlot((1+event.getPlayer().getInventory().getHeldItemSlot())%9);
         }

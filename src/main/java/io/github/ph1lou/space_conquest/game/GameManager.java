@@ -4,7 +4,7 @@ import fr.mrmicky.fastboard.FastBoard;
 import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.MapLoader;
 import io.github.ph1lou.space_conquest.enums.State;
-import io.github.ph1lou.space_conquest.listeners.Capture;
+import io.github.ph1lou.space_conquest.listeners.GameListener;
 import io.github.ph1lou.space_conquest.listeners.LobbyListener;
 import io.github.ph1lou.space_conquest.listeners.PlayerListener;
 import io.github.ph1lou.space_conquest.tasks.Lobby;
@@ -28,7 +28,7 @@ public class GameManager {
     private int zoneNumber =10;
     private final Main main;
     private int teamSize=4;
-    private Capture capture;
+    private GameListener gameListener;
     private final LobbyListener lobbyListener;
     private PlayerListener playerListener;
     private State state = State.LOBBY;
@@ -194,9 +194,9 @@ public class GameManager {
         this.world.setDifficulty(Difficulty.PEACEFUL);
         this.world.setTime(19000);
         this.mapLoader.generateTeamCamp();
-        this.capture=new Capture(this);
+        this.gameListener =new GameListener(this);
         this.playerListener=new PlayerListener(this);
-        Bukkit.getPluginManager().registerEvents(this.capture,this.main);
+        Bukkit.getPluginManager().registerEvents(this.gameListener,this.main);
         Bukkit.getPluginManager().registerEvents(this.playerListener,main);
     }
 
@@ -225,7 +225,7 @@ public class GameManager {
         this.setState(State.END);
         HandlerList.unregisterAll(this.lobbyListener);
         HandlerList.unregisterAll(this.playerListener);
-        HandlerList.unregisterAll(this.capture);
+        HandlerList.unregisterAll(this.gameListener);
         this.main.setCurrentGame(new GameManager(this.main));
 
         for (Player player : Bukkit.getOnlinePlayers()) {

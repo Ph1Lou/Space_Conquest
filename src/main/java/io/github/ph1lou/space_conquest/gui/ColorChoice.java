@@ -25,7 +25,7 @@ public class ColorChoice implements InventoryProvider {
             .manager(JavaPlugin.getPlugin(Main.class).getInvManager())
             .provider(new ColorChoice())
             .size(3, 9)
-            .title("Couleur Team")
+            .title(JavaPlugin.getPlugin(Main.class).getLangManager().getTranslation("space-conquest.gui.team-color"))
             .closeable(true)
             .build();
 
@@ -55,11 +55,11 @@ public class ColorChoice implements InventoryProvider {
 
             ItemBuilder banner = new ItemBuilder(colorTeam.getConstructionMaterial());
 
-            banner.setDisplayName(colorTeam.getName());
+            banner.setDisplayName(game.translate(colorTeam.getName()));
 
             contents.set(j/9,j%9,ClickableItem.of((banner.build()),e -> {
                         team.setColorTeam(colorTeam);
-                        TeamChoice.INVENTORY.open(player);
+                        ConfigMenu.INVENTORY.open(player);
             } ));
             j++;
         }

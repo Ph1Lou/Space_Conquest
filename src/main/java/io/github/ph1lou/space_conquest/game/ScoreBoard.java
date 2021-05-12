@@ -8,7 +8,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ScoreBoard {
@@ -60,7 +59,7 @@ public class ScoreBoard {
 
         for(String line:scoreBoard){
             line=line.replace("&team&",team.getName());
-            line=line.replace("&color&",team.getColorTeam().getName());
+            line=line.replace("&color&",game.translate(team.getColorTeam().getName()));
             scoreBoardResult.add(line);
         }
 
@@ -98,7 +97,8 @@ public class ScoreBoard {
             }
             else {
                 updatePlayerGameBoard(fastBoard);
-                fastBoard.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.format("Crying Obsidian §b%d/%d",game.getTeam(fastBoard.getPlayer()).getResource().getOrDefault(Material.CRYING_OBSIDIAN,0),game.getObjective())));
+                Team team =game.getTeam(fastBoard.getPlayer());
+                fastBoard.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.format("Crying Obsidian §b%d/%d",team==null?0:team.getResource().getOrDefault(Material.CRYING_OBSIDIAN,0),game.getObjective())));
             }
         }
     }

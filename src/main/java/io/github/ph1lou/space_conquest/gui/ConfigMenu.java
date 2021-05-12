@@ -17,20 +17,19 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class TeamChoice implements InventoryProvider {
+public class ConfigMenu implements InventoryProvider {
 
 
 
     public static final SmartInventory INVENTORY = SmartInventory.builder()
             .id("TeamChoice")
             .manager(JavaPlugin.getPlugin(Main.class).getInvManager())
-            .provider(new TeamChoice())
+            .provider(new ConfigMenu())
             .size(4, 9)
-            .title("Team")
+            .title(JavaPlugin.getPlugin(Main.class).getLangManager().getTranslation("space-conquest.gui.config-menu.name"))
             .closeable(true)
             .build();
 
@@ -41,7 +40,7 @@ public class TeamChoice implements InventoryProvider {
         GameManager game = main.getCurrentGame();
 
         ItemBuilder itemStack = new ItemBuilder(Material.CREEPER_HEAD);
-        itemStack.setDisplayName("Créez une Team");
+        itemStack.setDisplayName(game.translate("space-conquest.gui.config-menu.create"));
 
         contents.set(0,0,ClickableItem.of((itemStack.build()),e -> new AnvilGUI.Builder()
                         .onComplete((player2, text) -> {
@@ -57,23 +56,23 @@ public class TeamChoice implements InventoryProvider {
                                     team.setFounder(player2.getUniqueId());
                                     game.getTeams().add(team);
                                 }
-                                else player2.sendMessage("Le nombre d'équipes maximums a été crée");
+                                else player2.sendMessage(game.translate("space-conquest.gui.config-menu.max"));
                             }
-                            else player2.sendMessage("La partie est déjà lancée");
+                            else player2.sendMessage(game.translate("space-conquest.gui.config-menu.already-launch"));
                             return AnvilGUI.Response.close();
                         })
-                        .title("Entrez le nom de votre équipe")
+                        .title(game.translate("space-conquest.gui.config-menu.input-title"))
                         .item(new ItemStack(Material.GREEN_CONCRETE_POWDER))
                         .plugin(main)
                         .text(" ")
                         .onClose(player1 -> Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
                             if(game.isState(State.LOBBY)){
-                                TeamChoice.INVENTORY.open(player1);
+                                ConfigMenu.INVENTORY.open(player1);
                             }
                         }))
                         .open(player)
         ));
-        contents.set(0,8,ClickableItem.of((new ItemBuilder(Material.BARRIER).setDisplayName("Quitter son équipe").build()),e ->{
+        contents.set(0,8,ClickableItem.of((new ItemBuilder(Material.BARRIER).setDisplayName(game.translate("space-conquest.gui.config-menu.leave")).build()),e ->{
             Team team = game.getTeam(player);
             if(team!=null){
                 team.removePlayer(player);
@@ -105,7 +104,7 @@ public class TeamChoice implements InventoryProvider {
                 }
             }
             banner.setLore(lore);
-            banner.setDisplayName(team.getColorTeam().getChatColor()+"[Team "+team.getName()+"]");
+            banner.setDisplayName(team.getColorTeam().getChatColor()+game.translate("space-conquest.team.name",team.getName()));
 
 
             contents.set(j/9+1,j%9,ClickableItem.of((banner.build()),e -> team.addPlayer(player)));
@@ -123,9 +122,8 @@ public class TeamChoice implements InventoryProvider {
 
             ItemBuilder teamSize = new ItemBuilder(Material.STONE_BUTTON);
 
-            teamSize.setDisplayName(String.format("Taille des équipes §b%d",game.getTeamSize()));
-            teamSize.setLore(Arrays.asList("§fClique-§bGauche§f >> +",
-                    "§fClique-§bDroit§f >> -"));
+            teamSize.setDisplayName(game.translate("space-conquest.gui.config-menu.size",game.getTeamSize()));
+            teamSize.setLore(game.translateArray("space-conquest.gui.config-menu.lores-1"));
 
             contents.set(0,1,ClickableItem.of((teamSize.build()),e -> {
                 if(e.isRightClick()){
@@ -139,9 +137,8 @@ public class TeamChoice implements InventoryProvider {
 
             }));
 
-            teamSize.setDisplayName(String.format("Taille Base Centrale §b%d",game.getCenterSize()));
-            teamSize.setLore(Arrays.asList("§fClique-§bGauche§f >> +2",
-                    "§fClique-§bDroit§f >> -2"));
+            teamSize.setDisplayName(game.translate("space-conquest.gui.config-menu.size-middle",game.getCenterSize()));
+            teamSize.setLore(game.translateArray("space-conquest.gui.config-menu.lores-2"));
 
             contents.set(3,8,ClickableItem.of((teamSize.build()),e -> {
                 if(e.isRightClick()){
@@ -157,9 +154,8 @@ public class TeamChoice implements InventoryProvider {
 
             ItemBuilder baseNumber = new ItemBuilder(Material.STONE_BUTTON);
 
-            baseNumber.setDisplayName(String.format("Nombre de bases de fers §b%d",game.getZoneNumber()));
-            baseNumber.setLore(Arrays.asList("§fClique-§bGauche§f >> +",
-                    "§fClique-§bDroit§f >> -"));
+            baseNumber.setDisplayName(game.translate("space-conquest.gui.config-menu.iron-area",game.getZoneNumber()));
+            baseNumber.setLore(game.translateArray("space-conquest.gui.config-menu.lores-1"));
 
             contents.set(0,2,ClickableItem.of((baseNumber.build()),e -> {
                 if(e.isRightClick()){
@@ -176,9 +172,8 @@ public class TeamChoice implements InventoryProvider {
 
             ItemBuilder playerMaxSize = new ItemBuilder(Material.STONE_BUTTON);
 
-            playerMaxSize.setDisplayName(String.format("Joueurs Max §b%d",game.getPlayerMax()));
-            playerMaxSize.setLore(Arrays.asList("§fClique-§bGauche§f >> +",
-                    "§fClique-§bDroit§f >> -"));
+            playerMaxSize.setDisplayName(game.translate("space-conquest.gui.config-menu.max-player",game.getPlayerMax()));
+            playerMaxSize.setLore(game.translateArray("space-conquest.gui.config-menu.lores-1"));
 
             contents.set(0,3,ClickableItem.of((playerMaxSize.build()),e -> {
                 if(e.isRightClick()){
@@ -194,9 +189,8 @@ public class TeamChoice implements InventoryProvider {
 
             ItemBuilder teamNumber = new ItemBuilder(Material.STONE_BUTTON);
 
-            teamNumber.setDisplayName(String.format("Nombre d'équipe Max §b%d",game.getTeamNumber()));
-            teamNumber.setLore(Arrays.asList("§fClique-§bGauche§f >> +",
-                    "§fClique-§bDroit§f >> -"));
+            teamNumber.setDisplayName(game.translate("space-conquest.gui.config-menu.team-size",game.getTeamNumber()));
+            teamNumber.setLore(game.translateArray("space-conquest.gui.config-menu.lores-1"));
 
             contents.set(0,5,ClickableItem.of((teamNumber.build()),e -> {
                 if(e.isRightClick()){
@@ -213,16 +207,15 @@ public class TeamChoice implements InventoryProvider {
 
             ItemBuilder isSingle = new ItemBuilder(game.isSingleColor()?Material.GREEN_CARPET:Material.RED_CARPET);
 
-            isSingle.setDisplayName("Couleur unique");
+            isSingle.setDisplayName(game.translate("space-conquest.gui.config-menu.single-color"));
             isSingle.setLore(game.isSingleColor()?"§2Activé":"§4Désactivé");
 
             contents.set(0, 6, ClickableItem.of((isSingle.build()),e -> game.setSingleColor(!game.isSingleColor())));
 
             ItemBuilder objective = new ItemBuilder(Material.STONE_BUTTON);
 
-            objective.setDisplayName(String.format("Crying Obsidian a récolté §b%d",game.getObjective()));
-            objective.setLore(Arrays.asList("§fClique-§bGauche§f >> +",
-                    "§fClique-§bDroit§f >> -"));
+            objective.setDisplayName(game.translate("space-conquest.gui.config-menu.crying-obsidian-goal",game.getObjective()));
+            objective.setLore(game.translateArray("space-conquest.gui.config-menu.lores-1"));
 
             contents.set(0,7,ClickableItem.of((objective.build()),e -> {
                 if(e.isRightClick()){
@@ -237,20 +230,20 @@ public class TeamChoice implements InventoryProvider {
             }));
             ItemBuilder gameName = new ItemBuilder(Material.ACACIA_SIGN);
 
-            gameName.setDisplayName("Changez le nom de la Partie");
+            gameName.setDisplayName(game.translate("space-conquest.gui.config-menu.change-game-name"));
 
             contents.set(0, 4, ClickableItem.of((gameName.build()), e -> new AnvilGUI.Builder()
                     .onComplete((player2, text) -> {
                         game.setGameName(text);
                         return AnvilGUI.Response.close();
                     })
-                    .title("Changez le nom de la Partie")
+                    .title(game.translate("space-conquest.gui.config-menu.change-game-name"))
                     .item(new ItemStack(Material.GREEN_CONCRETE_POWDER))
                     .plugin(main)
                     .text(game.getGameName())
                     .onClose(player1 -> Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
                         if(game.isState(State.LOBBY)){
-                            TeamChoice.INVENTORY.open(player1);
+                            ConfigMenu.INVENTORY.open(player1);
                         }
                     }))
                     .open(player)));
@@ -274,7 +267,7 @@ public class TeamChoice implements InventoryProvider {
 
         if(team!=null && team.getFounder().equals(player.getUniqueId())){
             contents.set(3,6,ClickableItem.of((new ItemBuilder(Material.ACACIA_SIGN).
-                    setDisplayName("Renommez votre équipe").
+                    setDisplayName(game.translate("space-conquest.gui.config-menu.rename-team")).
                     build()),e -> new AnvilGUI.Builder()
                             .onComplete((player2, text) -> {
                                 if(text.length()>0 && text.charAt(0)==' '){
@@ -283,19 +276,19 @@ public class TeamChoice implements InventoryProvider {
                                 team.setName(text.substring(0,Math.min(text.length(),16)));
                                 return AnvilGUI.Response.close();
                             })
-                            .title("Renommez votre équipe")
+                            .title(game.translate("space-conquest.gui.config-menu.rename-team"))
                             .item(new ItemStack(Material.GREEN_CONCRETE_POWDER))
                             .text(team.getName())
                             .plugin(main)
                             .onClose(player1 -> Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
                                 if(game.isState(State.LOBBY)){
-                                    TeamChoice.INVENTORY.open(player1);
+                                    ConfigMenu.INVENTORY.open(player1);
                                 }
                             }))
                             .open(player)));
 
             contents.set(3,2,ClickableItem.of((new ItemBuilder(team.getColorTeam().getConstructionMaterial()).
-                    setDisplayName("Changez votre couleur").
+                    setDisplayName(game.translate("space-conquest.gui.config-menu.change-color")).
                     build()),e -> ColorChoice.INVENTORY.open(player)));
 
         }

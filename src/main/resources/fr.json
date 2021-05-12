@@ -4,17 +4,165 @@
         "no-team": "[Space §bConquest§r] Vous n'êtes dans aucune équipe",
         "prefix-chat": "[Team Chat]§r ",
         "leader": "Commandant Équipe %s",
-        "choice": "Choix des §bÉquipes"
+        "choice": "Choix des §bÉquipes",
+        "name": "[Team %s]",
+        "color": {
+          "blue": "Bleu",
+          "cyan": "Cyan",
+          "light_blue": "Bleu Clair",
+          "green": "Vert",
+          "lime": "Lime",
+          "red": "Rouge",
+          "magenta": "Magenta",
+          "pink": "Rose",
+          "purple": "Violet",
+          "yellow": "Jaune",
+          "orange": "Orange",
+          "brown": "Marron",
+          "black": "Noir",
+          "gray": "Gris",
+          "light_gray": "Gris Clair"
+        }
       },
+    "gui": {
+      "team-color": "Couleur Team",
+      "ressources": {
+        "title": "Vos Ressources"
+      },
+      "start": {
+        "name": "Lancer la Partie",
+        "back": "Revenir au menu des équipes"
+      },
+      "upgrade": {
+        "name": "Menu des Améliorations",
+        "iron-chest-plate": {
+          "name": "§bUpgrade Iron ChestPlate§r Coût 5000 Fers (§b%d en banque)",
+          "message": "Amélioration iron chestplate unlock"
+        },
+        "diamond-chest-plate": {
+          "name": "§bAmélioration Diamond ChestPlate§r Coût 5000 Diamants (§b%d en banque)",
+          "message": "Amélioration Diamond Chestplate unlock"
+        },
+        "protection-1": {
+          "name": "§bAmélioration Protection§r Coût 5000 Ors (§b%d en banque)",
+          "message": "Amélioration protection unlock"
+        },
+        "protection-2": {
+          "name": "§bAmélioration Protection§r Coût 10000 Ors (§b%d en banque)",
+          "message": "Amélioration protection II unlock"
+        },
+        "sharpness-1": {
+          "name": "§bAmélioration Sharpness§r Coût 5000 Ors (§b%d en banque)",
+          "message": "Amélioration Tranchant débloquée"
+        },
+        "sharpness-2": {
+          "name": "§bAmélioration Sharpness§r Coût 10000 Ors (§b%d en banque)",
+          "message": "Amélioration Tranchant II débloquée"
+        },
+        "power-1": {
+          "name": "§bAmélioration Power§r Coût 5000 Ors (§b%d en banque)",
+          "message": "Amélioration Power unlock"
+        },
+        "power-2": {
+          "name": "§bAmélioration Power§r Coût 10000 Ors (§b%d en banque)",
+          "message": "Amélioration Power II unlock"
+        }
+      },
+      "config-menu": {
+        "name": "Menu de Configuration",
+        "create": "Créez une Team",
+        "max": "Le nombre d'équipes maximum a été crée",
+        "already-launch": "La partie est déjà lancée",
+        "input-title": "Entrez le nom de votre équipe",
+        "leave": "Quitter son équipe",
+        "size": "Taille des équipes §b%d",
+        "lores-1": [
+          "§fClique-§bGauche§f >> +",
+          "§fClique-§bDroit§f >> -"
+        ],
+        "lores-2": [
+          "§fClique-§bGauche§f >> +2",
+          "§fClique-§bDroit§f >> -2"
+        ],
+        "size-middle": "Taille Base Centrale §b%d",
+        "iron-area": "Nombre de bases de fers §b%d",
+        "max-player": "Joueurs Max §b%d",
+        "team-size": "Nombre d'équipe Max §b%d",
+        "single-color": "Couleur unique",
+        "crying-obsidian-goal": "Crying Obsidian a récolté §b%d",
+        "change-game-name": "Changez le nom de la Partie",
+        "rename-team": "Renommez votre équipe",
+        "change-color": "Changez votre couleur"
+      },
+      "boutique": {
+        "title": "Boutique",
+        "shear": "Coût 200 Fers (§b%d en banque)",
+        "wool": "Coût 64 Fers (§b%d en banque)",
+        "arrow": "Coût 500 Diamants (§b%d en banque)",
+        "bow": "Coût 2000 Ors (§b%d en banque)",
+        "diamond-sword": "Coût 3000 Diamants (§b%d en banque)",
+        "iron-sword": "Coût 1500 Fers (§b%d en banque)",
+        "wooden-sword": "Coût 500 Fers (§b%d en banque)"
+      },
+      "special-artefact": {
+        "title": "Objets Spéciaux",
+        "tnt": "§bTNT§r Coût 150 Emeraudes (§b%d en banque)",
+        "propulser": {
+          "name": "§bPropulseur§r Coût 300 Emeraudes (§b%d en banque)",
+          "description": [
+            "Propulse la personne qui l'utilise",
+            "puis donne l'effet slow falling",
+            "pendant 15 secondes"
+          ],
+          "item-name": "§bPropulsion"
+        },
+        "levitation": {
+          "name": "§bLévitation§r Coût 300 Emeraudes (§b%d en banque)",
+          "description": [
+            "Donne l'effet Lévitation à toutes les personnes",
+            "situées à moins de 25 blocks",
+            "utilisateur de l'objet non compris"
+          ],
+          "item-name": "§bLéviation"
+        },
+        "knockback-stick":  {
+          "name": "§bBaton de Recul§r Coût 3000 Emeraudes (§b%d en banque)",
+          "item-name": "§bBaton de Recul"
+        },
+        "bridge": {
+          "name": "§bPont Automatique§r Coût 1000 Fers (§b%d en banque)",
+          "item-name": "§bPont Automatique"
+        },
+        "explosion": {
+          "name": "§bExplosion du centre§r Coût 500 Emeraudes (§b%d en banque)",
+          "item-name": "§bExplosion Centrale"
+        },
+        "fire-charge": {
+          "name": "§bBoule de Feu§r Coût 500 Emeraudes (§b%d en banque)",
+          "item-name": "§bBoule de Feu"
+        },
+        "no-gravity": {
+          "name": "§bBloc Anti-Gravité§r Coût 1000 Fers (§b%d en banque)",
+          "item-name": "§bBloc Anti-Gravité"
+        },
+        "permutation": {
+          "name": "§bFlèche de permutation§r Coût 500 Emeraudes (§b%d en banque)",
+          "item-name": "§bFlèche de permutation"
+        }
+
+      }
+
+    },
     "title": "Space §bConquest",
-    "credit": "Plugin et Concept par ",
+    "credit": "Plugin et Concept par §b",
 
     "game": {
       "bacon": {
         "no-control": "[Space §bConquest§r] Vous n'avez pas le contrôle de cette Balise"
       },
       "message": {
-        "sabotage": "[Space §bConquest§r] Votre assistance gravitationnelle a été sabotée"
+        "sabotage": "[Space §bConquest§r] Votre assistance gravitationnelle a été sabotée",
+        "no-team": "[Space §bConquest] Il n'y a pas d'équipes enregistrées"
       },
       "chat": {
         "global": "[Global Chat] %s : %s",

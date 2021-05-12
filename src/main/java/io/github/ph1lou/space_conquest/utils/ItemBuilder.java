@@ -3,9 +3,10 @@ package io.github.ph1lou.space_conquest.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.server.v1_16_R3.NBTTagCompound;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.block.data.Lightable;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -126,4 +127,13 @@ public class ItemBuilder {
         return stack;
     }
 
+    public ItemBuilder addNBTTag(String key, boolean value) {
+        net.minecraft.server.v1_16_R3.ItemStack nmsItem = CraftItemStack.asNMSCopy(this.stack);
+        NBTTagCompound compound = nmsItem.getOrCreateTag();
+
+        compound.setBoolean(key,value);
+
+        nmsItem.setTag(compound);
+        return this;
+    }
 }

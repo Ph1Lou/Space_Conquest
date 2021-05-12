@@ -18,24 +18,30 @@ import org.bukkit.potion.PotionEffectType;
 
 public class PlayerListener implements Listener {
 
-    final GameManager game;
+    private final GameManager game;
 
     public PlayerListener(GameManager game){
         this.game=game;
     }
 
-
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event){
-        if(game.isState(State.LOBBY)) return;
+
+        if(this.game.isState(State.LOBBY)) return;
+
         Player player1 =event.getPlayer();
-        Team team = game.getTeam(player1);
+
+        Team team = this.game.getTeam(player1);
+
         if(team ==null) {
-            event.setRespawnLocation(game.getWorld().getSpawnLocation());
+            event.setRespawnLocation(this.game.getWorld().getSpawnLocation());
         }
-        else if(game.isState(State.GAME)){
+        else if(this.game.isState(State.GAME)){
             event.setRespawnLocation(team.getSpawn());
-            Bukkit.getScheduler().scheduleSyncDelayedTask(game.getMain(), () -> team.start(player1), 20L);
+            Bukkit.getScheduler()
+                    .scheduleSyncDelayedTask(
+                            this.game.getMain(),
+                            () -> team.start(player1), 20L);
         }
     }
 
@@ -78,7 +84,5 @@ public class PlayerListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event){
         event.getDrops().clear();
     }
-
-
 
 }
