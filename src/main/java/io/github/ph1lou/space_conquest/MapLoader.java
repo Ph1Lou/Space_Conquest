@@ -107,7 +107,7 @@ public class MapLoader {
     public Area generateCircle(Location location, int size, Material material, boolean isBase, boolean isMiddle){
 
         World world = game.getWorld();
-        Area area = new Area(isBase,isMiddle,location.clone(),Material.CRYING_OBSIDIAN);
+        Area area = new Area(game,isBase,isMiddle,location.clone(),Material.CRYING_OBSIDIAN);
 
         for(int i=-size/2;i<Math.ceil(size/2f);i++){
             for(int j=-size/2;j<Math.ceil(size/2f);j++){

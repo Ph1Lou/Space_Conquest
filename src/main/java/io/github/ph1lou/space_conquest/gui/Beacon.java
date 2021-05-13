@@ -8,6 +8,7 @@ import fr.minuskube.inv.content.Pagination;
 import fr.minuskube.inv.content.SlotIterator;
 import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.enums.TowerMode;
+import io.github.ph1lou.space_conquest.game.Area;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
@@ -105,22 +106,42 @@ public class Beacon implements InventoryProvider {
             }));
         }
 
-
         List<TowerMode> modes = Arrays.stream(TowerMode.values())
                 .filter(towerMode -> towerMode.getLevel()<=team.getUpgrade().getTower())
                 .collect(Collectors.toList());
 
+        Area area = game.getAreas()
+                .stream()
+                .filter(area1 -> area1.isOnArea(player))
+                .findFirst().orElse(null);
+
+
+        if(area!=null){
+            contents.set(1,2, ClickableItem.of((new ItemBuilder(Material.BEACON).setDisplayName(game.translate(area.getMode().getKey()))
+                    .build()), e -> {
+                int index = modes.indexOf(area.getMode());
+                if(e.isLeftClick()){
+                    area.setMode(modes.get((index+1)%modes.size()));
+                }
+                else{
+                    area.setMode(modes.get((index+modes.size()-1)%modes.size()));
+                }
+            }));
+            return;
+        }
+
+
         List<ClickableItem> items = game.getAreas().stream()
-                .filter(area -> !area.isBase())
-                .filter(area -> team.equals(area.getOwnerTeam()))
-                .map(area -> ClickableItem.of((new ItemBuilder(Material.BEACON).setDisplayName(game.translate(area.getMode().getKey()))
+                .filter(area1 -> !area1.isBase())
+                .filter(area1 -> team.equals(area1.getOwnerTeam()))
+                .map(area1 -> ClickableItem.of((new ItemBuilder(Material.BEACON).setDisplayName(game.translate(area.getMode().getKey()))
                                     .build()),e -> {
-                                int index = modes.indexOf(area.getMode());
+                                int index = modes.indexOf(area1.getMode());
                                 if(e.isLeftClick()){
-                                    area.setMode(modes.get((index+1)%modes.size()));
+                                    area1.setMode(modes.get((index+1)%modes.size()));
                                 }
                                 else{
-                                    area.setMode(modes.get((index+modes.size()-1)%modes.size()));
+                                    area1.setMode(modes.get((index+modes.size()-1)%modes.size()));
                                 }
                             }))
                 .collect(Collectors.toList());
@@ -148,7 +169,7 @@ public class Beacon implements InventoryProvider {
                     .setDisplayName(game.translate("space-conquest.gui.beacon.modes.current",
                             page, items.size() / 27 + 1)).build()));
         } else {
-            int i = 9;
+            int i = 18;
             for (ClickableItem clickableItem : items) {
                 contents.set(i / 9 + 1, i % 9, clickableItem);
                 i++;

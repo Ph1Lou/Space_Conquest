@@ -7,11 +7,12 @@ import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
 import net.minecraft.server.v1_16_R3.Tuple;
 import org.apache.logging.log4j.util.TriConsumer;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import java.util.function.Consumer;
 
@@ -28,7 +29,7 @@ public class GameTask extends BukkitRunnable {
     private void progressMiddle(Player player, Area area, Team team) {
 
         player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 10, 10);
-        this.mineRessources(area, team);
+        area.mineRessources(team);
         team.getBossBar().setVisible(true);
         team.getBossBar().setProgress(team.getResource().getOrDefault(Material.CRYING_OBSIDIAN, 0) / (float) game.getObjective());
         Bukkit.getOnlinePlayers().forEach(player1 -> team.getBossBar().addPlayer(player1));
@@ -74,7 +75,7 @@ public class GameTask extends BukkitRunnable {
                 .filter(area -> !area.isBase())
                 .map(area -> new Tuple<>(area,area.getOwnerTeam()))
                 .filter(areaTeamTuple -> areaTeamTuple.b()!=null)
-        .forEach(areaTeamTuple -> this.mineRessources(areaTeamTuple.a(),areaTeamTuple.b()));
+        .forEach(areaTeamTuple -> areaTeamTuple.a().mineRessources(areaTeamTuple.b()));
 
 
         playerMoved((p) -> {},(player, area, team) -> {
@@ -84,43 +85,11 @@ public class GameTask extends BukkitRunnable {
                     this.progressMiddle(player,area,team);
                 }
                 else {
-                    area.progressCapture(team, team1 -> game.getAreas().stream()
-                            .filter(area1 -> !area1.isBase())
-                            .filter(area1 -> team1.equals(area1.getIsCapture()))
-                            .forEach(area1 -> {
-                                int areaSize = 1;
-                                int temp1 = 0;
-                                while (temp1 != areaSize) {
-                                    areaSize = area1.getControlSize();
-                                    area1.removeControl();
-                                    temp1 = area1.getControlSize();
-                                }
-                                area1.setOwnerTeam(null);
-                                area1.setIsCapture(null);
-                            }));
+                    area.progressCapture(team);
                 }
             }
         });
 
-    }
-
-    /**
-     * Génère les particules du beacon vers la base de la team et les ajoutes dans leur ressources de team
-     * @param area l'aire de départ
-     * @param team la team a qui appartient à la zone
-     */
-    private void mineRessources(Area area, Team team) {
-        team.getResource().put(area.getGeneratorType(), team.getResource().getOrDefault(area.getGeneratorType(),0)+area.getBlocks().size()/18);
-        Location location = area.getMiddle().clone();
-        location.setY(location.getBlockY()+3.5);
-        location.setX(location.getBlockX()+0.5);
-        location.setZ(location.getBlockZ()+0.5);
-        Location base = team.getBase().getMiddle().clone();
-        base.setY(base.getBlockY()-0.5);
-        base.setX(base.getBlockX()+0.5);
-        base.setZ(base.getBlockZ()+0.5);
-        Vector vector = base.toVector().subtract(location.toVector()).normalize();
-        game.getWorld().spawnParticle(Particle.FLAME,location,0,vector.getX(),vector.getY(),vector.getZ(),0.5);
     }
 
     public void playerMoved(Consumer<Player> onSelfArea, TriConsumer<Player,Area, Team> onForeignArea) {

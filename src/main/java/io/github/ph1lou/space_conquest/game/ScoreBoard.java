@@ -14,17 +14,15 @@ import java.util.List;
 public class ScoreBoard {
 
     private final GameManager game;
-    private final List<String> scoreBoardLobby;
-    private final List<String> scoreBoardGame;
+    private final List<String> scoreBoardLobby = new ArrayList<>();
+    private final List<String> scoreBoardGame= new ArrayList<>();
 
     public ScoreBoard(GameManager game){
         this.game=game;
-        this.scoreBoardLobby = game.translateArray("space-conquest.score-board.lobby");
-        this.scoreBoardGame = game.translateArray("space-conquest.score-board.game-board");
     }
 
     public void updateGlobalLobby(){
-        List<String> scoreBoard = new ArrayList<>(scoreBoardLobby);
+        List<String> scoreBoard = new ArrayList<>(game.translateArray("space-conquest.score-board.lobby"));
         scoreBoardLobby.clear();
 
         for(String line: scoreBoard){
@@ -38,7 +36,7 @@ public class ScoreBoard {
 
     public void updateGlobalGameBoard(){
 
-        List<String> scoreBoard = new ArrayList<>(scoreBoardGame);
+        List<String> scoreBoard = new ArrayList<>(game.translateArray("space-conquest.score-board.game-board"));
         scoreBoardGame.clear();
 
         for(String line:scoreBoard){
