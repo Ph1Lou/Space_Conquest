@@ -25,7 +25,7 @@ public class GameManager {
     private int teamNumber=12;
     private String gameName="@Ph1Lou_";
     private int centerSize=7;
-    private int zoneNumber =10;
+    private int zoneNumber =12;
     private final Main main;
     private int teamSize=4;
     private GameListener gameListener;

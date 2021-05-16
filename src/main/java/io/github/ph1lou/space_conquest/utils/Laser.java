@@ -119,6 +119,11 @@ public class Laser {
     }
 
     public void moveEnd(Location location)  {
+
+        if(location.equals(this.end)){
+            return;
+        }
+
         this.end = location;
 
         try {

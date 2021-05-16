@@ -7,6 +7,7 @@ public enum TowerMode {
     CONQUEST_AND_MINE(2,"space-conquest.gui.beacon.modes.mine_and_conquest"),
     DEFEND_AND_MINE(2,"space-conquest.gui.beacon.modes.mine_and_defend"),
     DEFEND_AND_CONQUEST(2,"space-conquest.gui.beacon.modes.conquest_and_defend"),
+    NOT_DEFINED(10,""),
     ATTACK(3,"space-conquest.gui.beacon.modes.attack");
 
 
@@ -27,4 +28,5 @@ public enum TowerMode {
     public int getLevel() {
         return level;
     }
+
 }

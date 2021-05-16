@@ -4,6 +4,7 @@ import io.github.ph1lou.space_conquest.enums.TowerMode;
 import io.github.ph1lou.space_conquest.utils.Laser;
 import net.minecraft.server.v1_16_R3.Tuple;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class Area {
 
     private final GameManager game;
+    private final int size;
 
     private Material generatorType;
 
@@ -36,7 +38,7 @@ public class Area {
 
     private int controlSize;
 
-    private TowerMode mode = TowerMode.MINE;
+    private TowerMode mode = TowerMode.NOT_DEFINED;
 
     @Nullable
     private Team isCapture;
@@ -50,10 +52,11 @@ public class Area {
     private final List<Location> blocks = new ArrayList<>();
     private int timer=0;
 
-    public Area(GameManager game, boolean isBase, boolean isMiddle , Location middle, Material generatorType){
+    public Area(GameManager game, boolean isBase, boolean isMiddle , Location middle, Material generatorType, int size){
         this.game=game;
         this.isBase=isBase;
         this.middle=middle;
+        this.size=size;
         this.isMiddle=isMiddle;
         this.generatorType = generatorType;
         this.laser = new Laser(this.middle.clone().add(new Vector(0.5,this.isBase?
@@ -184,8 +187,10 @@ public class Area {
     }
 
     public void setOwnerTeam(@Nullable Team ownerTeam) {
+        if(!this.isBase){
+            this.setMode(TowerMode.MINE);
+        }
         this.ownerTeam = ownerTeam;
-        this.setMode(TowerMode.MINE);
     }
 
     public int getControlSize() {
@@ -221,7 +226,7 @@ public class Area {
     }
 
     public void setMode(TowerMode mode) {
-        this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,10,0.5)));
+        this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,20,0.5)));
         this.mode = mode;
     }
 
@@ -270,7 +275,7 @@ public class Area {
                     return;
                 }
                 else{
-                    this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,10,0.5)));
+                    this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,20,0.5)));
                     this.target=null;
                 }
             }
@@ -287,7 +292,29 @@ public class Area {
                     .map(Tuple::a)
                     .findFirst().orElse(null);
         }
-        else if(this.mode == TowerMode.ATTACK){
+
+        if (this.mode == TowerMode.DEFEND_AND_CONQUEST || this.mode== TowerMode.DEFEND_AND_MINE || this.mode == TowerMode.DEFEND){
+            Location loc = this.getMiddle().add(new Vector(0,3,0));
+            double tot = Math.PI*this.size/2f;
+
+            for(int i=0;i<tot;i++){
+
+                int x = (int) (Math.round(this.size * Math.cos(2*Math.PI*i/tot) + loc.getX()));
+                int z = (int) (Math.round(this.size * Math.sin(2*Math.PI*i/tot) + loc.getZ()));
+                int red = 199;
+                int green = 21;
+                int blue = 133;
+                Location circle = new Location(loc.getWorld(),x,loc.getY(),z);
+                this.getMiddle()
+                        .getWorld()
+                        .spawnParticle(Particle.REDSTONE,
+                                circle,
+                                2,
+                                new Particle.DustOptions(Color.fromBGR(red, green, blue), 1));
+            }
+        }
+
+        if(this.mode == TowerMode.ATTACK){
             AtomicBoolean present = new AtomicBoolean();
             Bukkit.getOnlinePlayers().stream()
                     .filter(player -> player.getWorld().equals(this.getMiddle().getWorld()))
@@ -300,7 +327,7 @@ public class Area {
                     });
 
             if(!present.get()){
-                this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,10,0.5)));
+                this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,20,0.5)));
             }
         }
     }

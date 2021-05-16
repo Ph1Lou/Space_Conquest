@@ -37,7 +37,7 @@ public class GameTask extends BukkitRunnable {
             if (area.getRatioPlayerOn(team) < 1/2f) {
                 team.getBossBar().setVisible(false);
             }
-        }, 120);
+        }, 20);
 
         if (team.getResource().getOrDefault(Material.CRYING_OBSIDIAN, 0) >= game.getObjective()) {
 

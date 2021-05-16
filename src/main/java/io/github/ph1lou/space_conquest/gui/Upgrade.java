@@ -54,10 +54,10 @@ public class Upgrade implements InventoryProvider {
             
             contents.set(1,1, ClickableItem.of((chestPlate.build()), e -> {
                 if(team.getResource().containsKey(Material.IRON_BLOCK)){
-                    if(team.getResource().get(Material.IRON_BLOCK)>=5000){
+                    if(team.getResource().get(Material.IRON_BLOCK)>=10000){
                         team.getUpgrade().setChestPlate(1);
                         player.sendMessage(game.translate("space-conquest.gui.upgrade.iron-chest-plate.message"));
-                        team.getResource().put(Material.IRON_BLOCK,team.getResource().get(Material.IRON_BLOCK)-5000);
+                        team.getResource().put(Material.IRON_BLOCK,team.getResource().get(Material.IRON_BLOCK)-10000);
                     }
                 }
             }));
@@ -68,10 +68,10 @@ public class Upgrade implements InventoryProvider {
 
             contents.set(1,1, ClickableItem.of((chestPlate.build()), e -> {
                 if(team.getResource().containsKey(Material.DIAMOND_BLOCK)){
-                    if(team.getResource().get(Material.DIAMOND_BLOCK)>=5000){
+                    if(team.getResource().get(Material.DIAMOND_BLOCK)>=20000){
                         team.getUpgrade().setChestPlate(2);
                         player.sendMessage(game.translate("space-conquest.gui.upgrade.diamond-chest-plate.message"));
-                        team.getResource().put(Material.DIAMOND_BLOCK,team.getResource().get(Material.DIAMOND_BLOCK)-5000);
+                        team.getResource().put(Material.DIAMOND_BLOCK,team.getResource().get(Material.DIAMOND_BLOCK)-20000);
                     }
                 }
             }));
@@ -86,10 +86,10 @@ public class Upgrade implements InventoryProvider {
             
             contents.set(1,3, ClickableItem.of((anvil.build()), e -> {
                 if(team.getResource().containsKey(Material.GOLD_BLOCK)){
-                    if(team.getResource().get(Material.GOLD_BLOCK)>=5000){
+                    if(team.getResource().get(Material.GOLD_BLOCK)>=10000){
                         team.getUpgrade().setProtection(1);
                         player.sendMessage(game.translate("space-conquest.gui.upgrade.protection-1.message"));
-                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-5000);
+                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-10000);
                     }
                 }
             }));
@@ -102,10 +102,10 @@ public class Upgrade implements InventoryProvider {
 
             contents.set(1,3, ClickableItem.of((anvil.build()), e -> {
                 if(team.getResource().containsKey(Material.GOLD_BLOCK)){
-                    if(team.getResource().get(Material.GOLD_BLOCK)>=10000){
+                    if(team.getResource().get(Material.GOLD_BLOCK)>=20000){
                         team.getUpgrade().setProtection(2);
                         player.sendMessage(game.translate("space-conquest.gui.upgrade.protection-2.message"));
-                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-10000);
+                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-20000);
                     }
                 }
             }));
@@ -120,10 +120,10 @@ public class Upgrade implements InventoryProvider {
             
             contents.set(1,5, ClickableItem.of((sword.build()), e -> {
                 if(team.getResource().containsKey(Material.GOLD_BLOCK)){
-                    if(team.getResource().get(Material.GOLD_BLOCK)>=5000){
+                    if(team.getResource().get(Material.GOLD_BLOCK)>=10000){
                         team.getUpgrade().setSharpness(1);
                         player.sendMessage(game.translate("space-conquest.gui.upgrade.sharpness-1.message"));
-                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-5000);
+                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-10000);
                     }
                 }
             }));
@@ -136,10 +136,10 @@ public class Upgrade implements InventoryProvider {
 
             contents.set(1,5, ClickableItem.of((sword.build()), e -> {
                 if(team.getResource().containsKey(Material.GOLD_BLOCK)){
-                    if(team.getResource().get(Material.GOLD_BLOCK)>=10000){
+                    if(team.getResource().get(Material.GOLD_BLOCK)>=20000){
                         team.getUpgrade().setSharpness(2);
                         player.sendMessage(game.translate("space-conquest.gui.upgrade.sharpness-2.message"));
-                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-10000);
+                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-20000);
                     }
                 }
             }));
@@ -153,10 +153,10 @@ public class Upgrade implements InventoryProvider {
             
             contents.set(1,7, ClickableItem.of((bow.build()), e -> {
                 if(team.getResource().containsKey(Material.GOLD_BLOCK)){
-                    if(team.getResource().get(Material.GOLD_BLOCK)>=5000){
+                    if(team.getResource().get(Material.GOLD_BLOCK)>=10000){
                         team.getUpgrade().setPower(1);
                         player.sendMessage(game.translate("space-conquest.gui.upgrade.power-1.message"));
-                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-5000);
+                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-10000);
                     }
                 }
             }));
@@ -168,10 +168,10 @@ public class Upgrade implements InventoryProvider {
 
             contents.set(1,7, ClickableItem.of((bow.build()), e -> {
                 if(team.getResource().containsKey(Material.GOLD_BLOCK)){
-                    if(team.getResource().get(Material.GOLD_BLOCK)>=10000){
+                    if(team.getResource().get(Material.GOLD_BLOCK)>=20000){
                         team.getUpgrade().setPower(2);
                         player.sendMessage(game.translate("space-conquest.gui.upgrade.power-2.message"));
-                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-10000);
+                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-20000);
                     }
                 }
             }));

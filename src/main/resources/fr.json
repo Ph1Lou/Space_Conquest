@@ -66,35 +66,35 @@
       "upgrade": {
         "name": "Menu des Améliorations",
         "iron-chest-plate": {
-          "name": "§bUpgrade Iron ChestPlate§r Coût 5000 Fers (§b%d en banque)",
+          "name": "§bUpgrade Iron ChestPlate§r Coût 10000 Fers (§b%d en banque)",
           "message": "[Space §bConquest§r] Amélioration iron Chestplate débloquée"
         },
         "diamond-chest-plate": {
-          "name": "§bAmélioration Diamond ChestPlate§r Coût 5000 Diamants (§b%d en banque)",
+          "name": "§bAmélioration Diamond ChestPlate§r Coût 20000 Diamants (§b%d en banque)",
           "message": "[Space §bConquest§r] Amélioration Diamond Chestplate débloquée"
         },
         "protection-1": {
-          "name": "§bAmélioration Protection§r Coût 5000 Ors (§b%d en banque)",
+          "name": "§bAmélioration Protection§r Coût 10000 Ors (§b%d en banque)",
           "message": "[Space §bConquest§r] Amélioration protection débloquée"
         },
         "protection-2": {
-          "name": "§bAmélioration Protection§r Coût 10000 Ors (§b%d en banque)",
+          "name": "§bAmélioration Protection§r Coût 20000 Ors (§b%d en banque)",
           "message": "[Space §bConquest§r] Amélioration protection II débloquée"
         },
         "sharpness-1": {
-          "name": "§bAmélioration Sharpness§r Coût 5000 Ors (§b%d en banque)",
+          "name": "§bAmélioration Sharpness§r Coût 10000 Ors (§b%d en banque)",
           "message": "[Space §bConquest§r] Amélioration Tranchant débloquée"
         },
         "sharpness-2": {
-          "name": "§bAmélioration Sharpness§r Coût 10000 Ors (§b%d en banque)",
+          "name": "§bAmélioration Sharpness§r Coût 20000 Ors (§b%d en banque)",
           "message": "[Space §bConquest§r] Amélioration Tranchant II débloquée"
         },
         "power-1": {
-          "name": "§bAmélioration Power§r Coût 5000 Ors (§b%d en banque)",
+          "name": "§bAmélioration Power§r Coût 10000 Ors (§b%d en banque)",
           "message": "[Space §bConquest§r] Amélioration Power débloquée"
         },
         "power-2": {
-          "name": "§bAmélioration Power§r Coût 10000 Ors (§b%d en banque)",
+          "name": "§bAmélioration Power§r Coût 20000 Ors (§b%d en banque)",
           "message": "[Space §bConquest§r] Amélioration Power II débloquée"
         }
       },

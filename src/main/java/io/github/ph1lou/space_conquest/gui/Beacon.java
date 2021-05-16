@@ -108,7 +108,7 @@ public class Beacon implements InventoryProvider {
         }
 
         List<TowerMode> modes = Arrays.stream(TowerMode.values())
-                .filter(towerMode -> towerMode.getLevel()<=4/*team.getUpgrade().getTower()*/)
+                .filter(towerMode -> towerMode.getLevel()<=team.getUpgrade().getTower())
                 .collect(Collectors.toList());
 
         Area area = game.getAreas()
@@ -172,7 +172,7 @@ public class Beacon implements InventoryProvider {
                             page, items.size() / 27 + 1)).build()));
         }
         else {
-            int i = 18;
+            int i = 9;
             for (ClickableItem clickableItem : items) {
                 contents.set(i / 9 + 1, i % 9, clickableItem);
                 i++;

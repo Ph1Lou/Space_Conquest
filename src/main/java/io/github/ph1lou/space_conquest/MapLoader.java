@@ -109,7 +109,7 @@ public class MapLoader {
     public Area generateCircle(Location location, int size, Material material, boolean isBase, boolean isMiddle){
 
         World world = game.getWorld();
-        Area area = new Area(game,isBase,isMiddle,location.clone(),Material.CRYING_OBSIDIAN);
+        Area area = new Area(game,isBase,isMiddle,location.clone(),Material.CRYING_OBSIDIAN,size);
 
         for(int i=-size/2;i<Math.ceil(size/2f);i++){
             for(int j=-size/2;j<Math.ceil(size/2f);j++){
@@ -150,7 +150,7 @@ public class MapLoader {
             location1.setY(location1.getBlockY()+1);
             world.getBlockAt(location1).setType(Material.BEACON);
         }
-        else {
+        if(isMiddle || isBase){
             location.setY(location.getBlockY()-1);
             world.getBlockAt(location).setType(Material.BEACON);
         }
