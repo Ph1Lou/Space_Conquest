@@ -25,7 +25,6 @@ public class GameTask extends BukkitRunnable {
         this.game=game;
     }
 
-
     private void progressMiddle(Player player, Area area, Team team) {
 
         player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 10, 10);
@@ -38,16 +37,21 @@ public class GameTask extends BukkitRunnable {
             if (area.getRatioPlayerOn(team) < 1/2f) {
                 team.getBossBar().setVisible(false);
             }
-        }, 6);
+        }, 120);
+
         if (team.getResource().getOrDefault(Material.CRYING_OBSIDIAN, 0) >= game.getObjective()) {
 
             game.getScoreBoard().updateScoreBoard();
 
             Bukkit.getOnlinePlayers().forEach(player1 -> {
                 player1.playSound(player1.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 10, 10);
-                player1.sendTitle("Victoire", String.format("Équipe %s", team.getName()), 20, 20, 20);
+                player1.sendTitle(game.translate("space-conquest.game.victory.title"),
+                        game.translate("space-conquest.game.victory.subtitle",
+                                team.getName()), 20, 20, 20);
             });
-            Bukkit.broadcastMessage("[Space §bConquest] Victoire " + String.format("Équipe §b%s", team.getName()));
+            Bukkit.broadcastMessage(game.translate("space-conquest.game.victory.message",
+                    game.translate("space-conquest.game.victory.team",
+                            team.getName())));
             game.restart();
             Bukkit.getPluginManager().callEvent(new WinEvent(team));
         }

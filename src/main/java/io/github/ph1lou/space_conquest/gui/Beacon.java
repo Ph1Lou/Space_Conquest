@@ -15,6 +15,7 @@ import io.github.ph1lou.space_conquest.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.BoundingBox;
 
 import java.util.Arrays;
 import java.util.List;
@@ -107,14 +108,15 @@ public class Beacon implements InventoryProvider {
         }
 
         List<TowerMode> modes = Arrays.stream(TowerMode.values())
-                .filter(towerMode -> towerMode.getLevel()<=team.getUpgrade().getTower())
+                .filter(towerMode -> towerMode.getLevel()<=4/*team.getUpgrade().getTower()*/)
                 .collect(Collectors.toList());
 
         Area area = game.getAreas()
                 .stream()
-                .filter(area1 -> area1.isOnArea(player))
-                .findFirst().orElse(null);
-
+                .filter(area1 -> !area1.isBase())
+                .filter(area1 -> BoundingBox.of(area1.getMiddle(),5,5,5).contains(player.getLocation().toVector()))
+                .findFirst()
+                .orElse(null);
 
         if(area!=null){
             contents.set(1,2, ClickableItem.of((new ItemBuilder(Material.BEACON).setDisplayName(game.translate(area.getMode().getKey()))
@@ -130,11 +132,11 @@ public class Beacon implements InventoryProvider {
             return;
         }
 
-
         List<ClickableItem> items = game.getAreas().stream()
                 .filter(area1 -> !area1.isBase())
                 .filter(area1 -> team.equals(area1.getOwnerTeam()))
-                .map(area1 -> ClickableItem.of((new ItemBuilder(Material.BEACON).setDisplayName(game.translate(area.getMode().getKey()))
+                .map(area1 -> ClickableItem.of((new ItemBuilder(Material.BEACON)
+                        .setDisplayName(game.translate(area1.getMode().getKey()))
                                     .build()),e -> {
                                 int index = modes.indexOf(area1.getMode());
                                 if(e.isLeftClick()){
@@ -168,7 +170,8 @@ public class Beacon implements InventoryProvider {
             contents.set(4, 4, ClickableItem.empty(new ItemBuilder(Material.ACACIA_SIGN)
                     .setDisplayName(game.translate("space-conquest.gui.beacon.modes.current",
                             page, items.size() / 27 + 1)).build()));
-        } else {
+        }
+        else {
             int i = 18;
             for (ClickableItem clickableItem : items) {
                 contents.set(i / 9 + 1, i % 9, clickableItem);
@@ -178,6 +181,5 @@ public class Beacon implements InventoryProvider {
                 contents.set(k / 9 + 1, k % 9, null);
             }
         }
-
     }
 }

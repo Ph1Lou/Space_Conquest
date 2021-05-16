@@ -1,6 +1,7 @@
 package io.github.ph1lou.space_conquest.game;
 
 import io.github.ph1lou.space_conquest.enums.TowerMode;
+import io.github.ph1lou.space_conquest.utils.Laser;
 import net.minecraft.server.v1_16_R3.Tuple;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class Area {
@@ -34,10 +36,12 @@ public class Area {
 
     private int controlSize;
 
-    private TowerMode mode =TowerMode.MINE;
+    private TowerMode mode = TowerMode.MINE;
 
     @Nullable
     private Team isCapture;
+
+    private final Laser laser;
 
     private final boolean isBase;
 
@@ -52,6 +56,26 @@ public class Area {
         this.middle=middle;
         this.isMiddle=isMiddle;
         this.generatorType = generatorType;
+        this.laser = new Laser(this.middle.clone().add(new Vector(0.5,this.isBase?
+                0
+                :
+                this.isMiddle ?
+                        20
+                        :
+                        3,0.5)),
+                this.middle.clone().add(new Vector(0.5,this.isMiddle || this.isBase?
+                        -20
+                        :
+                        20,0.5)));
+        this.laser.start();
+
+    }
+
+    private void progressCaptureAuto(Team team){
+
+        if (this.getRatioPlayerOn(team,true) > 1/2f) {
+            this.progressCapture(team);
+        }
     }
 
     public List<Location> getBlocks() {
@@ -59,11 +83,16 @@ public class Area {
     }
 
     public boolean isOnArea(Player player){
-        Location location = player.getLocation();
+        return isOnArea(player.getLocation());
+    }
+
+
+    public boolean isOnArea(Location location1){
+
         return blocks.stream()
-                .filter(location1 -> location1.getX()==location.getBlockX())
-                .filter(location1 -> location1.getY()+1==location.getBlockY())
-                .anyMatch(location1 -> location1.getZ()==location.getBlockZ());
+                .filter(location -> location.getX()==location1.getBlockX())
+                .filter(location -> location.getY()+1==location1.getBlockY())
+                .anyMatch(location -> location.getZ()==location1.getBlockZ());
     }
 
     public List<Player> getPlayerOn(){
@@ -87,7 +116,12 @@ public class Area {
                     this.setOwnerTeam(team);
                     for(Player player: getPlayerOn()){
                         player.setVelocity(new Vector(0,3,0));
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,300,0,false,false));
+                        player.addPotionEffect(new PotionEffect(
+                                PotionEffectType.SLOW_FALLING,
+                                300,
+                                0,
+                                false,
+                                false));
                         player.playSound(player.getLocation(), Sound.BLOCK_BELL_USE,10,10);
                     }
                 }
@@ -119,7 +153,7 @@ public class Area {
             Material material = location.getBlock().getType();
             if(material.toString().contains("STAINED_GLASS") && !material.equals(Material.WHITE_STAINED_GLASS)){
                 location.getBlock().setType(Material.WHITE_STAINED_GLASS);
-                this.controlSize-=1;
+                this.controlSize--;
                 break;
             }
         }
@@ -142,7 +176,7 @@ public class Area {
     }
 
     public Location getMiddle() {
-        return this.middle;
+        return this.middle.clone();
     }
 
     public @Nullable Team getOwnerTeam() {
@@ -151,7 +185,7 @@ public class Area {
 
     public void setOwnerTeam(@Nullable Team ownerTeam) {
         this.ownerTeam = ownerTeam;
-        mode = TowerMode.MINE;
+        this.setMode(TowerMode.MINE);
     }
 
     public int getControlSize() {
@@ -159,14 +193,19 @@ public class Area {
     }
 
     public float getRatioPlayerOn(Team team) {
+        return this.getRatioPlayerOn(team,false);
+    }
+
+    public float getRatioPlayerOn(Team team, boolean ok){
         List<Player> players = this.getPlayerOn();
         int total = players.size();
+        int boost = ok?1:0;
         if(this.mode == TowerMode.DEFEND_AND_CONQUEST || this.mode == TowerMode.DEFEND_AND_MINE || this.mode == TowerMode.DEFEND){
             total++;
         }
-        return players.stream()
+        return (players.stream()
                 .filter(player -> team.getMembers().contains(player.getUniqueId()))
-                .count()/(float)Math.max(1,total);
+                .count()+boost)/(float)Math.max(1,total);
     }
 
     public void setGeneratorType(Material generatorType) {
@@ -182,6 +221,7 @@ public class Area {
     }
 
     public void setMode(TowerMode mode) {
+        this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,10,0.5)));
         this.mode = mode;
     }
 
@@ -192,13 +232,15 @@ public class Area {
      */
     public void mineRessources(Team team) {
 
-        if(this.mode == TowerMode.MINE || this.mode == TowerMode.CONQUEST_AND_MINE || this.mode == TowerMode.DEFEND_AND_MINE){
+        if(this.mode == TowerMode.MINE ||
+                this.mode == TowerMode.CONQUEST_AND_MINE ||
+                this.mode == TowerMode.DEFEND_AND_MINE){
             team.getResource().put(this.getGeneratorType(), team.getResource().getOrDefault(this.getGeneratorType(),0)+this.getBlocks().size()/18);
-            Location location = this.getMiddle().clone();
+            Location location = this.getMiddle();
             location.setY(location.getBlockY()+3.5);
             location.setX(location.getBlockX()+0.5);
             location.setZ(location.getBlockZ()+0.5);
-            Location base = team.getBase().getMiddle().clone();
+            Location base = team.getBase().getMiddle();
             base.setY(base.getBlockY()-0.5);
             base.setX(base.getBlockX()+0.5);
             base.setZ(base.getBlockZ()+0.5);
@@ -210,8 +252,9 @@ public class Area {
             return;
         }
 
-
-        if(this.mode == TowerMode.CONQUEST || this.mode == TowerMode.CONQUEST_AND_MINE || this.mode == TowerMode.DEFEND_AND_CONQUEST){
+        if(this.mode == TowerMode.CONQUEST ||
+                this.mode == TowerMode.CONQUEST_AND_MINE ||
+                this.mode == TowerMode.DEFEND_AND_CONQUEST){
 
             this.timer++;
             this.timer%=4;
@@ -220,23 +263,16 @@ public class Area {
                 return;
             }
 
-
             if(this.target!=null){
                 if(!this.getOwnerTeam().equals(this.target.getOwnerTeam())){
-                    Location location = this.getMiddle().clone();
-                    location.setY(location.getBlockY()+3.5);
-                    location.setX(location.getBlockX()+0.5);
-                    location.setZ(location.getBlockZ()+0.5);
-                    Location base = team.getBase().getMiddle().clone();
-                    base.setY(base.getBlockY()+3.5);
-                    base.setX(base.getBlockX()+0.5);
-                    base.setZ(base.getBlockZ()+0.5);
-                    Vector vector = base.toVector().subtract(location.toVector()).normalize().multiply(50);
-                    game.getWorld().spawnParticle(Particle.FLAME,location,0,vector.getX(),vector.getY(),vector.getZ(),0.5);
-                    this.target.progressCapture(this.getOwnerTeam());
+                    this.laser.moveEnd(this.target.getMiddle().add(new Vector(0.5,2,0.5)));
+                    this.target.progressCaptureAuto(this.getOwnerTeam());
                     return;
                 }
-
+                else{
+                    this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,10,0.5)));
+                    this.target=null;
+                }
             }
 
             this.target = game.getAreas().stream()
@@ -244,28 +280,29 @@ public class Area {
                     .filter(area -> !this.getOwnerTeam().equals(area.getOwnerTeam()))
                     .filter(area -> !area.isBase())
                     .filter(area -> !area.isMiddle())
+                    .filter(area -> area.getGeneratorType().equals(this.getGeneratorType()))
                     .map(area -> new Tuple<>(area,this.getMiddle().distance(area.getMiddle())))
                     .sorted(Comparator.comparingDouble(Tuple::b))
-                    .filter(areaDoubleTuple -> areaDoubleTuple.b()<100)
+                    .filter(areaDoubleTuple -> areaDoubleTuple.b()<75)
                     .map(Tuple::a)
                     .findFirst().orElse(null);
         }
         else if(this.mode == TowerMode.ATTACK){
+            AtomicBoolean present = new AtomicBoolean();
             Bukkit.getOnlinePlayers().stream()
                     .filter(player -> player.getWorld().equals(this.getMiddle().getWorld()))
                     .filter(player -> player.getLocation().distance(this.getMiddle())<30)
                     .findFirst()
                     .ifPresent(player -> {
-                        Location location = this.getMiddle().clone();
-                        location.setY(location.getBlockY()+3.5);
-                        location.setX(location.getBlockX()+0.5);
-                        location.setZ(location.getBlockZ()+0.5);
-                        Vector vector = player.getEyeLocation().toVector().subtract(location.toVector()).normalize().multiply(20);
-                        game.getWorld().spawnParticle(Particle.FLAME,location,0,vector.getX(),vector.getY(),vector.getZ(),0.5);
+                        this.laser.moveEnd((player.getEyeLocation().add(new Vector(0,-1,0))));
                         player.damage(1);
+                        present.set(true);
                     });
-        }
 
+            if(!present.get()){
+                this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,10,0.5)));
+            }
+        }
     }
 
 }

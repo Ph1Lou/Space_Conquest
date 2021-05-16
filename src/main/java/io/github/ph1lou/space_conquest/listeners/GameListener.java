@@ -268,7 +268,9 @@ public class GameListener implements Listener {
                 else if(area.getGeneratorType().equals(Material.CRYING_OBSIDIAN)){
                     Rank.INVENTORY.open(player1);
                 }
-                else player1.sendMessage(game.translate("space-conquest.game.beacon.no-control"));
+                else {
+                    player1.sendMessage(game.translate("space-conquest.game.beacon.no-control"));
+                }
             }
         }
     }

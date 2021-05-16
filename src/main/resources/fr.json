@@ -199,6 +199,12 @@
       "chat": {
         "global": "[Global Chat] %s : %s",
         "format": "[Global Chat] %s [Team %s]§r %s : %s"
+      },
+      "victory": {
+        "title": "Victoire",
+        "subtitle": "Équipe %s",
+        "message": "[Space §bConquest] Victoire %s",
+        "team": "Équipe §b%s"
       }
     },
     "score-board": {
