@@ -18,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -107,6 +106,10 @@ public class Area {
 
     public void progressCapture(Team team){
 
+        if(this.isMiddle() || this.isBase()){
+            return;
+        }
+
         int temp = this.controlSize;
 
         if(team.equals(this.isCapture)){
@@ -131,7 +134,7 @@ public class Area {
             }
         }
         else {
-            this.ownerTeam=null;
+            this.setOwnerTeam(null);
             this.removeControl();
             if(temp==this.controlSize){ //tant que la base n'est pas toute blanche
                 this.isCapture=team;
@@ -319,6 +322,16 @@ public class Area {
         if(this.mode == TowerMode.ATTACK){
             AtomicBoolean present = new AtomicBoolean();
             Bukkit.getOnlinePlayers().stream()
+                    .filter(player -> {
+                        Team team1 = game.getTeam(player);
+
+                        if(team1==null){
+                            return false;
+                        }
+
+                        return !team1.equals(this.getOwnerTeam());
+
+                    })
                     .filter(player -> player.getWorld().equals(this.getMiddle().getWorld()))
                     .filter(player -> player.getLocation().distance(this.getMiddle())<30)
                     .findFirst()
