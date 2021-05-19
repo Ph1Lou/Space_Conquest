@@ -30,7 +30,8 @@ public class GameTask extends BukkitRunnable {
         player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 10, 10);
         area.mineRessources(team);
         team.getBossBar().setVisible(true);
-        team.getBossBar().setProgress(team.getResource().getOrDefault(Material.CRYING_OBSIDIAN, 0) / (float) game.getObjective());
+        team.getBossBar().setProgress(team.getResource().getOrDefault(Material.CRYING_OBSIDIAN,
+                0) / (float) game.getObjective());
         Bukkit.getOnlinePlayers().forEach(player1 -> team.getBossBar().addPlayer(player1));
         Bukkit.getScheduler().scheduleSyncDelayedTask(game.getMain(), () -> {
 
@@ -85,8 +86,15 @@ public class GameTask extends BukkitRunnable {
         playerMoved((p) -> {},(player, area, team) -> {
             if (area.getRatioPlayerOn(team) > 1/2f) {
 
-                if (Material.CRYING_OBSIDIAN.equals(area.getGeneratorType())) {
+                if (area.isMiddle()) {
                     this.progressMiddle(player,area,team);
+                }
+                if(area.isBase() && area.getOwnerTeam()!=null && !area.getOwnerTeam().equals(team)){
+                    Bukkit.getOnlinePlayers()
+                            .stream()
+                            .filter(player1 -> game.getTeam(player1)!=null)
+                            .forEach(player1 -> player1.teleport(area.getOwnerTeam().getSpawn()));
+                    player.teleport(team.getSpawn());
                 }
                 else {
                     area.progressCapture(team);

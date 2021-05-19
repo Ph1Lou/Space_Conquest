@@ -191,7 +191,7 @@ public class GameManager {
         this.world.setGameRule(GameRule.DO_INSOMNIA,false);
         this.world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN,true);
         this.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
-        this.world.setDifficulty(Difficulty.EASY);
+        this.world.setDifficulty(Difficulty.PEACEFUL);
         this.world.setTime(19000);
         this.mapLoader.generateTeamCamp();
         this.gameListener =new GameListener(this);

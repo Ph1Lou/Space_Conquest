@@ -224,12 +224,14 @@ public class GameListener implements Listener {
         }
         else if(item.getTag().getBoolean("fire-charge")){
 
-            if(itemStack.getAmount()==1){
-                player.getInventory().removeItem(itemStack);
-            }
-            else itemStack.setAmount(itemStack.getAmount()-1);
             Action action = event.getAction();
-            if ((action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) && player.getInventory().getItemInMainHand().getType() == Material.FIRE_CHARGE) {
+            if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
+                if(itemStack.getAmount()==1){
+                    player.getInventory().removeItem(itemStack);
+                }
+                else {
+                    itemStack.setAmount(itemStack.getAmount()-1);
+                }
                 Location eye = player.getEyeLocation();
                 Location loc = eye.add(eye.getDirection().multiply(1.2));
                 Fireball fireball = (Fireball)player.getWorld().spawnEntity(loc, EntityType.FIREBALL);
@@ -247,6 +249,11 @@ public class GameListener implements Listener {
 
         Block block = event.getClickedBlock();
         Player player1 = event.getPlayer();
+        Team team =game.getTeam(player1);
+
+        if(team==null){
+            return;
+        }
 
         if(block==null) return;
         if(!block.getType().equals(Material.BEACON)){
@@ -262,7 +269,7 @@ public class GameListener implements Listener {
 
         for(Area area:game.getAreas()){
             if(area.getMiddle().equals(location)){
-                if(area.getOwnerTeam()!=null && area.getOwnerTeam().equals(game.getTeam(player1))){
+                if(team.equals(area.getOwnerTeam())){
                     Ressources.INVENTORY.open(player1);
                 }
                 else if(area.getGeneratorType().equals(Material.CRYING_OBSIDIAN)){

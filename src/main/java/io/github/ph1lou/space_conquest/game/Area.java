@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -112,10 +113,8 @@ public class Area {
 
             this.progressControl();
             if(temp==this.controlSize){
-                if(this.isBase && !team.equals(this.getOwnerTeam())){
-                    //mettre ici le vol des crying obsidian de l'autre équipe
-                }
-                else {
+
+                if(!this.isBase && !team.equals(this.getOwnerTeam())){
                     this.setOwnerTeam(team);
                     for(Player player: getPlayerOn()){
                         player.setVelocity(new Vector(0,3,0));
@@ -128,6 +127,7 @@ public class Area {
                         player.playSound(player.getLocation(), Sound.BLOCK_BELL_USE,10,10);
                     }
                 }
+
             }
         }
         else {
@@ -205,7 +205,9 @@ public class Area {
         List<Player> players = this.getPlayerOn();
         int total = players.size();
         int boost = ok?1:0;
-        if(this.mode == TowerMode.DEFEND_AND_CONQUEST || this.mode == TowerMode.DEFEND_AND_MINE || this.mode == TowerMode.DEFEND){
+        if(this.mode == TowerMode.DEFEND_AND_CONQUEST ||
+                this.mode == TowerMode.DEFEND_AND_MINE ||
+                this.mode == TowerMode.DEFEND){
             total++;
         }
         return (players.stream()
@@ -237,7 +239,7 @@ public class Area {
      */
     public void mineRessources(Team team) {
 
-        if(this.mode == TowerMode.MINE ||
+        if(this.isMiddle || this.mode == TowerMode.MINE ||
                 this.mode == TowerMode.CONQUEST_AND_MINE ||
                 this.mode == TowerMode.DEFEND_AND_MINE){
             team.getResource().put(this.getGeneratorType(), team.getResource().getOrDefault(this.getGeneratorType(),0)+this.getBlocks().size()/18);
