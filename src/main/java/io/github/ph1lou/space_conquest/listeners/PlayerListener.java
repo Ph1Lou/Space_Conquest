@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -42,6 +43,18 @@ public class PlayerListener implements Listener {
                     .scheduleSyncDelayedTask(
                             this.game.getMain(),
                             () -> team.start(player1), 20L);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event){
+
+        if(event.getTo()==null){
+            return;
+        }
+
+        if(event.getTo().getY()<10){
+            event.getPlayer().damage(1000000000);
         }
     }
 

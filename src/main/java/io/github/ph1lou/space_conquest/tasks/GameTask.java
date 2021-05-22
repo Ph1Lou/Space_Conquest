@@ -92,7 +92,10 @@ public class GameTask extends BukkitRunnable {
                 if(area.isBase() && area.getOwnerTeam()!=null && !area.getOwnerTeam().equals(team)){
                     Bukkit.getOnlinePlayers()
                             .stream()
-                            .filter(player1 -> game.getTeam(player1)!=null)
+                            .filter(player1 -> {
+                                Team team1 = game.getTeam(player1);
+                                return team1 !=null && team1.equals(area.getOwnerTeam());
+                            })
                             .forEach(player1 -> player1.teleport(area.getOwnerTeam().getSpawn()));
                     player.teleport(team.getSpawn());
                 }
