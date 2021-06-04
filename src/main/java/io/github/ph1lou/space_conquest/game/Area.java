@@ -100,6 +100,7 @@ public class Area {
 
     public List<Player> getPlayerOn(){
         return Bukkit.getOnlinePlayers().stream()
+                .filter(player -> game.getTeam(player).isPresent())
                 .filter(this::isOnArea)
                 .collect(Collectors.toList());
     }
@@ -207,7 +208,7 @@ public class Area {
     public float getRatioPlayerOn(Team team, boolean ok){
         List<Player> players = this.getPlayerOn();
         int total = players.size();
-        int boost = ok?1:0;
+        float boost = ok?0.55f:0f;
         if(this.mode == TowerMode.DEFEND_AND_CONQUEST ||
                 this.mode == TowerMode.DEFEND_AND_MINE ||
                 this.mode == TowerMode.DEFEND){
@@ -322,16 +323,9 @@ public class Area {
         if(this.mode == TowerMode.ATTACK){
             AtomicBoolean present = new AtomicBoolean();
             Bukkit.getOnlinePlayers().stream()
-                    .filter(player -> {
-                        Team team1 = game.getTeam(player);
-
-                        if(team1==null){
-                            return false;
-                        }
-
-                        return !team1.equals(this.getOwnerTeam());
-
-                    })
+                    .filter(player -> game.getTeam(player)
+                            .filter(value -> !value.equals(this.getOwnerTeam()))
+                            .isPresent())
                     .filter(player -> player.getWorld().equals(this.getMiddle().getWorld()))
                     .filter(player -> player.getLocation().distance(this.getMiddle())<30)
                     .findFirst()

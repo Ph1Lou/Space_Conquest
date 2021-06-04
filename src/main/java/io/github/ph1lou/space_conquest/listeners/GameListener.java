@@ -2,7 +2,6 @@ package io.github.ph1lou.space_conquest.listeners;
 
 import io.github.ph1lou.space_conquest.game.Area;
 import io.github.ph1lou.space_conquest.game.GameManager;
-import io.github.ph1lou.space_conquest.game.Team;
 import io.github.ph1lou.space_conquest.gui.Ressources;
 import io.github.ph1lou.space_conquest.gui.Rank;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -249,37 +248,35 @@ public class GameListener implements Listener {
 
         Block block = event.getClickedBlock();
         Player player1 = event.getPlayer();
-        Team team =game.getTeam(player1);
-
-        if(team==null){
-            return;
-        }
 
         if(block==null) return;
         if(!block.getType().equals(Material.BEACON)){
             return;
         }
 
-        event.setCancelled(true);
-        Location location = block.getLocation();
-        location.setY(location.getBlockY()-2);
+        game.getTeam(player1).ifPresent(team -> {
+
+            event.setCancelled(true);
+            Location location = block.getLocation();
+            location.setY(location.getBlockY()-2);
 
 
-        if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)) return;
+            if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)) return;
 
-        for(Area area:game.getAreas()){
-            if(area.getMiddle().equals(location)){
-                if(team.equals(area.getOwnerTeam())){
-                    Ressources.INVENTORY.open(player1);
-                }
-                else if(area.getGeneratorType().equals(Material.CRYING_OBSIDIAN)){
-                    Rank.INVENTORY.open(player1);
-                }
-                else {
-                    player1.sendMessage(game.translate("space-conquest.game.beacon.no-control"));
+            for(Area area:game.getAreas()){
+                if(area.getMiddle().equals(location)){
+                    if(team.equals(area.getOwnerTeam())){
+                        Ressources.INVENTORY.open(player1);
+                    }
+                    else if(area.getGeneratorType().equals(Material.CRYING_OBSIDIAN)){
+                        Rank.INVENTORY.open(player1);
+                    }
+                    else {
+                        player1.sendMessage(game.translate("space-conquest.game.beacon.no-control"));
+                    }
                 }
             }
-        }
+        });
     }
 
     @EventHandler
@@ -322,17 +319,14 @@ public class GameListener implements Listener {
             Bukkit.getScheduler().scheduleSyncDelayedTask(game.getMain(),() -> {
 
                 if(block.getType().equals(Material.AIR)){
-                    Team team = game.getTeam(player);
-                    if(team!=null){
-                        block.setType(team.getColorTeam().getConstructionMaterial());
-                    }
-
+                    game.getTeam(player).ifPresent(team -> block.setType(team.getColorTeam().getConstructionMaterial()));
                 }
             },3L);
 
         },2L,1L);
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(game.getMain(),() -> Bukkit.getScheduler().cancelTask(i),30);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(game.getMain(),() ->
+                Bukkit.getScheduler().cancelTask(i),30);
 
     }
 

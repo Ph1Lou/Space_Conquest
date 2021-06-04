@@ -32,7 +32,7 @@ public class PlayerListener implements Listener {
 
         Player player1 =event.getPlayer();
 
-        Team team = this.game.getTeam(player1);
+        Team team = this.game.getTeam(player1).orElse(null);
 
         if(team ==null) {
             event.setRespawnLocation(this.game.getWorld().getSpawnLocation());

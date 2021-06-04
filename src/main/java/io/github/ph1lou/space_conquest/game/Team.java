@@ -147,9 +147,6 @@ public class Team {
 
         inventory.setLeggings(leatherLeggings.build());
 
-
-
-
         inventory.setChestplate(this.getChestPlate());
 
 
@@ -203,10 +200,8 @@ public class Team {
         if(getMembers().contains(player.getUniqueId())) return;
 
         if(getMembers().size()<game.getTeamSize()){
-            Team team1 = game.getTeam(player);
-            if(team1!=null){
-                team1.removePlayer(player);
-            }
+            game.getTeam(player).ifPresent(team1 -> team1.removePlayer(player));
+
             if(game.getPlayerMax()>game.getPlayerSize()){
                 getMembers().add(player.getUniqueId());
                 game.setPlayerSize(game.getPlayerSize()+1);
@@ -216,7 +211,6 @@ public class Team {
             else {
                 player.sendMessage(game.translate("space-conquest.game.message.max"));
             }
-
         }
     }
 
@@ -236,6 +230,11 @@ public class Team {
             else {
                 game.getTeams().remove(this);
                 team.unregister();
+                if(this.game.isTraining()){
+                    if(this.game.getTeams().size()<this.game.getTeamAutoStart()){
+                        this.game.removeStart();
+                    }
+                }
             }
         }
     }

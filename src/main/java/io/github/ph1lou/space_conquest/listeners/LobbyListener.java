@@ -29,7 +29,7 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event){
 
-        if(!game.isState(State.LOBBY)) return;
+        if(!this.game.isState(State.LOBBY)) return;
 
         event.setRespawnLocation(Bukkit.getWorlds().get(0).getSpawnLocation());
     }
@@ -42,14 +42,14 @@ public class LobbyListener implements Listener {
                 game.translate("space-conquest.title"),
                 game.translate("space-conquest.credit")+"Ph1Lou");
 
-        if(game.getTeam(player)!=null || game.isState(State.LOBBY)){
+        if(game.getTeam(player).isPresent() || game.isState(State.LOBBY)){
             FastBoard fastboard = new FastBoard(player);
             fastboard.updateTitle(game.translate("space-conquest.title"));
             game.getFastBoard().put(player.getUniqueId(), fastboard);
         }
 
         if(!game.isState(State.LOBBY)){
-            if(game.getTeam(player)==null){
+            if(!game.getTeam(player).isPresent()){
                 player.teleport(game.getWorld().getSpawnLocation());
                 player.setGameMode(GameMode.SPECTATOR);
             }
@@ -93,10 +93,8 @@ public class LobbyListener implements Listener {
 
         if(!game.isState(State.LOBBY)) return;
 
-        Team team = game.getTeam(player);
-        if(team!=null){
-            team.removePlayer(player);
-        }
+        game.getTeam(player).ifPresent(team -> team.removePlayer(player));
+
     }
 
 
@@ -126,7 +124,7 @@ public class LobbyListener implements Listener {
 
         Player player =event.getPlayer();
 
-        Team team = game.getTeam(player);
+        Team team = game.getTeam(player).orElse(null);
 
         if(team==null) {
             event.setFormat(game.translate("space-conquest.game.chat.global",

@@ -13,7 +13,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -44,7 +43,7 @@ public class Laser {
     private UUID guardianUUID;
 
     private BukkitRunnable run;
-    private HashSet<Player> show = new HashSet<>();
+    private final HashSet<Player> show = new HashSet<>();
 
     /**
      * Create a Laser instance
@@ -174,11 +173,11 @@ public class Laser {
             return lastIssuedEID++;
         }
 
-        private static String[] versions = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3].substring(1).split("_");
-        private static int version = Integer.parseInt(versions[1]); // 1.X
-        private static int versionMinor = Integer.parseInt(versions[2].substring(1)); // 1.X.Y
-        private static String npack = "net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".";
-        private static String cpack = Bukkit.getServer().getClass().getPackage().getName() + ".";
+        private static final String[] versions = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3].substring(1).split("_");
+        private static final int version = Integer.parseInt(versions[1]); // 1.X
+        private static final int versionMinor = Integer.parseInt(versions[2].substring(1)); // 1.X.Y
+        private static final String npack = "net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".";
+        private static final String cpack = Bukkit.getServer().getClass().getPackage().getName() + ".";
         private static Constructor<?> watcherConstructor;
         private static Method watcherSet;
         private static Method watcherRegister;

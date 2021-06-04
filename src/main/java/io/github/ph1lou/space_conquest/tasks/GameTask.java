@@ -14,6 +14,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class GameTask extends BukkitRunnable {
@@ -34,11 +35,10 @@ public class GameTask extends BukkitRunnable {
                 0) / (float) game.getObjective());
         Bukkit.getOnlinePlayers().forEach(player1 -> team.getBossBar().addPlayer(player1));
         Bukkit.getScheduler().scheduleSyncDelayedTask(game.getMain(), () -> {
-
-            if (area.getRatioPlayerOn(team) < 1/2f) {
+            if (area.getRatioPlayerOn(team) <= 1/2f - 0.0001) { // -0.0001 pour éviter les arrondis foireux
                 team.getBossBar().setVisible(false);
             }
-        }, 20);
+        }, 6);
 
         if (team.getResource().getOrDefault(Material.CRYING_OBSIDIAN, 0) >= game.getObjective()) {
 
@@ -63,19 +63,19 @@ public class GameTask extends BukkitRunnable {
     @Override
     public void run() {
 
-        timer++;
-        if(game.isState(State.END)){
+        this.timer++;
+        if(this.game.isState(State.END)){
             cancel();
             return;
         }
 
-        game.getScoreBoard().updateScoreBoard();
+        this.game.getScoreBoard().updateScoreBoard();
 
-        if(timer%4==0){
-            game.setTimer(game.getTimer()+1);
+        if(this.timer%4==0){
+            this.game.setTimer(this.game.getTimer()+1);
         }
 
-        game.getAreas()
+        this.game.getAreas()
                 .stream()
                 .filter(area -> !area.isBase())
                 .map(area -> new Tuple<>(area,area.getOwnerTeam()))
@@ -83,7 +83,7 @@ public class GameTask extends BukkitRunnable {
         .forEach(areaTeamTuple -> areaTeamTuple.a().mineRessources(areaTeamTuple.b()));
 
 
-        playerMoved((p) -> {},(player, area, team) -> {
+        this.playerMoved((p) -> {},(player, area, team) -> {
             if (area.getRatioPlayerOn(team) > 1/2f) {
 
                 if (area.isMiddle()) {
@@ -93,8 +93,8 @@ public class GameTask extends BukkitRunnable {
                     Bukkit.getOnlinePlayers()
                             .stream()
                             .filter(player1 -> {
-                                Team team1 = game.getTeam(player1);
-                                return team1 !=null && team1.equals(area.getOwnerTeam());
+                                Optional<Team> team1 = this.game.getTeam(player1);
+                                return team1.isPresent() && team1.get().equals(area.getOwnerTeam());
                             })
                             .forEach(player1 -> player1.teleport(area.getOwnerTeam().getSpawn()));
                     player.teleport(team.getSpawn());
@@ -115,7 +115,8 @@ public class GameTask extends BukkitRunnable {
                     return face.toString().contains("STAINED_GLASS") || face.equals(Material.GLOWSTONE);
                 })
                 .map(player -> new Tuple<>(game.getTeam(player),player))
-                .filter(tuple -> tuple.a()!=null)
+                .filter(tuple -> tuple.a().isPresent())
+                .map(optionalTuple -> new Tuple<>(optionalTuple.a().get(),optionalTuple.b()))
                 .forEach(tuple -> game.getAreas()
                         .stream()
                         .filter(area -> area.isOnArea(tuple.b()))

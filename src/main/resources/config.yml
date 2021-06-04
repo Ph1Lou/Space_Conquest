@@ -11,5 +11,7 @@
 # Copyright : All Rights Reserved - 2019
 
 
-
 default_lobby: true
+training: false
+tournament: false
+number_team_auto_start: 4;

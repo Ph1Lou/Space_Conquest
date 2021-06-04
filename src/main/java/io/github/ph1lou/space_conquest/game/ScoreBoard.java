@@ -67,15 +67,15 @@ public class ScoreBoard {
 
     public void updatePlayerGameBoard(FastBoard fastBoard) {
         Player player = fastBoard.getPlayer();
-        Team team = game.getTeam(player);
-        if(team==null) return;
-        List<String> scoreBoard = new ArrayList<>(team.getScoreBoard());
-        List<String> scoreBoardResult = new ArrayList<>();
-        for(String line:scoreBoard){
-            line=line.replace("&kill&",game.getKills().getOrDefault(player.getUniqueId(),0)+"");
-            scoreBoardResult.add(line);
-        }
-        fastBoard.updateLines(scoreBoardResult);
+        game.getTeam(player).ifPresent(team -> {
+            List<String> scoreBoard = new ArrayList<>(team.getScoreBoard());
+            List<String> scoreBoardResult = new ArrayList<>();
+            for(String line:scoreBoard){
+                line=line.replace("&kill&",game.getKills().getOrDefault(player.getUniqueId(),0)+"");
+                scoreBoardResult.add(line);
+            }
+            fastBoard.updateLines(scoreBoardResult);
+        });
     }
 
     public void updateScoreBoard(){
@@ -96,13 +96,13 @@ public class ScoreBoard {
             }
             else {
                 updatePlayerGameBoard(fastBoard);
-                Team team =game.getTeam(fastBoard.getPlayer());
-                fastBoard.getPlayer()
+                game.getTeam(fastBoard.getPlayer()).ifPresent(team -> fastBoard.getPlayer()
                         .spigot()
                         .sendMessage(ChatMessageType.ACTION_BAR,
                                 TextComponent.fromLegacyText(game.translate("space-conquest.action-bar.message",
-                                        team==null?0:team.getResource().getOrDefault(Material.CRYING_OBSIDIAN,0),
-                                        game.getObjective())));
+                                        team.getResource().getOrDefault(Material.CRYING_OBSIDIAN,0),
+                                        game.getObjective()))));
+
             }
         }
     }

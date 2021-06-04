@@ -14,7 +14,7 @@
           "leather-chest-plate": "Combinaison Spatiale",
           "boots": "Bottes Spatiales"
         },
-        "mining": "L'équipe %s%s§r mine la Crying Obsidian",
+        "mining": "L'Équipe %s%s§r mine la Crying Obsidian",
         "color": {
           "blue": "Bleu",
           "cyan": "Cyan",
@@ -52,7 +52,7 @@
           "mode_3": "Tourelles prochain niveau (§b%d§f) Coût 10000 diamants :  (§b%d en banque)"
         }
       },
-      "team-color": "Couleur Team",
+      "team-color": "Couleur Équipe",
       "ressources": {
         "title": "Vos Ressources"
       },
@@ -66,42 +66,42 @@
       "upgrade": {
         "name": "Menu des Améliorations",
         "iron-chest-plate": {
-          "name": "§bUpgrade Iron ChestPlate§r Coût 10000 Fers (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration iron Chestplate débloquée"
+          "name": "§bAmélioration Plastron en Fer§r Coût 10000 Fers (§b%d en banque)",
+          "message": "[Space §bConquest§r] Amélioration Plastron en Fer débloquée"
         },
         "diamond-chest-plate": {
-          "name": "§bAmélioration Diamond ChestPlate§r Coût 20000 Diamants (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration Diamond Chestplate débloquée"
+          "name": "§bAmélioration Plastron en Diamant§r Coût 20000 Diamants (§b%d en banque)",
+          "message": "[Space §bConquest§r] Amélioration Plastron en Diamant débloquée"
         },
         "protection-1": {
           "name": "§bAmélioration Protection§r Coût 10000 Ors (§b%d en banque)",
           "message": "[Space §bConquest§r] Amélioration protection débloquée"
         },
         "protection-2": {
-          "name": "§bAmélioration Protection§r Coût 20000 Ors (§b%d en banque)",
+          "name": "§bAmélioration Protection II§r Coût 20000 Ors (§b%d en banque)",
           "message": "[Space §bConquest§r] Amélioration protection II débloquée"
         },
         "sharpness-1": {
-          "name": "§bAmélioration Sharpness§r Coût 10000 Ors (§b%d en banque)",
+          "name": "§bAmélioration Tranchant§r Coût 10000 Ors (§b%d en banque)",
           "message": "[Space §bConquest§r] Amélioration Tranchant débloquée"
         },
         "sharpness-2": {
-          "name": "§bAmélioration Sharpness§r Coût 20000 Ors (§b%d en banque)",
+          "name": "§bAmélioration Tranchant II§r Coût 20000 Ors (§b%d en banque)",
           "message": "[Space §bConquest§r] Amélioration Tranchant II débloquée"
         },
         "power-1": {
-          "name": "§bAmélioration Power§r Coût 10000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration Power débloquée"
+          "name": "§bAmélioration Puissance§r Coût 10000 Ors (§b%d en banque)",
+          "message": "[Space §bConquest§r] Amélioration Puissance débloquée"
         },
         "power-2": {
-          "name": "§bAmélioration Power§r Coût 20000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration Power II débloquée"
+          "name": "§bAmélioration Puissance§r Coût 20000 Ors (§b%d en banque)",
+          "message": "[Space §bConquest§r] Amélioration Puissance II débloquée"
         }
       },
       "config-menu": {
         "name": "Menu de Configuration",
         "create": "Créez une Team",
-        "max": "Le nombre d'équipes maximum a été crée",
+        "max": "Le nombre d'Équiped maximum a été crée",
         "already-launch": "La partie est déjà lancée",
         "input-title": "Entrez le nom de votre équipe",
         "leave": "Quitter son équipe",
@@ -136,9 +136,9 @@
       },
       "special-artefact": {
         "title": "Objets Spéciaux",
-        "tnt": "§bTNT§r Coût 150 Emeraudes (§b%d en banque)",
+        "tnt": "§bTNT§r Coût 150 Émeraudes (§b%d en banque)",
         "propulser": {
-          "name": "§bPropulseur§r Coût 300 Emeraudes (§b%d en banque)",
+          "name": "§bPropulseur§r Coût 300 Émeraudes (§b%d en banque)",
           "description": [
             "Propulse la personne qui l'utilise",
             "puis donne l'effet slow falling",
@@ -147,16 +147,16 @@
           "item-name": "§bPropulsion"
         },
         "levitation": {
-          "name": "§bLévitation§r Coût 300 Emeraudes (§b%d en banque)",
+          "name": "§bLévitation§r Coût 300 Émeraudes (§b%d en banque)",
           "description": [
             "Donne l'effet Lévitation à toutes les personnes",
-            "situées à moins de 25 blocks",
+            "situées à moins de 25 blocs",
             "utilisateur de l'objet non compris"
           ],
-          "item-name": "§bLéviation"
+          "item-name": "§bLevitation"
         },
         "knockback-stick":  {
-          "name": "§bBaton de Recul§r Coût 3000 Emeraudes (§b%d en banque)",
+          "name": "§bBaton de Recul§r Coût 3000 Émeraudes (§b%d en banque)",
           "item-name": "§bBaton de Recul"
         },
         "bridge": {
@@ -164,19 +164,20 @@
           "item-name": "§bPont Automatique"
         },
         "explosion": {
-          "name": "§bExplosion du centre§r Coût 500 Emeraudes (§b%d en banque)",
+          "name": "§bExplosion du centre§r Coût 500 Émeraudes (§b%d en banque)",
           "item-name": "§bExplosion Centrale"
         },
         "fire-charge": {
-          "name": "§bBoule de Feu§r Coût 500 Emeraudes (§b%d en banque)",
+          "name": "§bBoule de Feu§r Coût 500 Émeraudes (§b%d en banque)",
           "item-name": "§bBoule de Feu"
         },
         "no-gravity": {
           "name": "§bBloc Anti-Gravité§r Coût 1000 Fers (§b%d en banque)",
-          "item-name": "§bBloc Anti-Gravité"
+          "item-name": "§bBloc Anti-Gravité",
+          "lore": "Se pose dans le vide même si il n'y a pas de blocs autour"
         },
         "permutation": {
-          "name": "§bFlèche de permutation§r Coût 500 Emeraudes (§b%d en banque)",
+          "name": "§bFlèche de permutation§r Coût 500 Émeraudes (§b%d en banque)",
           "item-name": "§bFlèche de permutation"
         }
 
@@ -193,7 +194,7 @@
       "message": {
         "sabotage": "[Space §bConquest§r] Votre assistance gravitationnelle a été sabotée",
         "no-team": "[Space §bConquest] Il n'y a pas d'équipes enregistrées",
-        "use": "[Space §bConquest§r] Vous venez de saboter les assistance gravitationnelle de votre périmètre",
+        "use": "[Space §bConquest§r] Vous venez de saboter les assistances gravitationnelles de votre périmètre",
         "max": "[Space §bConquest] Le nombre de joueurs max a été atteint"
       },
       "chat": {

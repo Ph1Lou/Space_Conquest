@@ -29,7 +29,7 @@ public class TeamChat implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        Team team = game.getTeam(player);
+        Team team = game.getTeam(player).orElse(null);
 
         if(team==null) {
             player.sendMessage(game.translate("space-conquest.team.no-team"));

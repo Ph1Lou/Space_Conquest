@@ -38,34 +38,34 @@ public class ColorChoice implements InventoryProvider {
 
         GameManager game = JavaPlugin.getPlugin(Main.class).getCurrentGame();
 
-        Team team = game.getTeam(player);
+        game.getTeam(player).ifPresent(team -> {
+            int j=0;
 
-        if(team==null) return;
-
-        int j=0;
-
-        List<ColorTeam> colorTeams = new ArrayList<>(Arrays.asList(ColorTeam.values()));
-        if(game.isSingleColor()){
-            for(Team team1:game.getTeams()){
-                colorTeams.remove(team1.getColorTeam());
+            List<ColorTeam> colorTeams = new ArrayList<>(Arrays.asList(ColorTeam.values()));
+            if(game.isSingleColor()){
+                for(Team team1:game.getTeams()){
+                    colorTeams.remove(team1.getColorTeam());
+                }
             }
-        }
 
-        for(ColorTeam colorTeam:colorTeams){
+            for(ColorTeam colorTeam:colorTeams){
 
-            ItemBuilder banner = new ItemBuilder(colorTeam.getConstructionMaterial());
+                ItemBuilder banner = new ItemBuilder(colorTeam.getConstructionMaterial());
 
-            banner.setDisplayName(game.translate(colorTeam.getName()));
+                banner.setDisplayName(game.translate(colorTeam.getName()));
 
-            contents.set(j/9,j%9,ClickableItem.of((banner.build()),e -> {
-                        team.setColorTeam(colorTeam);
-                        ConfigMenu.INVENTORY.open(player);
-            } ));
-            j++;
-        }
+                contents.set(j/9,j%9,ClickableItem.of((banner.build()),e -> {
+                    team.setColorTeam(colorTeam);
+                    ConfigMenu.INVENTORY.open(player);
+                } ));
+                j++;
+            }
 
-        for(int k=j;k<18;k++){
-            contents.set(j/9,j%9,null);
-        }
+            for(int k=j;k<18;k++){
+                contents.set(j/9,j%9,null);
+            }
+        });
+
+
     }
 }

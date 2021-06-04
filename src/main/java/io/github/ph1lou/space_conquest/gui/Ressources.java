@@ -6,7 +6,6 @@ import fr.minuskube.inv.content.InventoryContents;
 import fr.minuskube.inv.content.InventoryProvider;
 import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.game.GameManager;
-import io.github.ph1lou.space_conquest.game.Team;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -43,16 +42,14 @@ public class Ressources implements InventoryProvider {
     public void update(Player player, InventoryContents contents) {
 
         GameManager game = JavaPlugin.getPlugin(Main.class).getCurrentGame();
-        Team team = game.getTeam(player);
-
-        if(team!=null){
+        game.getTeam(player).ifPresent(team -> {
             int i=1;
             for(Material mat:team.getResource().keySet()){
                 ItemBuilder itemStack = new ItemBuilder(mat).setDisplayName(String.valueOf(team.getResource().get(mat)));
                 contents.set(1,i,ClickableItem.of((itemStack.build()),e -> e.setCancelled(true)));
                 i++;
             }
-        }
+        });
 
     }
 }

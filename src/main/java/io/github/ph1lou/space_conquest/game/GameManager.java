@@ -7,27 +7,37 @@ import io.github.ph1lou.space_conquest.enums.State;
 import io.github.ph1lou.space_conquest.listeners.GameListener;
 import io.github.ph1lou.space_conquest.listeners.LobbyListener;
 import io.github.ph1lou.space_conquest.listeners.PlayerListener;
-import io.github.ph1lou.space_conquest.tasks.Lobby;
-import org.bukkit.*;
+import io.github.ph1lou.space_conquest.tasks.LobbyTask;
+import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
+import org.bukkit.GameMode;
+import org.bukkit.GameRule;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.IllegalFormatException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 public class GameManager {
 
-    private int objective=1000;
+    private int objective = 1000;
     private boolean singleColor = true;
-    private int playerMax=40;
-    private int teamNumber=12;
-    private String gameName="@Ph1Lou_";
-    private int centerSize=7;
-    private int zoneNumber =12;
+    private int playerMax = 40;
+    private int teamNumber = 12;
+    private String gameName = "@Ph1Lou_";
+    private int centerSize = 7;
+    private int zoneNumber = 12;
     private final Main main;
-    private int teamSize=4;
+    private int teamSize = 3;
     private GameListener gameListener;
     private final LobbyListener lobbyListener;
     private PlayerListener playerListener;
@@ -40,8 +50,12 @@ public class GameManager {
     private World world;
     private final Map<UUID, FastBoard> fastBoard = new HashMap<>();
     private final Map<UUID, Integer> kills = new HashMap<>();
-    private int playerSize=0;
+    private int playerSize = 0;
     private final MapLoader mapLoader;
+    private final boolean training;
+    private final boolean tournament;
+    private int countDown=30;
+    private final int teamAutoStart;
 
     public GameManager(Main main){
         this.main = main;
@@ -53,7 +67,10 @@ public class GameManager {
         for(org.bukkit.scoreboard.Team team:this.scoreboard.getTeams()){
             team.unregister();
         }
-        Lobby start = new Lobby(this);
+        this.training = main.getConfig().getBoolean("training");
+        this.tournament = main.getConfig().getBoolean("tournament");
+        this.teamAutoStart = main.getConfig().getInt("number_team_auto_start");
+        LobbyTask start = new LobbyTask(this);
         start.runTaskTimer(main, 0, 5);
     }
 
@@ -177,12 +194,11 @@ public class GameManager {
         this.world = world;
     }
 
-    @Nullable
-    public Team getTeam(Player player){
+    public Optional<Team> getTeam(Player player){
         return this.getTeams()
                 .stream()
                 .filter(team -> team.getMembers().contains(player.getUniqueId()))
-                .findFirst().orElse(null);
+                .findFirst();
     }
 
     public void repartition() {
@@ -228,7 +244,7 @@ public class GameManager {
         HandlerList.unregisterAll(this.gameListener);
         this.main.setCurrentGame(new GameManager(this.main));
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        Bukkit.getOnlinePlayers().forEach(player -> {
             player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
             ItemStack itemStack = new ItemStack(Material.WHITE_BANNER);
             GameManager newGame = this.main.getCurrentGame();
@@ -238,11 +254,46 @@ public class GameManager {
             fastBoard.updateTitle(this.translate("space-conquest.title"));
             newGame.getFastBoard().put(player.getUniqueId(),fastBoard);
             player.getInventory().addItem(itemStack);
-        }
+        });
+
         this.getMapLoader().deleteMap();
     }
 
     public int getObjective() {
         return this.objective;
+    }
+
+    public boolean isTraining() {
+        return training;
+    }
+
+    public boolean isTournament() {
+        return tournament;
+    }
+
+    public void initStart() {
+        if(this.teams.stream()
+                .filter(team -> team.getMembers().size()==this.getTeamSize()).count()>=this.getTeamAutoStart()){
+            this.state=State.PRE_START;
+        }
+    }
+
+    public void removeStart() {
+        if(this.state == State.PRE_START){
+            this.state = State.LOBBY;
+            this.countDown = 30;
+        }
+    }
+
+    public int getCountDown() {
+        return countDown;
+    }
+
+    public void setCountDown(int countDown) {
+        this.countDown = countDown;
+    }
+
+    public int getTeamAutoStart() {
+        return teamAutoStart;
     }
 }
