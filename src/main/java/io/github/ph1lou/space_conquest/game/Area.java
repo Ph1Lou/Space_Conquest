@@ -76,7 +76,7 @@ public class Area {
 
     private void progressCaptureAuto(Team team){
 
-        if (this.getRatioPlayerOn(team,true) > 1/2f) {
+        if (this.isInSuperiority(team,true)) {
             this.progressCapture(team);
         }
     }
@@ -166,14 +166,6 @@ public class Area {
         }
     }
 
-    public @Nullable Team getIsCapture() {
-        return isCapture;
-    }
-
-    public void setIsCapture(@Nullable Team isCapture) {
-        this.isCapture = isCapture;
-    }
-
     public Material getGeneratorType() {
         return this.generatorType;
     }
@@ -201,22 +193,27 @@ public class Area {
         return this.controlSize;
     }
 
-    public float getRatioPlayerOn(Team team) {
-        return this.getRatioPlayerOn(team,false);
+    public boolean isInSuperiority(Team team) {
+        return this.isInSuperiority(team,false);
     }
 
-    public float getRatioPlayerOn(Team team, boolean ok){
+    public boolean isInSuperiority(Team team, boolean ok){
         List<Player> players = this.getPlayerOn();
-        int total = players.size();
-        float boost = ok?0.55f:0f;
+        float total = players.size();
+        float teamTotal= players.stream()
+                .filter(player -> team.getMembers().contains(player.getUniqueId()))
+                .count();
+        if(ok){
+            teamTotal+=0.6;
+        }
         if(this.mode == TowerMode.DEFEND_AND_CONQUEST ||
                 this.mode == TowerMode.DEFEND_AND_MINE ||
                 this.mode == TowerMode.DEFEND){
-            total++;
+            total+=1.05;
         }
-        return (players.stream()
-                .filter(player -> team.getMembers().contains(player.getUniqueId()))
-                .count()+boost)/(float)Math.max(1,total);
+
+        return total<teamTotal;
+
     }
 
     public void setGeneratorType(Material generatorType) {
@@ -235,7 +232,6 @@ public class Area {
         this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,20,0.5)));
         this.mode = mode;
     }
-
 
     /**
      * Génère les particules du beacon vers la base de la team et les ajoutes dans leur ressources de team
