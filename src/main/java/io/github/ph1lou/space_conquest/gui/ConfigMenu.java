@@ -56,7 +56,7 @@ public class ConfigMenu implements InventoryProvider {
                                 Team team = new Team(game,text);
                                 team.addPlayer(player2);
                                 team.setFounder(player2.getUniqueId());
-                                game.getTeams().add(team);
+                                game.registerTeam(team);
 
                                 if(game.isTraining() && game.getTeams().size()>= game.getTeamAutoStart()){
                                     game.initStart();
@@ -108,7 +108,7 @@ public class ConfigMenu implements InventoryProvider {
                 }
             }
             banner.setLore(lore);
-            banner.setDisplayName(team.getColorTeam().getChatColor()+game.translate("space-conquest.team.name",team.getName()));
+            banner.setDisplayName(team.getColorTeam().getChatColor()+team.getName());
 
 
             contents.set(j/9+1,j%9,ClickableItem.of((banner.build()),e -> {
@@ -281,26 +281,30 @@ public class ConfigMenu implements InventoryProvider {
         Team team = game.getTeam(player).orElse(null);
 
         if(team!=null && team.getFounder().equals(player.getUniqueId())){
-            contents.set(3,6,ClickableItem.of((new ItemBuilder(Material.ACACIA_SIGN).
-                    setDisplayName(game.translate("space-conquest.gui.config-menu.rename-team")).
-                    build()),e -> new AnvilGUI.Builder()
-                            .onComplete((player2, text) -> {
-                                if(text.length()>0 && text.charAt(0)==' '){
-                                    text=text.replaceFirst(" ","");
-                                }
-                                team.setName(text.substring(0,Math.min(text.length(),16)));
-                                return AnvilGUI.Response.close();
-                            })
-                            .title(game.translate("space-conquest.gui.config-menu.rename-team"))
-                            .item(new ItemStack(Material.GREEN_CONCRETE_POWDER))
-                            .text(team.getName())
-                            .plugin(main)
-                            .onClose(player1 -> Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
-                                if(game.isState(State.LOBBY)){
-                                    ConfigMenu.INVENTORY.open(player1);
-                                }
-                            }))
-                            .open(player)));
+
+            if(!game.isTournament()){
+                contents.set(3,6,ClickableItem.of((new ItemBuilder(Material.ACACIA_SIGN).
+                        setDisplayName(game.translate("space-conquest.gui.config-menu.rename-team")).
+                        build()),e -> new AnvilGUI.Builder()
+                        .onComplete((player2, text) -> {
+                            if(text.length()>0 && text.charAt(0)==' '){
+                                text=text.replaceFirst(" ","");
+                            }
+                            team.setName(text.substring(0,Math.min(text.length(),16)));
+                            return AnvilGUI.Response.close();
+                        })
+                        .title(game.translate("space-conquest.gui.config-menu.rename-team"))
+                        .item(new ItemStack(Material.GREEN_CONCRETE_POWDER))
+                        .text(team.getName())
+                        .plugin(main)
+                        .onClose(player1 -> Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
+                            if(game.isState(State.LOBBY)){
+                                ConfigMenu.INVENTORY.open(player1);
+                            }
+                        }))
+                        .open(player)));
+            }
+
 
             contents.set(3,2,ClickableItem.of((new ItemBuilder(team.getColorTeam().getConstructionMaterial()).
                     setDisplayName(game.translate("space-conquest.gui.config-menu.change-color")).

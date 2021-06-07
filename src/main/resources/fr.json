@@ -3,9 +3,9 @@
       "team": {
         "no-team": "[Space §bConquest§r] Vous n'êtes dans aucune équipe",
         "prefix-chat": "[Team Chat]§r ",
-        "leader": "Commandant Équipe %s",
+        "leader": "Commandant %s",
         "choice": "Choix des §bÉquipes",
-        "name": "[Team %s] ",
+        "name": "%s » ",
         "equipment": {
           "helmet":"Casque Spatial",
           "leggings": "Combinaison Spatiale",
@@ -199,7 +199,7 @@
       },
       "chat": {
         "global": "[Global Chat] %s : %s",
-        "format": "[Global Chat] %s [Team %s]§r %s : %s"
+        "format": "[Global Chat] %s %s » §r %s : %s"
       },
       "victory": {
         "title": "Victoire",

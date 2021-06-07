@@ -17,6 +17,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
@@ -29,10 +30,10 @@ import java.util.UUID;
 
 public class GameManager {
 
-    private int objective = 1000;
+    private int objective = 8000;
     private boolean singleColor = true;
     private int playerMax = 40;
-    private int teamNumber = 12;
+    private int teamNumber = 6;
     private String gameName = "@Ph1Lou_";
     private int centerSize = 7;
     private int zoneNumber = 12;
@@ -182,8 +183,12 @@ public class GameManager {
         this.teamSize = teamSize;
     }
 
-    public List<Team> getTeams() {
+    public List<? extends Team> getTeams() {
         return this.teams;
+    }
+
+    public void registerTeam(Team team){
+        this.teams.add(team);
     }
 
     public World getWorld() {
@@ -195,13 +200,26 @@ public class GameManager {
     }
 
     public Optional<Team> getTeam(Player player){
-        return this.getTeams()
+        return this.teams
                 .stream()
                 .filter(team -> team.getMembers().contains(player.getUniqueId()))
                 .findFirst();
     }
 
-    public void repartition() {
+    public void start() {
+
+        if(this.isTournament()){
+            switch (this.getPlayerSize()){
+                case 5:
+                    this.setZoneNumber(15);
+                    break;
+                case 6 :
+                    this.setZoneNumber(18);
+                    break;
+                default:
+                    break;
+            }
+        }
 
         this.world = this.mapLoader.generateMap();
         this.world.setGameRule(GameRule.DO_INSOMNIA,false);
@@ -254,6 +272,9 @@ public class GameManager {
             fastBoard.updateTitle(this.translate("space-conquest.title"));
             newGame.getFastBoard().put(player.getUniqueId(),fastBoard);
             player.getInventory().addItem(itemStack);
+            if(newGame.isTournament()){
+                newGame.join(player);
+            }
         });
 
         this.getMapLoader().deleteMap();
@@ -295,5 +316,41 @@ public class GameManager {
 
     public int getTeamAutoStart() {
         return teamAutoStart;
+    }
+
+    public void join(Player player) {
+
+        if(this.isState(State.LOBBY) && this.isTournament()){
+
+            if(this.getTeams().size()<this.getTeamNumber()){
+
+                Main main = JavaPlugin.getPlugin(Main.class);
+
+                main.getPlayerDTOS().stream()
+                        .filter(playerDTO -> playerDTO.getName().equals(player.getName()))
+                        .findFirst()
+                        .ifPresent(playerDTO -> {
+                            String teamName = playerDTO.getTeam();
+                            teamName=teamName.substring(0,Math.min(teamName.length(),16));
+
+                            Optional<? extends Team> team = this.getTeams()
+                                    .stream().filter(team1 -> team1.getName().equals(playerDTO.getName()))
+                                    .findFirst();
+
+                            if(!team.isPresent()){
+                                Team team1 = new Team(this,teamName);
+                                team1.addPlayer(player);
+                                team1.setFounder(player.getUniqueId());
+                                this.registerTeam(team1);
+                            }
+                            else {
+                                team.get().addPlayer(player);
+                                if(playerDTO.isCaptain() && team.get().getMembers().contains(player.getUniqueId())){ //Si assez de monde
+                                    team.get().setFounder(player.getUniqueId());
+                                }
+                            }
+                        });
+            }
+        }
     }
 }

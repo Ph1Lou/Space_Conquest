@@ -30,7 +30,6 @@ public class GameTask extends BukkitRunnable {
 
         player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 10, 10);
         area.mineRessources(team);
-        area.setOwnerTeam(team);
         team.getBossBar().setVisible(true);
         team.getBossBar().setProgress(team.getResource().getOrDefault(Material.CRYING_OBSIDIAN,
                 0) / (float) game.getObjective());
@@ -38,6 +37,10 @@ public class GameTask extends BukkitRunnable {
         Bukkit.getScheduler().scheduleSyncDelayedTask(game.getMain(), () -> {
             if (!team.equals(area.getOwnerTeam())) {
                 team.getBossBar().setVisible(false);
+            }
+            else if (!area.isInSuperiority(team)) {
+                team.getBossBar().setVisible(false);
+                area.setOwnerTeam(null);
             }
         }, 6);
 
@@ -78,17 +81,21 @@ public class GameTask extends BukkitRunnable {
 
         this.game.getAreas()
                 .stream()
-                .filter(area -> !area.isBase())
+                .filter(area -> !area.isBase() && !area.isMiddle())
                 .map(area -> new Tuple<>(area,area.getOwnerTeam()))
                 .filter(areaTeamTuple -> areaTeamTuple.b()!=null)
         .forEach(areaTeamTuple -> areaTeamTuple.a().mineRessources(areaTeamTuple.b()));
 
 
-        this.playerMoved((p) -> {},(player, area, team) -> {
+        this.playerMoved((player, area, team) -> {
+            if (area.isMiddle()) {
+                this.progressMiddle(player,area,team);
+            }
+        },(player, area, team) -> {
             if (area.isInSuperiority(team)) {
 
                 if (area.isMiddle()) {
-                    this.progressMiddle(player,area,team);
+                    area.setOwnerTeam(team);
                 }
                 if(area.isBase() && area.getOwnerTeam()!=null && !area.getOwnerTeam().equals(team)){
                     Bukkit.getOnlinePlayers()
@@ -108,7 +115,7 @@ public class GameTask extends BukkitRunnable {
 
     }
 
-    public void playerMoved(Consumer<Player> onSelfArea, TriConsumer<Player,Area, Team> onForeignArea) {
+    public void playerMoved(TriConsumer<Player,Area, Team> onSelfArea, TriConsumer<Player,Area, Team> onForeignArea) {
 
         Bukkit.getOnlinePlayers().stream()
                 .filter(player -> {
@@ -123,7 +130,7 @@ public class GameTask extends BukkitRunnable {
                         .filter(area -> area.isOnArea(tuple.b()))
                         .findFirst().ifPresent(area -> {
                             if(tuple.a().equals(area.getOwnerTeam())){
-                                onSelfArea.accept(tuple.b());
+                                onSelfArea.accept(tuple.b(),area,tuple.a());
                             }
                             else {
                                 onForeignArea.accept(tuple.b(),area,tuple.a());

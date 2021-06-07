@@ -1,5 +1,6 @@
 package io.github.ph1lou.space_conquest.listeners;
 
+import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.enums.State;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
@@ -12,10 +13,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.Optional;
 
 public class PlayerListener implements Listener {
 
@@ -45,6 +50,7 @@ public class PlayerListener implements Listener {
                             () -> team.start(player1), 20L);
         }
     }
+
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event){

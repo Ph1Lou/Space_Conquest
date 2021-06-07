@@ -1,11 +1,13 @@
 package io.github.ph1lou.space_conquest.tasks;
 
+import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.enums.State;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class LobbyTask extends BukkitRunnable {
@@ -35,27 +37,30 @@ public class LobbyTask extends BukkitRunnable {
 
         if(this.game.isState(State.GAME)){
 
-            game.repartition();
+            game.start();
 
-            game.getTeams().forEach(team -> team.getMembers().forEach(uuid -> {
-                Player player1 = Bukkit.getPlayer(uuid);
-                if(player1!=null){
+            Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class),() -> {
+                game.getTeams().forEach(team -> team.getMembers().forEach(uuid -> {
+                    Player player1 = Bukkit.getPlayer(uuid);
+                    if(player1!=null){
+                        player1.closeInventory();
+                        player1.teleport(team.getSpawn());
+                        team.start(player1);
+                    }
+                }));
+
+                Bukkit.getOnlinePlayers().forEach(player1 -> {
                     player1.closeInventory();
-                    player1.teleport(team.getSpawn());
-                    team.start(player1);
-                }
-            }));
+                    if(!player1.getWorld().equals(game.getWorld())){
+                        player1.teleport(game.getWorld().getSpawnLocation());
+                        player1.setGameMode(GameMode.SPECTATOR);
+                    }
+                });
 
-            Bukkit.getOnlinePlayers().forEach(player1 -> {
-                player1.closeInventory();
-                if(!player1.getWorld().equals(game.getWorld())){
-                    player1.teleport(game.getWorld().getSpawnLocation());
-                    player1.setGameMode(GameMode.SPECTATOR);
-                }
-            });
+                GameTask start = new GameTask(this.game);
+                start.runTaskTimer(this.game.getMain(), 0, 5);
 
-            GameTask start = new GameTask(this.game);
-            start.runTaskTimer(this.game.getMain(), 0, 5);
+            },200);
             cancel();
             return;
         }

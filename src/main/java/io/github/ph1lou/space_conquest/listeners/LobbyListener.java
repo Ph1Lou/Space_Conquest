@@ -1,6 +1,7 @@
 package io.github.ph1lou.space_conquest.listeners;
 
 import fr.mrmicky.fastboard.FastBoard;
+import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.enums.State;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
@@ -17,6 +18,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Optional;
 
 public class LobbyListener implements Listener {
 
@@ -78,6 +82,13 @@ public class LobbyListener implements Listener {
             player.getInventory().setHeldItemSlot((1+player.getInventory().getHeldItemSlot())%9);
         }
     }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event){
+
+        game.join(event.getPlayer());
+    }
+
 
 
     @EventHandler

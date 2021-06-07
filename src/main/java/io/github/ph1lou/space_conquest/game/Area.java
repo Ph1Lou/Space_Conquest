@@ -183,7 +183,7 @@ public class Area {
     }
 
     public void setOwnerTeam(@Nullable Team ownerTeam) {
-        if(!this.isBase){
+        if(!this.isBase && !this.isMiddle){
             this.setMode(TowerMode.MINE);
         }
         this.ownerTeam = ownerTeam;
@@ -199,20 +199,21 @@ public class Area {
 
     public boolean isInSuperiority(Team team, boolean ok){
         List<Player> players = this.getPlayerOn();
-        float total = players.size();
+
         float teamTotal= players.stream()
                 .filter(player -> team.getMembers().contains(player.getUniqueId()))
                 .count();
+        float othersTeamTotal = players.size() - teamTotal;
         if(ok){
             teamTotal+=0.6;
         }
         if(this.mode == TowerMode.DEFEND_AND_CONQUEST ||
                 this.mode == TowerMode.DEFEND_AND_MINE ||
                 this.mode == TowerMode.DEFEND){
-            total+=1.05;
+            othersTeamTotal+=1.05;
         }
 
-        return total<teamTotal;
+        return Math.min(othersTeamTotal,1) < teamTotal;
 
     }
 
@@ -255,7 +256,7 @@ public class Area {
             game.getWorld().spawnParticle(Particle.FLAME,location,0,vector.getX(),vector.getY(),vector.getZ(),0.5);
         }
 
-        if(this.getOwnerTeam()==null){
+        if(this.getOwnerTeam()==null || this.isMiddle()){
             return;
         }
 

@@ -39,7 +39,7 @@ public class Rank implements InventoryProvider {
         for(Team team:game.getTeams()){
 
             ItemBuilder banner = new ItemBuilder(team.getColorTeam().getBanner());
-            banner.setDisplayName(team.getColorTeam().getChatColor()+game.translate("space-conquest.team.name",team.getName()));
+            banner.setDisplayName(team.getColorTeam().getChatColor()+team.getName());
             banner.setLore(game.translate("space-conquest.gui.rank.message",team.getResource().getOrDefault(Material.CRYING_OBSIDIAN,0),game.getObjective()));
 
             contents.set(j/9,j%9,ClickableItem.empty(banner.build()));
