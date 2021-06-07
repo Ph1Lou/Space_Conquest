@@ -5,7 +5,6 @@ import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.MapLoader;
 import io.github.ph1lou.space_conquest.database.DataBaseManager;
 import io.github.ph1lou.space_conquest.database.DbConnection;
-import io.github.ph1lou.space_conquest.database.dto.PlayerDTO;
 import io.github.ph1lou.space_conquest.enums.State;
 import io.github.ph1lou.space_conquest.listeners.GameListener;
 import io.github.ph1lou.space_conquest.listeners.LobbyListener;
