@@ -3,6 +3,9 @@ package io.github.ph1lou.space_conquest.game;
 import fr.mrmicky.fastboard.FastBoard;
 import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.MapLoader;
+import io.github.ph1lou.space_conquest.database.DataBaseManager;
+import io.github.ph1lou.space_conquest.database.DbConnection;
+import io.github.ph1lou.space_conquest.database.dto.PlayerDTO;
 import io.github.ph1lou.space_conquest.enums.State;
 import io.github.ph1lou.space_conquest.listeners.GameListener;
 import io.github.ph1lou.space_conquest.listeners.LobbyListener;
@@ -20,7 +23,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.IllegalFormatException;
 import java.util.List;
@@ -209,7 +219,7 @@ public class GameManager {
     public void start() {
 
         if(this.isTournament()){
-            switch (this.getPlayerSize()){
+            switch (this.getTeams().size()){
                 case 5:
                     this.setZoneNumber(15);
                     break;
@@ -352,5 +362,84 @@ public class GameManager {
                         });
             }
         }
+    }
+
+    public void sendScore(Team team) {
+
+        if(!this.isTournament()) return;
+
+        DataBaseManager dataBaseManager = new DataBaseManager(JavaPlugin.getPlugin(Main.class));
+
+        DbConnection playerConnection = dataBaseManager.getDataBaseConnection();
+
+        try {
+
+            int teamId = 0;
+
+            Connection connection = playerConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT id FROM teams WHERE name=?");
+            preparedStatement.setString(1,team.getName());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                Bukkit.getLogger().warning("Team id not found");
+                return;
+
+            }
+
+            teamId = resultSet.getInt(1);
+
+            preparedStatement = connection.prepareStatement("INSERT INTO games VALUES (?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, 0);
+            preparedStatement.setInt(2, teamId);
+            preparedStatement.setInt(3, this.getTimer());
+            preparedStatement.setTimestamp(4, new Timestamp(new Date().getTime()));
+            preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+            if(!rs.next()){
+                Bukkit.getLogger().warning("Game id not generated");
+                return;
+            }
+
+            int gameId = rs.getInt(1);
+
+
+
+            this.teams.forEach(team1 -> {
+                Bukkit.broadcastMessage(this.translate("space-conquest.team.point",team1.getName(),team1.getResource()
+                        .getOrDefault(Material.CRYING_OBSIDIAN,0)));
+
+                try {
+                    PreparedStatement preparedStatement1 = connection.prepareStatement("SELECT id FROM teams WHERE name=?");
+                    preparedStatement1.setString(1,team.getName());
+                    ResultSet resultSet1 = preparedStatement1.executeQuery();
+
+                    if (resultSet1.next()) {
+
+                        int teamId1 = resultSet.getInt(1);
+
+                        PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO points VALUES (?, ?, ?)");
+
+                        preparedStatement2.setInt(1,teamId1);
+                        preparedStatement2.setInt(2,gameId);
+                        preparedStatement2.setInt(3,team1.getResource().getOrDefault(Material.CRYING_OBSIDIAN,0));
+                        preparedStatement2.executeUpdate();
+                    }
+
+
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+
+            });
+
+        }
+        catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
+        dataBaseManager.close();
     }
 }

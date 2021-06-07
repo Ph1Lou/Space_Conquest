@@ -6,6 +6,7 @@
         "leader": "Commandant %s",
         "choice": "Choix des §bÉquipes",
         "name": "%s » ",
+        "point": "[Space §bConquest§r] %s » %d points",
         "equipment": {
           "helmet":"Casque Spatial",
           "leggings": "Combinaison Spatiale",

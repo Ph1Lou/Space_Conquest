@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public class GameTask extends BukkitRunnable {
 
@@ -57,6 +56,9 @@ public class GameTask extends BukkitRunnable {
             Bukkit.broadcastMessage(game.translate("space-conquest.game.victory.message",
                     game.translate("space-conquest.game.victory.team",
                             team.getName())));
+
+            game.sendScore(team);
+
             game.restart();
             Bukkit.getPluginManager().callEvent(new WinEvent(team));
         }
