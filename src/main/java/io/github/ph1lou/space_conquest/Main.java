@@ -34,6 +34,7 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         this.invManager = new InventoryManager(this);
         this.loadDatas();
+        this.saveDefaultConfig();
 
         this.invManager.init();
         setWorld();

@@ -265,11 +265,11 @@ public class GameListener implements Listener {
 
             for(Area area:game.getAreas()){
                 if(area.getMiddle().equals(location)){
-                    if(team.equals(area.getOwnerTeam())){
-                        Ressources.INVENTORY.open(player1);
-                    }
-                    else if(area.getGeneratorType().equals(Material.CRYING_OBSIDIAN)){
+                    if(area.isMiddle()){
                         Rank.INVENTORY.open(player1);
+                    }
+                    else if(team.equals(area.getOwnerTeam())){
+                        Ressources.INVENTORY.open(player1);
                     }
                     else {
                         player1.sendMessage(game.translate("space-conquest.game.beacon.no-control"));
