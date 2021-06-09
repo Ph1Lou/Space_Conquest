@@ -26,11 +26,12 @@ public class LobbyTask extends BukkitRunnable {
                 this.game.setState(State.GAME);
             }
             else{
-                this.game.setCountDown(this.game.getCountDown()-1);
                 Bukkit.getOnlinePlayers().forEach(player -> {
-                    player.setLevel(30-this.game.getCountDown());
+                    player.setLevel(this.game.getCountDown());
                     player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP,10,10);
                 });
+                this.game.setCountDown(this.game.getCountDown()-1);
+
             }
         }
 
