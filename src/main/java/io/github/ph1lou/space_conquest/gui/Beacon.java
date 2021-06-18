@@ -11,6 +11,7 @@ import io.github.ph1lou.space_conquest.enums.TowerMode;
 import io.github.ph1lou.space_conquest.game.Area;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
+import io.github.ph1lou.space_conquest.utils.TexturedItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,22 +40,21 @@ public class Beacon implements InventoryProvider {
 
         GameManager game = JavaPlugin.getPlugin(Main.class).getCurrentGame();
 
-        contents.set(0,0,ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON)
-                .setDisplayName(game.translate("space-conquest.gui.ressources.title"))
-                .build()),e -> Ressources.INVENTORY.open(player)));
+        contents.set(0,0,
+                ClickableItem.of((TexturedItem.BLUE_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.ressources.title"))
+                        .build()),e -> Ressources.INVENTORY.open(player)));
         contents.set(0,2,
-                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON)
-                        .setDisplayName(game.translate("space-conquest.gui.boutique.title"))
+                ClickableItem.of((TexturedItem.RED_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.boutique.title"))
                         .build()),e -> Boutique.INVENTORY.open(player)));
-        contents.set(0,4,ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON)
-                .setDisplayName(game.translate("space-conquest.gui.upgrade.name"))
-                .build()),e -> Beacon.INVENTORY.open(player)));
-        contents.set(0,6,ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON)
-                .setDisplayName(game.translate("space-conquest.gui.special-artefact.title"))
-                .build()),e -> SpecialArtefact.INVENTORY.open(player)));
+        contents.set(0,4,
+                ClickableItem.of((TexturedItem.YELLOW_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.upgrade.name"))
+                        .build()),e -> Upgrade.INVENTORY.open(player)));
+        contents.set(0,6,
+                ClickableItem.of((TexturedItem.GREEN_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.special-artefact.title"))
+                        .build()),e -> SpecialArtefact.INVENTORY.open(player)));
+
         contents.set(0,8,
-                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON)
-                        .setDisplayName(game.translate("space-conquest.gui.beacon.name"))
+                ClickableItem.of((TexturedItem.PURPLE_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.beacon.name"))
                         .build()),e -> Beacon.INVENTORY.open(player)));
     }
 
@@ -67,52 +67,31 @@ public class Beacon implements InventoryProvider {
 
 
             if(team.getUpgrade().getTower()==0){
-                ItemBuilder mode = new ItemBuilder(Material.WOODEN_PICKAXE);
+                ItemBuilder mode = TexturedItem.TOWER_LEVEL_1.getItemBuilder();
                 mode.setDisplayName(game.translate("space-conquest.gui.beacon.modes.mode_1",
                         team.getUpgrade().getTower()+1,
-                        team.getResource().getOrDefault(Material.IRON_BLOCK,0)));
+                        team.getResource().getOrDefault(TexturedItem.IRON_RESSOURCE,0)));
 
-                contents.set(1,4, ClickableItem.of((mode.build()), e -> {
-                    if(team.getResource().containsKey(Material.IRON_BLOCK)){
-                        int iron =team.getResource().get(Material.IRON_BLOCK);
-                        if(iron>=10000){
-                            team.getResource().put(Material.IRON_BLOCK,iron-10000);
-                            team.getUpgrade().setTower(team.getUpgrade().getTower()+1);
-                        }
-                    }
-                }));
+                contents.set(1,4, ClickableItem.of((mode.build()), e -> team.spend(10000,TexturedItem.IRON_RESSOURCE,
+                        () ->  team.getUpgrade().setTower(team.getUpgrade().getTower()+1))));
             }
             else if(team.getUpgrade().getTower()==1){
-                ItemBuilder mode = new ItemBuilder(Material.GOLDEN_PICKAXE);
+                ItemBuilder mode = TexturedItem.TOWER_LEVEL_2.getItemBuilder();
                 mode.setDisplayName(game.translate("space-conquest.gui.beacon.modes.mode_2",
                         team.getUpgrade().getTower()+1,
-                        team.getResource().getOrDefault(Material.GOLD_BLOCK,0)));
+                        team.getResource().getOrDefault(TexturedItem.GOLD_RESSOURCE,0)));
 
-                contents.set(1,4, ClickableItem.of((mode.build()), e -> {
-                    if(team.getResource().containsKey(Material.GOLD_BLOCK)){
-                        int iron =team.getResource().get(Material.GOLD_BLOCK);
-                        if(iron>=10000){
-                            team.getResource().put(Material.GOLD_BLOCK,iron-10000);
-                            team.getUpgrade().setTower(team.getUpgrade().getTower()+1);
-                        }
-                    }
-                }));
+                contents.set(1,4, ClickableItem.of((mode.build()), e -> team.spend(10000,TexturedItem.GOLD_RESSOURCE,
+                        () ->  team.getUpgrade().setTower(team.getUpgrade().getTower()+1))));
             }
             else if(team.getUpgrade().getTower()==2){
-                ItemBuilder mode = new ItemBuilder(Material.DIAMOND_PICKAXE);
+                ItemBuilder mode = TexturedItem.TOWER_LEVEL_3.getItemBuilder();
                 mode.setDisplayName(game.translate("space-conquest.gui.beacon.modes.mode_3",
                         team.getUpgrade().getTower()+1,
-                        team.getResource().getOrDefault(Material.DIAMOND_BLOCK,0)));
+                        team.getResource().getOrDefault(TexturedItem.DIAMOND_RESSOURCE,0)));
 
-                contents.set(1,4, ClickableItem.of((mode.build()), e -> {
-                    if(team.getResource().containsKey(Material.DIAMOND_BLOCK)){
-                        int iron =team.getResource().get(Material.DIAMOND_BLOCK);
-                        if(iron>=10000){
-                            team.getResource().put(Material.DIAMOND_BLOCK,iron-10000);
-                            team.getUpgrade().setTower(team.getUpgrade().getTower()+1);
-                        }
-                    }
-                }));
+                contents.set(1,4, ClickableItem.of((mode.build()), e -> team.spend(10000,TexturedItem.DIAMOND_RESSOURCE,
+                        () ->  team.getUpgrade().setTower(team.getUpgrade().getTower()+1))));
             }
 
             List<TowerMode> modes = Arrays.stream(TowerMode.values())

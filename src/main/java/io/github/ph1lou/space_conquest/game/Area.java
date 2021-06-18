@@ -2,6 +2,7 @@ package io.github.ph1lou.space_conquest.game;
 
 import io.github.ph1lou.space_conquest.enums.TowerMode;
 import io.github.ph1lou.space_conquest.utils.Laser;
+import io.github.ph1lou.space_conquest.utils.TexturedItem;
 import net.minecraft.server.v1_16_R3.Tuple;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -26,7 +27,7 @@ public class Area {
     private final GameManager game;
     private final int size;
 
-    private Material generatorType;
+    private TexturedItem generatorType;
 
     private final Location middle;
 
@@ -52,7 +53,7 @@ public class Area {
     private final List<Location> blocks = new ArrayList<>();
     private int timer=0;
 
-    public Area(GameManager game, boolean isBase, boolean isMiddle , Location middle, Material generatorType, int size){
+    public Area(GameManager game, boolean isBase, boolean isMiddle , Location middle, TexturedItem generatorType, int size){
         this.game=game;
         this.isBase=isBase;
         this.middle=middle;
@@ -166,7 +167,7 @@ public class Area {
         }
     }
 
-    public Material getGeneratorType() {
+    public TexturedItem getGeneratorType() {
         return this.generatorType;
     }
 
@@ -217,7 +218,7 @@ public class Area {
 
     }
 
-    public void setGeneratorType(Material generatorType) {
+    public void setGeneratorType(TexturedItem generatorType) {
         this.generatorType=generatorType;
     }
 

@@ -7,6 +7,7 @@ import fr.minuskube.inv.content.InventoryProvider;
 import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
+import io.github.ph1lou.space_conquest.utils.TexturedItem;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -33,20 +34,20 @@ public class Boutique implements InventoryProvider {
         GameManager game = JavaPlugin.getPlugin(Main.class).getCurrentGame();
 
         contents.set(0,0,
-                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.ressources.title"))
+                ClickableItem.of((TexturedItem.BLUE_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.ressources.title"))
                         .build()),e -> Ressources.INVENTORY.open(player)));
         contents.set(0,2,
-                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.boutique.title"))
+                ClickableItem.of((TexturedItem.RED_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.boutique.title"))
                         .build()),e -> Boutique.INVENTORY.open(player)));
         contents.set(0,4,
-                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.upgrade.name"))
+                ClickableItem.of((TexturedItem.YELLOW_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.upgrade.name"))
                         .build()),e -> Upgrade.INVENTORY.open(player)));
         contents.set(0,6,
-                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.special-artefact.title"))
+                ClickableItem.of((TexturedItem.GREEN_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.special-artefact.title"))
                         .build()),e -> SpecialArtefact.INVENTORY.open(player)));
 
         contents.set(0,8,
-                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.beacon.name"))
+                ClickableItem.of((TexturedItem.PURPLE_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.beacon.name"))
                         .build()),e -> Beacon.INVENTORY.open(player)));
 
 
@@ -59,51 +60,36 @@ public class Boutique implements InventoryProvider {
         GameManager game = JavaPlugin.getPlugin(Main.class).getCurrentGame();
 
         game.getTeam(player).ifPresent(team -> {
-            ItemBuilder woodenSword = new ItemBuilder(Material.WOODEN_SWORD);
+            ItemBuilder woodenSword = TexturedItem.SWORD_LEVEL_1.getItemBuilder();
 
             woodenSword.addEnchant(Enchantment.DAMAGE_ALL,team.getUpgrade().isSharpness());
 
 
             ItemStack tempWoodenSword = woodenSword.build().clone();
 
-            contents.set(1,1, ClickableItem.of((woodenSword.setDisplayName(game.translate("space-conquest.gui.boutique.wooden-sword",team.getResource().getOrDefault(Material.IRON_BLOCK,0))).build()), e -> {
-                if(team.getResource().containsKey(Material.IRON_BLOCK)){
-                    if(team.getResource().get(Material.IRON_BLOCK)>=500){
-                        player.getInventory().addItem(tempWoodenSword);
-                        team.getResource().put(Material.IRON_BLOCK,team.getResource().get(Material.IRON_BLOCK)-500);
-                    }
-                }
-            }));
+            contents.set(1,1, ClickableItem.of((woodenSword.setDisplayName(game.translate("space-conquest.gui.boutique.wooden-sword",
+                    team.getResource().getOrDefault(TexturedItem.IRON_RESSOURCE,0))).build()), e -> team.spend(500,TexturedItem.IRON_RESSOURCE,
+                    () -> player.getInventory().addItem(tempWoodenSword))));
 
-            ItemBuilder ironSword = new ItemBuilder(Material.IRON_SWORD);
+            ItemBuilder ironSword = TexturedItem.SWORD_LEVEL_2.getItemBuilder();
 
             ironSword.addEnchant(Enchantment.DAMAGE_ALL,team.getUpgrade().isSharpness());
 
             ItemStack temp = ironSword.build().clone();
 
-            contents.set(1,3, ClickableItem.of((ironSword.setDisplayName(game.translate("space-conquest.gui.boutique.iron-sword",team.getResource().getOrDefault(Material.IRON_BLOCK,0))).build()), e -> {
-                if(team.getResource().containsKey(Material.IRON_BLOCK)){
-                    if(team.getResource().get(Material.IRON_BLOCK)>=1500){
-                        player.getInventory().addItem(temp);
-                        team.getResource().put(Material.IRON_BLOCK,team.getResource().get(Material.IRON_BLOCK)-1500);
-                    }
-                }
-            }));
+            contents.set(1,3, ClickableItem.of((ironSword.setDisplayName(game.translate("space-conquest.gui.boutique.iron-sword",
+                    team.getResource().getOrDefault(TexturedItem.IRON_RESSOURCE,0))).build()), e -> team.spend(1500,TexturedItem.IRON_RESSOURCE,
+                            () ->  player.getInventory().addItem(temp))));
 
-            ItemBuilder diamondSword = new ItemBuilder(Material.DIAMOND_SWORD);
+            ItemBuilder diamondSword = TexturedItem.SWORD_LEVEL_3.getItemBuilder();
 
             diamondSword.addEnchant(Enchantment.DAMAGE_ALL,team.getUpgrade().isSharpness());
 
             ItemStack tempSword = diamondSword.build().clone();
 
-            contents.set(1,5, ClickableItem.of((diamondSword.setDisplayName(game.translate("space-conquest.gui.boutique.diamond-sword",team.getResource().getOrDefault(Material.DIAMOND_BLOCK,0))).build()), e -> {
-                if(team.getResource().containsKey(Material.DIAMOND_BLOCK)){
-                    if(team.getResource().get(Material.DIAMOND_BLOCK)>=3000){
-                        player.getInventory().addItem(tempSword);
-                        team.getResource().put(Material.DIAMOND_BLOCK,team.getResource().get(Material.DIAMOND_BLOCK)-3000);
-                    }
-                }
-            }));
+            contents.set(1,5, ClickableItem.of((diamondSword.setDisplayName(game.translate("space-conquest.gui.boutique.diamond-sword",
+                    team.getResource().getOrDefault(TexturedItem.DIAMOND_RESSOURCE,0))).build()), e -> team.spend(3000,TexturedItem.DIAMOND_RESSOURCE,
+                            () ->  player.getInventory().addItem(tempSword))));
 
             ItemBuilder bow = new ItemBuilder(Material.BOW);
 
@@ -112,53 +98,33 @@ public class Boutique implements InventoryProvider {
 
             ItemStack tempBow = bow.build().clone();
 
-            contents.set(1,7, ClickableItem.of((bow.setDisplayName(game.translate("space-conquest.gui.boutique.bow",team.getResource().getOrDefault(Material.GOLD_BLOCK,0))).build()), e -> {
-                if(team.getResource().containsKey(Material.GOLD_BLOCK)){
-                    if(team.getResource().get(Material.GOLD_BLOCK)>=2000){
-                        player.getInventory().addItem(tempBow);
-                        team.getResource().put(Material.GOLD_BLOCK,team.getResource().get(Material.GOLD_BLOCK)-2000);
-                    }
-                }
-            }));
+            contents.set(1,7, ClickableItem.of((bow.setDisplayName(game.translate("space-conquest.gui.boutique.bow",
+                    team.getResource().getOrDefault(TexturedItem.GOLD_RESSOURCE,0))).build()), e -> team.spend(2000,TexturedItem.GOLD_RESSOURCE,
+                            () ->   player.getInventory().addItem(tempBow))));
 
-            ItemBuilder arrow = new ItemBuilder(Material.ARROW);
+            ItemBuilder arrow = TexturedItem.ARROW.getItemBuilder();
             arrow.setAmount(16);
-            arrow.setDisplayName(game.translate("space-conquest.gui.boutique.arrow",team.getResource().getOrDefault(Material.DIAMOND_BLOCK,0)));
-            contents.set(3,1, ClickableItem.of((arrow.build()), e -> {
-                if(team.getResource().containsKey(Material.DIAMOND_BLOCK)){
-                    if(team.getResource().get(Material.DIAMOND_BLOCK)>=500){
-                        player.getInventory().addItem(new ItemStack(Material.ARROW,16));
-                        team.getResource().put(Material.DIAMOND_BLOCK,team.getResource().get(Material.DIAMOND_BLOCK)-500);
-                    }
-                }
-            }));
+            arrow.setDisplayName(game.translate("space-conquest.gui.boutique.arrow",
+                    team.getResource().getOrDefault(TexturedItem.DIAMOND_RESSOURCE,0)));
+            contents.set(3,1, ClickableItem.of((arrow.build()), e -> team.spend(500,TexturedItem.DIAMOND_RESSOURCE,
+                    () ->   player.getInventory().addItem(TexturedItem.ARROW.getItemBuilder().setAmount(16).build()))));
 
             ItemBuilder wool = new ItemBuilder(team.getColorTeam().getConstructionMaterial());
             wool.setAmount(32);
-            wool.setDisplayName(game.translate("space-conquest.gui.boutique.wool",team.getResource().getOrDefault(Material.IRON_BLOCK,0)));
+            wool.setDisplayName(game.translate("space-conquest.gui.boutique.wool",
+                    team.getResource().getOrDefault(TexturedItem.IRON_RESSOURCE,0)));
 
 
-            contents.set(3,3, ClickableItem.of((wool.build()), e -> {
-                if(team.getResource().containsKey(Material.IRON_BLOCK)){
-                    if(team.getResource().get(Material.IRON_BLOCK)>=64){
-                        player.getInventory().addItem(new ItemStack(team.getColorTeam().getConstructionMaterial(),32));
-                        team.getResource().put(Material.IRON_BLOCK,team.getResource().get(Material.IRON_BLOCK)-64);
-                    }
-                }
-            }));
+            contents.set(3,3, ClickableItem.of((wool.build()), e -> team.spend(64,TexturedItem.IRON_RESSOURCE,
+                    () ->   player.getInventory().addItem(new ItemStack(team.getColorTeam().getConstructionMaterial(),32)))));
 
-            ItemBuilder shear = new ItemBuilder(Material.SHEARS);
-            shear.setDisplayName(game.translate("space-conquest.gui.boutique.shear",team.getResource().getOrDefault(Material.IRON_BLOCK,0)));
+            ItemBuilder shear = TexturedItem.SHEARS.getItemBuilder();
+            shear.setDisplayName(game.translate("space-conquest.gui.boutique.shear",
+                    team.getResource().getOrDefault(TexturedItem.IRON_RESSOURCE,0)));
 
 
-            contents.set(3,5, ClickableItem.of((shear.build()), e -> {
-                if(team.getResource().containsKey(Material.IRON_BLOCK)){
-                    if(team.getResource().get(Material.IRON_BLOCK)>=200){
-                        player.getInventory().addItem(new ItemStack(Material.SHEARS));
-                        team.getResource().put(Material.IRON_BLOCK,team.getResource().get(Material.IRON_BLOCK)-200);
-                    }
-                }
-            }));
+            contents.set(3,5, ClickableItem.of((shear.build()), e -> team.spend(200,TexturedItem.IRON_RESSOURCE,
+                    () ->   player.getInventory().addItem(TexturedItem.SHEARS.getItemBuilder().build()))));
 
         });
 

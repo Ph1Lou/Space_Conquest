@@ -7,7 +7,7 @@ import fr.minuskube.inv.content.InventoryProvider;
 import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
-import org.bukkit.Material;
+import io.github.ph1lou.space_conquest.utils.TexturedItem;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,12 +28,21 @@ public class Ressources implements InventoryProvider {
 
         GameManager game = JavaPlugin.getPlugin(Main.class).getCurrentGame();
 
-        contents.set(0,0,ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.ressources.title")).build()),e -> Ressources.INVENTORY.open(player)));
-        contents.set(0,2,ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.boutique.title")).build()),e -> Boutique.INVENTORY.open(player)));
-        contents.set(0,4,ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.upgrade.name")).build()),e -> Upgrade.INVENTORY.open(player)));
-        contents.set(0,6,ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.special-artefact.title")).build()),e -> SpecialArtefact.INVENTORY.open(player)));
+        contents.set(0,0,
+                ClickableItem.of((TexturedItem.BLUE_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.ressources.title"))
+                        .build()),e -> Ressources.INVENTORY.open(player)));
+        contents.set(0,2,
+                ClickableItem.of((TexturedItem.RED_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.boutique.title"))
+                        .build()),e -> Boutique.INVENTORY.open(player)));
+        contents.set(0,4,
+                ClickableItem.of((TexturedItem.YELLOW_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.upgrade.name"))
+                        .build()),e -> Upgrade.INVENTORY.open(player)));
+        contents.set(0,6,
+                ClickableItem.of((TexturedItem.GREEN_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.special-artefact.title"))
+                        .build()),e -> SpecialArtefact.INVENTORY.open(player)));
+
         contents.set(0,8,
-                ClickableItem.of((new ItemBuilder(Material.ACACIA_BUTTON).setDisplayName(game.translate("space-conquest.gui.beacon.name"))
+                ClickableItem.of((TexturedItem.PURPLE_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.beacon.name"))
                         .build()),e -> Beacon.INVENTORY.open(player)));
     }
 
@@ -44,8 +53,8 @@ public class Ressources implements InventoryProvider {
         GameManager game = JavaPlugin.getPlugin(Main.class).getCurrentGame();
         game.getTeam(player).ifPresent(team -> {
             int i=1;
-            for(Material mat:team.getResource().keySet()){
-                ItemBuilder itemStack = new ItemBuilder(mat).setDisplayName(String.valueOf(team.getResource().get(mat)));
+            for(TexturedItem item:team.getResource().keySet()){
+                ItemBuilder itemStack = item.getItemBuilder().setDisplayName(String.valueOf(team.getResource().get(item)));
                 contents.set(1,i,ClickableItem.of((itemStack.build()),e -> e.setCancelled(true)));
                 i++;
             }

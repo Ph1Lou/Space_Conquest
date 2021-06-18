@@ -138,4 +138,16 @@ public class ItemBuilder {
         this.stack = CraftItemStack.asBukkitCopy(nmsItem);
         return this;
     }
+
+    public ItemBuilder addNBTTag(String key, Integer value) {
+        net.minecraft.server.v1_16_R3.ItemStack nmsItem = CraftItemStack.asNMSCopy(this.stack);
+        NBTTagCompound compound = nmsItem.getOrCreateTag();
+
+        compound.setInt(key,value);
+
+        nmsItem.setTag(compound);
+
+        this.stack = CraftItemStack.asBukkitCopy(nmsItem);
+        return this;
+    }
 }

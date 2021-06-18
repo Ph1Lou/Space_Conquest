@@ -2,6 +2,7 @@ package io.github.ph1lou.space_conquest.game;
 
 import io.github.ph1lou.space_conquest.enums.ColorTeam;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
+import io.github.ph1lou.space_conquest.utils.TexturedItem;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class Team {
 
@@ -32,7 +34,7 @@ public class Team {
     private UUID founder;
     private Location spawn;
     private String name;
-    private final Map<Material,Integer> resource = new HashMap<>();
+    private final Map<TexturedItem,Integer> resource = new HashMap<>();
     private BossBar bossBar;
     private NPC npc ;
 
@@ -60,6 +62,16 @@ public class Team {
         this.team.setOption(org.bukkit.scoreboard.Team.Option.COLLISION_RULE, org.bukkit.scoreboard.Team.OptionStatus.NEVER);
         this.setName(name);
 
+    }
+
+    public void spend(int amount, TexturedItem item, Runnable callBack){
+        if(this.getResource().containsKey(item)){
+            int ressourceAmount =this.getResource().get(item);
+            if(ressourceAmount>=amount){
+                this.getResource().put(item,ressourceAmount-amount);
+                callBack.run();
+            }
+        }
     }
 
     public void setColorTeam(ColorTeam colorTeam){
@@ -125,7 +137,7 @@ public class Team {
     }
 
     @NotNull
-    public Map<Material,Integer> getResource() {
+    public Map<TexturedItem,Integer> getResource() {
         return this.resource;
     }
 
@@ -135,7 +147,7 @@ public class Team {
         player.setGameMode(GameMode.SURVIVAL);
 
         PlayerInventory inventory = player.getInventory();
-        ItemBuilder helmet = new ItemBuilder(getColorTeam().getMaterial())
+        ItemBuilder helmet = getColorTeam().getHelmet().getItemBuilder()
                 .setDisplayName(game.translate("space-conquest.team.equipment.helmet"));
         inventory.setHelmet(helmet.build());
 

@@ -4,6 +4,7 @@ import io.github.ph1lou.space_conquest.game.Area;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
+import io.github.ph1lou.space_conquest.utils.TexturedItem;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
@@ -107,7 +108,7 @@ public class MapLoader {
     public Area generateCircle(Location location, int size, Material material, boolean isBase, boolean isMiddle){
 
         World world = game.getWorld();
-        Area area = new Area(game,isBase,isMiddle,location.clone(),Material.CRYING_OBSIDIAN,size);
+        Area area = new Area(game,isBase,isMiddle,location.clone(), TexturedItem.CRYING_OBSIDIAN_RESSOURCE,size);
 
         for(int i=-size/2;i<Math.ceil(size/2f);i++){
             for(int j=-size/2;j<Math.ceil(size/2f);j++){
@@ -121,30 +122,36 @@ public class MapLoader {
 
         if(isMiddle){
             Location location1 = new Location(world,location.getBlockX(),location.getBlockY()+1,location.getBlockZ());
-            world.getBlockAt(location1).setType(area.getGeneratorType());
+            world.getBlockAt(location1).setType(Material.CRYING_OBSIDIAN);
             location1.setY(location1.getBlockY()+1);
             world.getBlockAt(location1).setType(Material.BEACON);
         }
         else if(!isBase){
             Location location1 = new Location(world,location.getBlockX(),location.getBlockY()+1,location.getBlockZ());
 
-            Material generatorType;
-
+            TexturedItem generatorType;
+            Material material1;
             if(size>=11){
-                generatorType=Material.IRON_BLOCK;
+                generatorType=TexturedItem.IRON_RESSOURCE;
+                material1 = Material.IRON_BLOCK;
+
             }
             else if(size>=9){
-                generatorType=Material.GOLD_BLOCK;
+                generatorType=TexturedItem.GOLD_RESSOURCE;
+                material1 = Material.GOLD_BLOCK;
             }
             else if(size>=7){
-                generatorType=Material.DIAMOND_BLOCK;
+                generatorType=TexturedItem.DIAMOND_RESSOURCE;
+                material1 = Material.DIAMOND_BLOCK;
+
             }
             else {
-                generatorType=Material.EMERALD_BLOCK;
+                generatorType=TexturedItem.EMERALD_RESSOURCE;
+                material1 = Material.EMERALD_BLOCK;
             }
 
             area.setGeneratorType(generatorType);
-            world.getBlockAt(location1).setType(area.getGeneratorType());
+            world.getBlockAt(location1).setType(material1);
             location1.setY(location1.getBlockY()+1);
             world.getBlockAt(location1).setType(Material.BEACON);
         }
