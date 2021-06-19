@@ -85,6 +85,7 @@ public class Boutique implements InventoryProvider {
 
             diamondSword.addEnchant(Enchantment.DAMAGE_ALL,team.getUpgrade().isSharpness());
 
+
             ItemStack tempSword = diamondSword.build().clone();
 
             contents.set(1,5, ClickableItem.of((diamondSword.setDisplayName(game.translate("space-conquest.gui.boutique.diamond-sword",
@@ -99,7 +100,7 @@ public class Boutique implements InventoryProvider {
             ItemStack tempBow = bow.build().clone();
 
             contents.set(1,7, ClickableItem.of((bow.setDisplayName(game.translate("space-conquest.gui.boutique.bow",
-                    team.getResource().getOrDefault(TexturedItem.GOLD_RESSOURCE,0))).build()), e -> team.spend(2000,TexturedItem.GOLD_RESSOURCE,
+                    team.getResource().getOrDefault(TexturedItem.GOLD_RESSOURCE,0))).build()), e -> team.spend(4000,TexturedItem.GOLD_RESSOURCE,
                             () ->   player.getInventory().addItem(tempBow))));
 
             ItemBuilder arrow = TexturedItem.ARROW.getItemBuilder();

@@ -38,6 +38,7 @@
       "beacon": {
         "name": "Gestion §bTourelles",
         "modes": {
+          "mode": "§fTourelle en Mode §b%s",
           "mine": "Minage",
           "attack": "Attaque des Joueurs",
           "conquest": "Conquête",
@@ -48,9 +49,13 @@
           "previous": "Précédent §b%d §r»§b %d ",
           "next": "Suivant §b%d §r»§b %d",
           "current": "Page §b%d§r/§b%d",
+          "click": "§fCliquez pour changer le mode de la §bTourelle",
           "mode_1": "Tourelles prochain niveau (§b%d§f) Coût 10000 fers :  (§b%d en banque)",
+          "unlock_1": "§fDébloque le mode §bConquête§f et le mode §bDéfense§f",
           "mode_2": "Tourelles prochain niveau (§b%d§f) Coût 10000 ors :  (§b%d en banque)",
-          "mode_3": "Tourelles prochain niveau (§b%d§f) Coût 10000 diamants :  (§b%d en banque)"
+          "unlock_2": "§fDébloque la possibilité de §bcombiner§f deux modes à la fois",
+          "mode_3": "Tourelles prochain niveau (§b%d§f) Coût 10000 diamants :  (§b%d en banque)",
+          "unlock_3": "§fDébloque le mode §bAttaque§f"
         }
       },
       "team-color": "Couleur Équipe",
@@ -58,7 +63,8 @@
         "title": "Vos Ressources"
       },
       "rank": {
-        "message": "Crying Obsidian §b%d/%d"
+        "rank": "Classement §béquipes",
+        "message": "§fCrying Obsidian §b%d/%d"
       },
       "start": {
         "name": "Lancer la Partie",
@@ -68,41 +74,41 @@
         "name": "Menu des Améliorations",
         "iron-chest-plate": {
           "name": "§bAmélioration Plastron en Fer§r Coût 10000 Fers (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration Plastron en Fer débloquée"
+          "message": "[Space §bConquest§r] Amélioration §bPlastron en Fer§f débloquée"
         },
         "diamond-chest-plate": {
           "name": "§bAmélioration Plastron en Diamant§r Coût 20000 Diamants (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration Plastron en Diamant débloquée"
+          "message": "[Space §bConquest§r] Amélioration §bPlastron en Diamant§f débloquée"
         },
         "protection-1": {
-          "name": "§bAmélioration Protection§r Coût 10000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration protection débloquée"
+          "name": "§bAmélioration Protection I§r Coût 10000 Ors (§b%d en banque)",
+          "message": "[Space §bConquest§r] Amélioration §bProtection I§f débloquée"
         },
         "protection-2": {
           "name": "§bAmélioration Protection II§r Coût 20000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration protection II débloquée"
+          "message": "[Space §bConquest§r] Amélioration §bProtection II§f débloquée"
         },
         "sharpness-1": {
-          "name": "§bAmélioration Tranchant§r Coût 10000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration Tranchant débloquée"
+          "name": "§bAmélioration Tranchant I§r Coût 10000 Ors (§b%d en banque)",
+          "message": "[Space §bConquest§r] Amélioration §bTranchant I§f débloquée"
         },
         "sharpness-2": {
           "name": "§bAmélioration Tranchant II§r Coût 20000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration Tranchant II débloquée"
+          "message": "[Space §bConquest§r] Amélioration §bTranchant II§f débloquée"
         },
         "power-1": {
-          "name": "§bAmélioration Puissance§r Coût 10000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration Puissance débloquée"
+          "name": "§bAmélioration Puissance I§r Coût 10000 Ors (§b%d en banque)",
+          "message": "[Space §bConquest§r] Amélioration §bPuissance I§f débloquée"
         },
         "power-2": {
           "name": "§bAmélioration Puissance§r Coût 20000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration Puissance II débloquée"
+          "message": "[Space §bConquest§r] Amélioration §bPuissance II§f débloquée"
         }
       },
       "config-menu": {
         "name": "Menu de Configuration",
         "create": "Créez une Team",
-        "max": "Le nombre d'Équiped maximum a été crée",
+        "max": "Le nombre d'Équipes maximum a été crée",
         "already-launch": "La partie est déjà lancée",
         "input-title": "Entrez le nom de votre équipe",
         "leave": "Quitter son équipe",
@@ -127,13 +133,13 @@
       },
       "boutique": {
         "title": "Boutique",
-        "shear": "Coût 200 Fers (§b%d en banque)",
-        "wool": "Coût 64 Fers (§b%d en banque)",
-        "arrow": "Coût 500 Diamants (§b%d en banque)",
-        "bow": "Coût 2000 Ors (§b%d en banque)",
-        "diamond-sword": "Coût 3000 Diamants (§b%d en banque)",
-        "iron-sword": "Coût 1500 Fers (§b%d en banque)",
-        "wooden-sword": "Coût 500 Fers (§b%d en banque)"
+        "shear": "Cisailles §bÉlectrique§f Coût 200 Fers (§b%d en banque)",
+        "wool": "Blocs de §bConstruction§f Coût 64 Fers (§b%d en banque)",
+        "arrow": "§bFlèches§f Coût 500 Diamants (§b%d en banque)",
+        "bow": "§bArc§f Coût 4000 Ors (§b%d en banque)",
+        "diamond-sword": "Sabre Niveau §b3§f Coût 3000 Diamants (§b%d en banque)",
+        "iron-sword": "Sabre Niveau §b2§f Coût 1500 Fers (§b%d en banque)",
+        "wooden-sword": "Sabre Niveau §b1§f Coût 500 Fers (§b%d en banque)"
       },
       "special-artefact": {
         "title": "Objets Spéciaux",

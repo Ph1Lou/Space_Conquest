@@ -3,9 +3,9 @@ package io.github.ph1lou.space_conquest.game;
 import fr.mrmicky.fastboard.FastBoard;
 import io.github.ph1lou.space_conquest.enums.State;
 import io.github.ph1lou.space_conquest.utils.BukkitUtils;
+import io.github.ph1lou.space_conquest.utils.TexturedItem;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -100,7 +100,7 @@ public class ScoreBoard {
                         .spigot()
                         .sendMessage(ChatMessageType.ACTION_BAR,
                                 TextComponent.fromLegacyText(game.translate("space-conquest.action-bar.message",
-                                        team.getResource().getOrDefault(Material.CRYING_OBSIDIAN,0),
+                                        team.getResource().getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,0),
                                         game.getObjective()))));
 
             }

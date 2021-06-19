@@ -116,8 +116,8 @@ public class SpecialArtefact implements InventoryProvider {
 
             ItemBuilder snowBall = TexturedItem.AUTO_WALL.getItemBuilder();
             snowBall.setDisplayName(game.translate("space-conquest.gui.special-artefact.bridge.name",
-                    team.getResource().getOrDefault(TexturedItem.GOLD_RESSOURCE,0)));
-            contents.set(3,1, ClickableItem.of((snowBall.build()), e -> team.spend(1000,TexturedItem.GOLD_RESSOURCE,
+                    team.getResource().getOrDefault(TexturedItem.IRON_RESSOURCE,0)));
+            contents.set(3,1, ClickableItem.of((snowBall.build()), e -> team.spend(1000,TexturedItem.IRON_RESSOURCE,
                     () ->  player.getInventory().addItem(TexturedItem.AUTO_WALL.getItemBuilder()
                             .setDisplayName(game.translate("space-conquest.gui.special-artefact.bridge.item-name"))
                             .build()))));
@@ -142,11 +142,11 @@ public class SpecialArtefact implements InventoryProvider {
 
             ItemBuilder gravityBlock = new ItemBuilder(Material.REDSTONE_LAMP);
             gravityBlock.setDisplayName(game.translate("space-conquest.gui.special-artefact.no-gravity.name",
-                    team.getResource().getOrDefault(TexturedItem.GOLD_RESSOURCE,0)))
+                    team.getResource().getOrDefault(TexturedItem.IRON_RESSOURCE,0)))
                     .setLore(game.translate("space-conquest.gui.special-artefact.no-gravity.lore"));
 
 
-            contents.set(3,7, ClickableItem.of((gravityBlock.build()), e -> team.spend(1000,TexturedItem.GOLD_RESSOURCE,
+            contents.set(3,7, ClickableItem.of((gravityBlock.build()), e -> team.spend(1000,TexturedItem.IRON_RESSOURCE,
                     () ->    player.getInventory().addItem(new ItemBuilder(Material.REDSTONE_LAMP)
                             .setDisplayName(game.translate("space-conquest.gui.special-artefact.no-gravity.item-name"))
                             .addNBTTag("no-gravity",true)

@@ -56,9 +56,12 @@ public class Upgrade implements InventoryProvider {
         game.getTeam(player).ifPresent(team -> {
             if(team.getUpgrade().getChestPlate()==0){
 
-                ItemBuilder chestPlate = new ItemBuilder(Material.IRON_CHESTPLATE).setDisplayName(game.translate("space-conquest.gui.upgrade.iron-chest-plate.name",team.getResource().getOrDefault(TexturedItem.GOLD_RESSOURCE,0)));
+                ItemBuilder chestPlate = new ItemBuilder(Material.IRON_CHESTPLATE)
+                        .setDisplayName(game.translate("space-conquest.gui.upgrade.iron-chest-plate.name",
+                                team.getResource().getOrDefault(TexturedItem.IRON_RESSOURCE,0)));
 
-                contents.set(1,1, ClickableItem.of((chestPlate.build()), e -> team.spend(10000,TexturedItem.DIAMOND_RESSOURCE,
+                contents.set(1,1, ClickableItem.of((chestPlate.build()),
+                        e -> team.spend(10000,TexturedItem.IRON_RESSOURCE,
                         () -> {
                             team.getUpgrade().setChestPlate(1);
                             player.sendMessage(game.translate("space-conquest.gui.upgrade.iron-chest-plate.message"));
@@ -68,7 +71,8 @@ public class Upgrade implements InventoryProvider {
 
                 ItemBuilder chestPlate = new ItemBuilder(Material.DIAMOND_CHESTPLATE).setDisplayName(game.translate("space-conquest.gui.upgrade.diamond-chest-plate.name",team.getResource().getOrDefault(TexturedItem.DIAMOND_RESSOURCE,0)));
 
-                contents.set(1,1, ClickableItem.of((chestPlate.build()), e -> team.spend(20000,TexturedItem.DIAMOND_RESSOURCE,
+                contents.set(1,1, ClickableItem.of((chestPlate.build()),
+                        e -> team.spend(20000,TexturedItem.DIAMOND_RESSOURCE,
                         () -> {
                             team.getUpgrade().setChestPlate(2);
                             player.sendMessage(game.translate("space-conquest.gui.upgrade.diamond-chest-plate.message"));

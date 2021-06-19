@@ -4,8 +4,6 @@ import fr.minuskube.inv.ClickableItem;
 import fr.minuskube.inv.SmartInventory;
 import fr.minuskube.inv.content.InventoryContents;
 import fr.minuskube.inv.content.InventoryProvider;
-import fr.minuskube.inv.content.Pagination;
-import fr.minuskube.inv.content.SlotIterator;
 import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.enums.TowerMode;
 import io.github.ph1lou.space_conquest.game.Area;
@@ -63,14 +61,15 @@ public class Beacon implements InventoryProvider {
 
         GameManager game = JavaPlugin.getPlugin(Main.class).getCurrentGame();
         game.getTeam(player).ifPresent(team -> {
-            Pagination pagination = contents.pagination();
+
 
 
             if(team.getUpgrade().getTower()==0){
                 ItemBuilder mode = TexturedItem.TOWER_LEVEL_1.getItemBuilder();
                 mode.setDisplayName(game.translate("space-conquest.gui.beacon.modes.mode_1",
                         team.getUpgrade().getTower()+1,
-                        team.getResource().getOrDefault(TexturedItem.IRON_RESSOURCE,0)));
+                        team.getResource().getOrDefault(TexturedItem.IRON_RESSOURCE,0)))
+                        .setLore(game.translate("space-conquest.gui.beacon.modes.unlock_1"));
 
                 contents.set(1,4, ClickableItem.of((mode.build()), e -> team.spend(10000,TexturedItem.IRON_RESSOURCE,
                         () ->  team.getUpgrade().setTower(team.getUpgrade().getTower()+1))));
@@ -79,7 +78,8 @@ public class Beacon implements InventoryProvider {
                 ItemBuilder mode = TexturedItem.TOWER_LEVEL_2.getItemBuilder();
                 mode.setDisplayName(game.translate("space-conquest.gui.beacon.modes.mode_2",
                         team.getUpgrade().getTower()+1,
-                        team.getResource().getOrDefault(TexturedItem.GOLD_RESSOURCE,0)));
+                        team.getResource().getOrDefault(TexturedItem.GOLD_RESSOURCE,0)))
+                        .setLore(game.translate("space-conquest.gui.beacon.modes.unlock_2"));
 
                 contents.set(1,4, ClickableItem.of((mode.build()), e -> team.spend(10000,TexturedItem.GOLD_RESSOURCE,
                         () ->  team.getUpgrade().setTower(team.getUpgrade().getTower()+1))));
@@ -88,7 +88,8 @@ public class Beacon implements InventoryProvider {
                 ItemBuilder mode = TexturedItem.TOWER_LEVEL_3.getItemBuilder();
                 mode.setDisplayName(game.translate("space-conquest.gui.beacon.modes.mode_3",
                         team.getUpgrade().getTower()+1,
-                        team.getResource().getOrDefault(TexturedItem.DIAMOND_RESSOURCE,0)));
+                        team.getResource().getOrDefault(TexturedItem.DIAMOND_RESSOURCE,0)))
+                        .setLore(game.translate("space-conquest.gui.beacon.modes.unlock_3"));
 
                 contents.set(1,4, ClickableItem.of((mode.build()), e -> team.spend(10000,TexturedItem.DIAMOND_RESSOURCE,
                         () ->  team.getUpgrade().setTower(team.getUpgrade().getTower()+1))));
@@ -98,76 +99,74 @@ public class Beacon implements InventoryProvider {
                     .filter(towerMode -> towerMode.getLevel()<=team.getUpgrade().getTower())
                     .collect(Collectors.toList());
 
-            Area area = game.getAreas()
+            game.getAreas()
                     .stream()
                     .filter(area1 -> !area1.isBase())
-                    .filter(area1 -> BoundingBox.of(area1.getMiddle(),5,5,5).contains(player.getLocation().toVector()))
+                    .filter(area1 -> BoundingBox.of(area1.getMiddle(), 5, 5, 5).contains(player.getLocation().toVector()))
                     .findFirst()
-                    .orElse(null);
-
-            if(area!=null){
-                contents.set(1,2, ClickableItem.of((new ItemBuilder(Material.BEACON).setDisplayName(game.translate(area.getMode().getKey()))
-                        .build()), e -> {
-                    int index = modes.indexOf(area.getMode());
-                    if(e.isLeftClick()){
-                        area.setMode(modes.get((index+1)%modes.size()));
-                    }
-                    else{
-                        area.setMode(modes.get((index+modes.size()-1)%modes.size()));
-                    }
-                }));
-                return;
-            }
-
-            List<ClickableItem> items = game.getAreas().stream()
-                    .filter(area1 -> !area1.isBase())
-                    .filter(area1 -> team.equals(area1.getOwnerTeam()))
-                    .map(area1 -> ClickableItem.of((new ItemBuilder(Material.BEACON)
-                            .setDisplayName(game.translate(area1.getMode().getKey()))
-                            .build()),e -> {
-                        int index = modes.indexOf(area1.getMode());
-                        if(e.isLeftClick()){
-                            area1.setMode(modes.get((index+1)%modes.size()));
-                        }
-                        else{
-                            area1.setMode(modes.get((index+modes.size()-1)%modes.size()));
-                        }
-                    }))
-                    .collect(Collectors.toList());
-
-            if (items.size() > 27) {
-                pagination.setItems(items.toArray(new ClickableItem[0]));
-                pagination.setItemsPerPage(18);
-                pagination.addToIterator(contents.newIterator(SlotIterator.Type.HORIZONTAL, 1, 0));
-                int page = pagination.getPage() + 1;
-                contents.set(4, 0, null);
-                contents.set(4, 1, null);
-                contents.set(4, 3, null);
-                contents.set(4, 5, null);
-                contents.set(4, 7, null);
-                contents.set(4, 8, null);
-                contents.set(4, 2, ClickableItem.of(new ItemBuilder(Material.ARROW)
-                                .setDisplayName(game.translate("space-conquest.gui.beacon.modes.previous",
-                                        page, pagination.isFirst() ? page : page - 1)).build(),
-                        e -> INVENTORY.open(player, pagination.previous().getPage())));
-                contents.set(4, 6, ClickableItem.of(new ItemBuilder(Material.ARROW)
-                                .setDisplayName(game.translate("space-conquest.gui.beacon.modes.next",
-                                        page, pagination.isLast() ? page : page + 1)).build(),
-                        e -> INVENTORY.open(player, pagination.next().getPage())));
-                contents.set(4, 4, ClickableItem.empty(new ItemBuilder(Material.ACACIA_SIGN)
-                        .setDisplayName(game.translate("space-conquest.gui.beacon.modes.current",
-                                page, items.size() / 27 + 1)).build()));
-            }
-            else {
-                int i = 9;
-                for (ClickableItem clickableItem : items) {
-                    contents.set(i / 9 + 1, i % 9, clickableItem);
-                    i++;
+                    .ifPresent(area -> contents.set(1, 2, ClickableItem.of((new ItemBuilder(Material.BEACON)
+                    .setDisplayName(game.translate("space-conquest.gui.beacon.modes.mode", game.translate(area.getMode().getKey())))
+                    .setLore(game.translate("space-conquest.gui.beacon.modes.click"))
+                    .build()), e -> {
+                int index = modes.indexOf(area.getMode());
+                if (e.isLeftClick()) {
+                    area.setMode(modes.get((index + 1) % modes.size()));
+                } else {
+                    area.setMode(modes.get((index + modes.size() - 1) % modes.size()));
                 }
-                for (int k = i; k < 27; k++) {
-                    contents.set(k / 9 + 1, k % 9, null);
-                }
-            }
+            })));
+
+            //Pagination pagination = contents.pagination();
+           //List<ClickableItem> items = game.getAreas().stream()
+           //        .filter(area1 -> !area1.isBase())
+           //        .filter(area1 -> team.equals(area1.getOwnerTeam()))
+           //        .map(area1 -> ClickableItem.of((new ItemBuilder(Material.BEACON)
+           //                .setDisplayName(game.translate("space-conquest.gui.beacon.modes.mode", game.translate(area1.getMode().getKey())))
+           //                .setLore(game.translate("space-conquest.gui.beacon.modes.click"))
+           //                .build()),e -> {
+           //            int index = modes.indexOf(area1.getMode());
+           //            if(e.isLeftClick()){
+           //                area1.setMode(modes.get((index+1)%modes.size()));
+           //            }
+           //            else{
+           //                area1.setMode(modes.get((index+modes.size()-1)%modes.size()));
+           //            }
+            //        }))
+            //        .collect(Collectors.toList());
+//
+            //if (items.size() > 27) {
+            //    pagination.setItems(items.toArray(new ClickableItem[0]));
+            //    pagination.setItemsPerPage(18);
+            //    pagination.addToIterator(contents.newIterator(SlotIterator.Type.HORIZONTAL, 1, 0));
+            //    int page = pagination.getPage() + 1;
+            //    contents.set(4, 0, null);
+            //    contents.set(4, 1, null);
+            //    contents.set(4, 3, null);
+            //    contents.set(4, 5, null);
+            //    contents.set(4, 7, null);
+            //    contents.set(4, 8, null);
+            //    contents.set(4, 2, ClickableItem.of(new ItemBuilder(Material.ARROW)
+            //                    .setDisplayName(game.translate("space-conquest.gui.beacon.modes.previous",
+            //                            page, pagination.isFirst() ? page : page - 1)).build(),
+            //            e -> INVENTORY.open(player, pagination.previous().getPage())));
+            //    contents.set(4, 6, ClickableItem.of(new ItemBuilder(Material.ARROW)
+            //                    .setDisplayName(game.translate("space-conquest.gui.beacon.modes.next",
+            //                            page, pagination.isLast() ? page : page + 1)).build(),
+            //            e -> INVENTORY.open(player, pagination.next().getPage())));
+            //    contents.set(4, 4, ClickableItem.empty(new ItemBuilder(Material.ACACIA_SIGN)
+            //            .setDisplayName(game.translate("space-conquest.gui.beacon.modes.current",
+            //                    page, items.size() / 27 + 1)).build()));
+            //}
+            //else {
+            //    int i = 9;
+            //    for (ClickableItem clickableItem : items) {
+            //        contents.set(i / 9 + 1, i % 9, clickableItem);
+            //        i++;
+            //    }
+            //    for (int k = i; k < 27; k++) {
+            //        contents.set(k / 9 + 1, k % 9, null);
+            //    }
+            //}
         });
 
     }

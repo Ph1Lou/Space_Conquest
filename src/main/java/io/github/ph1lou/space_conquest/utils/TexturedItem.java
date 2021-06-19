@@ -30,7 +30,7 @@ public enum TexturedItem {
     AUTO_WALL(Material.EGG,new Object[][]{{"CustomModelData", 2}}),
     PROTECTION_UPGRADE(Material.MUSIC_DISC_CHIRP,new Object[][]{{"CustomModelData", 2}}),
     FIRE_CHARGE(Material.FIRE_CHARGE,new Object[][]{{"CustomModelData", 2}}),
-    REVERSE_ARROW(Material.SPECTRAL_ARROW,new Object[][]{{"CustomModelData", 2}}),
+    REVERSE_ARROW(Material.TIPPED_ARROW,new Object[][]{{"CustomModelData", 2}}),
     TOWER_LEVEL_1(Material.WOODEN_PICKAXE,new Object[][]{{"CustomModelData", 2}}),
     TOWER_LEVEL_2(Material.GOLDEN_PICKAXE,new Object[][]{{"CustomModelData", 2}}),
     TOWER_LEVEL_3(Material.DIAMOND_PICKAXE,new Object[][]{{"CustomModelData", 2}}),

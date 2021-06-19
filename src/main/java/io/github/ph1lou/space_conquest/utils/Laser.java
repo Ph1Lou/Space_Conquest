@@ -35,12 +35,9 @@ public class Laser {
     private Object destroyPacket;
     private Object metadataPacketGuardian;
     private Object metadataPacketSquid;
-    private Object fakeGuardianDataWatcher;
 
     private int squid;
-    private UUID squidUUID;
     private int guardian;
-    private UUID guardianUUID;
 
     private BukkitRunnable run;
     private final HashSet<Player> show = new HashSet<>();
@@ -57,14 +54,14 @@ public class Laser {
         try {
             createSquidPacket = Packets.createPacketSquidSpawn(end);
             squid = (int) Packets.getField(Packets.packetSpawn, "a", createSquidPacket);
-            squidUUID = (UUID) Packets.getField(Packets.packetSpawn, "b", createSquidPacket);
+            UUID squidUUID = (UUID) Packets.getField(Packets.packetSpawn, "b", createSquidPacket);
             metadataPacketSquid = Packets.createPacketMetadata(squid, Packets.fakeSquidWatcher);
             Packets.setDirtyWatcher(Packets.fakeSquidWatcher);
 
-            fakeGuardianDataWatcher = Packets.createFakeDataWatcher();
+            Object fakeGuardianDataWatcher = Packets.createFakeDataWatcher();
             createGuardianPacket = Packets.createPacketGuardianSpawn(start, fakeGuardianDataWatcher, squid);
             guardian = (int) Packets.getField(Packets.packetSpawn, "a", createGuardianPacket);
-            guardianUUID = (UUID) Packets.getField(Packets.packetSpawn, "b", createGuardianPacket);
+            UUID guardianUUID = (UUID) Packets.getField(Packets.packetSpawn, "b", createGuardianPacket);
             metadataPacketGuardian = Packets.createPacketMetadata(guardian, fakeGuardianDataWatcher);
             teamAddPacket = Packets.createPacketTeamAddEntities(squidUUID, guardianUUID);
             destroyPacket = Packets.createPacketRemoveEntities(squid, guardian);

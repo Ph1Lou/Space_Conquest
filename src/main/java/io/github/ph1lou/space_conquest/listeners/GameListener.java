@@ -186,7 +186,7 @@ public class GameListener implements Listener {
                 if(player1.getLocation().distanceSquared(player.getLocation())<=625){
                     if(!player1.equals(player)){
                         player1.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,200,0,false,false));
-                        player1.sendMessage("space-conquest.game.message.sabotage");
+                        player1.sendMessage(game.translate("space-conquest.game.message.sabotage"));
                         player1.playSound(player.getLocation(),Sound.BLOCK_GLASS_BREAK,10,10);
 
                     }

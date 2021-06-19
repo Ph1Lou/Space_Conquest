@@ -189,7 +189,7 @@ public class ConfigMenu implements InventoryProvider {
 
 
 
-                contents.set(3,8,ClickableItem.of((teamSize.build()),e -> {
+                contents.set(3,8,ClickableItem.of((middleSize.build()),e -> {
                     if(e.isRightClick()){
                         if(game.getCenterSize()>2){
                             game.setCenterSize(game.getCenterSize()-2);

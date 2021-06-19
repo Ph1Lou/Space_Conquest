@@ -8,7 +8,7 @@ import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
-import org.bukkit.Material;
+import io.github.ph1lou.space_conquest.utils.TexturedItem;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,7 +21,7 @@ public class Rank implements InventoryProvider {
             .manager(JavaPlugin.getPlugin(Main.class).getInvManager())
             .provider(new Rank())
             .size(3, 9)
-            .title(JavaPlugin.getPlugin(Main.class).getLangManager().getTranslation("space-conquest.gui.rank.message"))
+            .title(JavaPlugin.getPlugin(Main.class).getLangManager().getTranslation("space-conquest.gui.rank.rank"))
             .closeable(true)
             .build();
 
@@ -40,7 +40,7 @@ public class Rank implements InventoryProvider {
 
             ItemBuilder banner = new ItemBuilder(team.getColorTeam().getBanner());
             banner.setDisplayName(team.getColorTeam().getChatColor()+team.getName());
-            banner.setLore(game.translate("space-conquest.gui.rank.message",team.getResource().getOrDefault(Material.CRYING_OBSIDIAN,0),game.getObjective()));
+            banner.setLore(game.translate("space-conquest.gui.rank.message",team.getResource().getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,0),game.getObjective()));
 
             contents.set(j/9,j%9,ClickableItem.empty(banner.build()));
             j++;

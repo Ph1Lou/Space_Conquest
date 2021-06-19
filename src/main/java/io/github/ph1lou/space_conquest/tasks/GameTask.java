@@ -5,6 +5,7 @@ import io.github.ph1lou.space_conquest.events.WinEvent;
 import io.github.ph1lou.space_conquest.game.Area;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
+import io.github.ph1lou.space_conquest.utils.TexturedItem;
 import net.minecraft.server.v1_16_R3.Tuple;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.bukkit.Bukkit;
@@ -30,7 +31,7 @@ public class GameTask extends BukkitRunnable {
         player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 10, 10);
         area.mineRessources(team);
         team.getBossBar().setVisible(true);
-        team.getBossBar().setProgress(team.getResource().getOrDefault(Material.CRYING_OBSIDIAN,
+        team.getBossBar().setProgress(team.getResource().getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,
                 0) / (float) game.getObjective());
         Bukkit.getOnlinePlayers().forEach(player1 -> team.getBossBar().addPlayer(player1));
         Bukkit.getScheduler().scheduleSyncDelayedTask(game.getMain(), () -> {
@@ -43,7 +44,7 @@ public class GameTask extends BukkitRunnable {
             }
         }, 6);
 
-        if (team.getResource().getOrDefault(Material.CRYING_OBSIDIAN, 0) >= game.getObjective()) {
+        if (team.getResource().getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE, 0) >= game.getObjective()) {
 
             game.getScoreBoard().updateScoreBoard();
 

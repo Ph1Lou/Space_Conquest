@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Main extends JavaPlugin {
 
@@ -40,8 +41,8 @@ public class Main extends JavaPlugin {
         setWorld();
         this.languageManager = new LanguageManager(this);
         this.currentGame= new GameManager(this);
-        getCommand("stop").setExecutor(new Stop(this));
-        getCommand("t").setExecutor(new TeamChat(this));
+        Objects.requireNonNull(getCommand("stop")).setExecutor(new Stop(this));
+        Objects.requireNonNull(getCommand("t")).setExecutor(new TeamChat(this));
     }
 
     private void loadDatas() {
