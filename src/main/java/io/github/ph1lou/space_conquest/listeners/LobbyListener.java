@@ -81,10 +81,7 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
-
         game.join(event.getPlayer());
-
-        event.getPlayer().setResourcePack("https://www.dropbox.com/s/elhbwqusuo4aokf/Space_Conquest.zip?dl=1");
     }
 
 

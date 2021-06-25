@@ -64,18 +64,19 @@ public class Upgrade implements InventoryProvider {
                         e -> team.spend(10000,TexturedItem.IRON_RESSOURCE,
                         () -> {
                             team.getUpgrade().setChestPlate(1);
-                            player.sendMessage(game.translate("space-conquest.gui.upgrade.iron-chest-plate.message"));
+                            team.sendMessage("space-conquest.gui.upgrade.iron-chest-plate.message");
                         })));
             }
             else if(team.getUpgrade().getChestPlate()==1){
 
-                ItemBuilder chestPlate = new ItemBuilder(Material.DIAMOND_CHESTPLATE).setDisplayName(game.translate("space-conquest.gui.upgrade.diamond-chest-plate.name",team.getResource().getOrDefault(TexturedItem.DIAMOND_RESSOURCE,0)));
+                ItemBuilder chestPlate = new ItemBuilder(Material.DIAMOND_CHESTPLATE).setDisplayName(game.translate("space-conquest.gui.upgrade.diamond-chest-plate.name",
+                        team.getResource().getOrDefault(TexturedItem.DIAMOND_RESSOURCE,0)));
 
                 contents.set(1,1, ClickableItem.of((chestPlate.build()),
                         e -> team.spend(20000,TexturedItem.DIAMOND_RESSOURCE,
                         () -> {
                             team.getUpgrade().setChestPlate(2);
-                            player.sendMessage(game.translate("space-conquest.gui.upgrade.diamond-chest-plate.message"));
+                            team.sendMessage("space-conquest.gui.upgrade.diamond-chest-plate.message");
                         })));
             }
             else contents.set(1,1, null);
@@ -89,7 +90,7 @@ public class Upgrade implements InventoryProvider {
                 contents.set(1,3, ClickableItem.of((anvil.build()), e -> team.spend(10000,TexturedItem.GOLD_RESSOURCE,
                         () -> {
                             team.getUpgrade().setProtection(1);
-                            player.sendMessage(game.translate("space-conquest.gui.upgrade.protection-1.message"));
+                            team.sendMessage("space-conquest.gui.upgrade.protection-1.message");
                         })));
             }
             else if(team.getUpgrade().isProtection()==1){
@@ -101,7 +102,7 @@ public class Upgrade implements InventoryProvider {
                 contents.set(1,3, ClickableItem.of((anvil.build()), e -> team.spend(20000,TexturedItem.GOLD_RESSOURCE,
                         () -> {
                             team.getUpgrade().setProtection(2);
-                            player.sendMessage(game.translate("space-conquest.gui.upgrade.protection-2.message"));
+                            team.sendMessage("space-conquest.gui.upgrade.protection-2.message");
                         })));
             }
             else contents.set(1,3, null);
@@ -115,7 +116,7 @@ public class Upgrade implements InventoryProvider {
                 contents.set(1,5, ClickableItem.of((sword.build()), e -> team.spend(10000,TexturedItem.GOLD_RESSOURCE,
                         () -> {
                             team.getUpgrade().setSharpness(1);
-                            player.sendMessage(game.translate("space-conquest.gui.upgrade.sharpness-1.message"));
+                            team.sendMessage("space-conquest.gui.upgrade.sharpness-1.message");
                         })));
             }
             else if(team.getUpgrade().isSharpness()==1){
@@ -127,7 +128,7 @@ public class Upgrade implements InventoryProvider {
                 contents.set(1,5, ClickableItem.of((sword.build()), e -> team.spend(20000,TexturedItem.GOLD_RESSOURCE,
                         () -> {
                             team.getUpgrade().setSharpness(2);
-                            player.sendMessage(game.translate("space-conquest.gui.upgrade.sharpness-2.message"));
+                            team.sendMessage("space-conquest.gui.upgrade.sharpness-2.message");
                         })));
             }
             else contents.set(1,5, null);
@@ -140,7 +141,7 @@ public class Upgrade implements InventoryProvider {
                 contents.set(1,7, ClickableItem.of((bow.build()), e -> team.spend(10000,TexturedItem.GOLD_RESSOURCE,
                         () -> {
                             team.getUpgrade().setPower(1);
-                            player.sendMessage(game.translate("space-conquest.gui.upgrade.power-1.message"));
+                            team.sendMessage("space-conquest.gui.upgrade.power-1.message");
                         })));
             }
             else if(team.getUpgrade().isPower()==1){
@@ -151,7 +152,7 @@ public class Upgrade implements InventoryProvider {
                 contents.set(1,7, ClickableItem.of((bow.build()), e -> team.spend(20000,TexturedItem.GOLD_RESSOURCE,
                         () -> {
                             team.getUpgrade().setPower(2);
-                            player.sendMessage(game.translate("space-conquest.gui.upgrade.power-2.message"));
+                            team.sendMessage("space-conquest.gui.upgrade.power-2.message");
                         })));
             }
             else contents.set(1,7, null);

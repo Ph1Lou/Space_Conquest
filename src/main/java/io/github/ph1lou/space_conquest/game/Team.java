@@ -265,4 +265,10 @@ public class Team {
     public void updateNpcChestPlate() {
         this.npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.CHESTPLATE, this.getChestPlate());
     }
+
+    public void sendMessage(String translate) {
+        this.getMembers().stream().map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .forEach(player -> player.sendMessage(game.translate(translate)));
+    }
 }

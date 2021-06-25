@@ -60,7 +60,12 @@
       },
       "team-color": "Couleur Équipe",
       "ressources": {
-        "title": "Vos Ressources"
+        "title": "Vos §bRessources",
+        "iron": "Fers : §b%s",
+        "gold": "Ors : §b%s",
+        "diamond": "Diamants : §b%s",
+        "emerald": "Émeraudes : §b%s",
+        "crying_obsidian": "Crying Obsidiennes : §b%s"
       },
       "rank": {
         "rank": "Classement §béquipes",
@@ -71,14 +76,14 @@
         "back": "Revenir au menu des équipes"
       },
       "upgrade": {
-        "name": "Menu des Améliorations",
+        "name": "Menu des §bAméliorations",
         "iron-chest-plate": {
-          "name": "§bAmélioration Plastron en Fer§r Coût 10000 Fers (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration §bPlastron en Fer§f débloquée"
+          "name": "§bAmélioration Plastron Renforcé§r Coût 10000 Fers (§b%d en banque)",
+          "message": "[Space §bConquest§r] Amélioration §bPlastron Renforcé§f débloquée"
         },
         "diamond-chest-plate": {
-          "name": "§bAmélioration Plastron en Diamant§r Coût 20000 Diamants (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration §bPlastron en Diamant§f débloquée"
+          "name": "§bAmélioration Plastron Ultra Renforcé§r Coût 20000 Diamants (§b%d en banque)",
+          "message": "[Space §bConquest§r] Amélioration §bUltra Renforcé§f débloquée"
         },
         "protection-1": {
           "name": "§bAmélioration Protection I§r Coût 10000 Ors (§b%d en banque)",
@@ -106,12 +111,12 @@
         }
       },
       "config-menu": {
-        "name": "Menu de Configuration",
-        "create": "Créez une Team",
+        "name": "Menu de §bConfiguration",
+        "create": "Créer une Team",
         "max": "Le nombre d'Équipes maximum a été crée",
         "already-launch": "La partie est déjà lancée",
         "input-title": "Entrez le nom de votre équipe",
-        "leave": "Quitter son équipe",
+        "leave": "§bQuitter§f son équipe",
         "size": "Taille des équipes §b%d",
         "lores-1": [
           "§fClique-§bGauche§f >> +",
@@ -127,12 +132,12 @@
         "team-size": "Nombre d'équipe Max §b%d",
         "single-color": "Couleur unique",
         "crying-obsidian-goal": "Crying Obsidian a récolté §b%d",
-        "change-game-name": "Changez le nom de la Partie",
-        "rename-team": "Renommez votre équipe",
-        "change-color": "Changez votre couleur"
+        "change-game-name": "Changer le nom de la Partie",
+        "rename-team": "Renommer votre équipe",
+        "change-color": "Changer votre couleur"
       },
       "boutique": {
-        "title": "Boutique",
+        "title": "§bBoutique",
         "shear": "Cisailles §bÉlectrique§f Coût 200 Fers (§b%d en banque)",
         "wool": "Blocs de §bConstruction§f Coût 64 Fers (§b%d en banque)",
         "arrow": "§bFlèches§f Coût 500 Diamants (§b%d en banque)",
@@ -142,7 +147,7 @@
         "wooden-sword": "Sabre Niveau §b1§f Coût 500 Fers (§b%d en banque)"
       },
       "special-artefact": {
-        "title": "Objets Spéciaux",
+        "title": "Objets §bSpéciaux",
         "tnt": "§bTNT§r Coût 150 Émeraudes (§b%d en banque)",
         "propulser": {
           "name": "§bPropulseur§r Coût 300 Émeraudes (§b%d en banque)",

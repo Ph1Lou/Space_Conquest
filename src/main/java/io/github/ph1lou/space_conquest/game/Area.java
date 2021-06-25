@@ -17,9 +17,12 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class Area {
@@ -30,6 +33,8 @@ public class Area {
     private TexturedItem generatorType;
 
     private final Location middle;
+
+    private final List<Area> neighbours = new ArrayList<>();
 
     @Nullable
     private Team ownerTeam;
@@ -72,12 +77,25 @@ public class Area {
                         :
                         20,0.5)));
         this.laser.start();
+    }
 
+    public void initNeighbours(){
+        this.neighbours.addAll(game.getAreas().stream()
+                .filter(area -> game.getWorld().equals(this.getMiddle().getWorld()))
+                .filter(area -> !area.equals(this))
+                .filter(area -> !area.isBase())
+                .filter(area -> !area.isMiddle())
+                .filter(area -> area.getGeneratorType().equals(this.generatorType))
+                .map(area -> new Tuple<>(area,this.getMiddle().distance(area.getMiddle())))
+                .sorted(Comparator.comparingDouble(Tuple::b))
+                .map(Tuple::a)
+                .limit(2)
+                .collect(Collectors.toList()));
     }
 
     private void progressCaptureAuto(Team team){
 
-        if (this.isInSuperiority(team,true)) {
+        if (this.isInSuperiority(team)) {
             this.progressCapture(team);
         }
     }
@@ -194,27 +212,27 @@ public class Area {
         return this.controlSize;
     }
 
-    public boolean isInSuperiority(Team team) {
-        return this.isInSuperiority(team,false);
-    }
 
-    public boolean isInSuperiority(Team team, boolean ok){
+    public boolean isInSuperiority(Team team){
         List<Player> players = this.getPlayerOn();
 
-        float teamTotal= players.stream()
+        AtomicReference<Float> teamTotal= new AtomicReference<>((float) players.stream()
                 .filter(player -> team.getMembers().contains(player.getUniqueId()))
-                .count();
-        float othersTeamTotal = players.size() - teamTotal;
-        if(ok){
-            teamTotal+=0.6;
-        }
+                .count());
+        float othersTeamTotal = players.size() - teamTotal.get();
+
+        this.neighbours.stream()
+                .filter(area -> team.equals(area.getOwnerTeam()))
+                .filter(area -> area.getTarget().isPresent() && area.getTarget().get().equals(this))
+                .forEach(area -> teamTotal.updateAndGet(v -> (float) (v + 0.6)));
+
         if(this.mode == TowerMode.DEFEND_AND_CONQUEST ||
                 this.mode == TowerMode.DEFEND_AND_MINE ||
                 this.mode == TowerMode.DEFEND){
             othersTeamTotal+=1.05;
         }
 
-        return Math.min(othersTeamTotal,1) < teamTotal;
+        return Math.min(othersTeamTotal,1) < teamTotal.get();
 
     }
 
@@ -232,6 +250,8 @@ public class Area {
 
     public void setMode(TowerMode mode) {
         this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,20,0.5)));
+        this.target = null;
+        Collections.shuffle(this.neighbours);
         this.mode = mode;
     }
 
@@ -284,17 +304,12 @@ public class Area {
                 }
             }
 
-            this.target = game.getAreas().stream()
-                    .filter(area -> game.getWorld().equals(this.getMiddle().getWorld()))
-                    .filter(area -> !this.getOwnerTeam().equals(area.getOwnerTeam()))
-                    .filter(area -> !area.isBase())
-                    .filter(area -> !area.isMiddle())
-                    .filter(area -> area.getGeneratorType().equals(this.getGeneratorType()))
-                    .map(area -> new Tuple<>(area,this.getMiddle().distance(area.getMiddle())))
-                    .sorted(Comparator.comparingDouble(Tuple::b))
-                    .filter(areaDoubleTuple -> areaDoubleTuple.b()<75)
-                    .map(Tuple::a)
-                    .findFirst().orElse(null);
+            this.target = this.neighbours.stream()
+                    .filter(area -> area.getOwnerTeam() == null ||
+                            !area.getOwnerTeam().equals(this.getOwnerTeam()))
+                    .findFirst()
+                    .orElse(null);
+
         }
 
         if (this.mode == TowerMode.DEFEND_AND_CONQUEST || this.mode== TowerMode.DEFEND_AND_MINE || this.mode == TowerMode.DEFEND){
@@ -337,6 +352,10 @@ public class Area {
                 this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,20,0.5)));
             }
         }
+    }
+
+    public Optional<Area> getTarget() {
+        return Optional.ofNullable(target);
     }
 
 }

@@ -6,7 +6,6 @@ import fr.minuskube.inv.content.InventoryContents;
 import fr.minuskube.inv.content.InventoryProvider;
 import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.enums.TowerMode;
-import io.github.ph1lou.space_conquest.game.Area;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
 import io.github.ph1lou.space_conquest.utils.TexturedItem;

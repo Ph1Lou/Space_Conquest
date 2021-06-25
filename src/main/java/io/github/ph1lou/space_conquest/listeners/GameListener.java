@@ -20,6 +20,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -125,6 +126,17 @@ public class GameListener implements Listener {
                 event.blockList().remove(block);
             }
             else i++;
+        }
+    }
+
+
+    @EventHandler
+    public void onHitFireBall(ProjectileHitEvent event) {
+
+        if(event.getEntity() instanceof Fireball) {
+            Fireball fireball = (Fireball) event.getEntity();
+            Location location = fireball.getLocation();
+            fireball.getWorld().createExplosion(location, 5f);
         }
     }
 

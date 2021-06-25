@@ -92,6 +92,12 @@ public class MapLoader {
         }
 
         this.generateCircle(world.getSpawnLocation(),game.getCenterSize(),Material.GLOWSTONE,false,true);
+
+
+        game.getAreas().stream()
+                .filter(area -> !area.isMiddle())
+                .filter(area -> !area.isBase())
+                .forEach(Area::initNeighbours);
     }
 
     private void generateCircle(Location location, int size, Material material){

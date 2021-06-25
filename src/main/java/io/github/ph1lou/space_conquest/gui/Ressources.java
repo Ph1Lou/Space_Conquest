@@ -7,9 +7,12 @@ import fr.minuskube.inv.content.InventoryProvider;
 import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
+import io.github.ph1lou.space_conquest.utils.Ressource;
 import io.github.ph1lou.space_conquest.utils.TexturedItem;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Ressources implements InventoryProvider {
 
@@ -52,11 +55,17 @@ public class Ressources implements InventoryProvider {
 
         GameManager game = JavaPlugin.getPlugin(Main.class).getCurrentGame();
         game.getTeam(player).ifPresent(team -> {
-            int i=1;
+            AtomicInteger i= new AtomicInteger(1);
             for(TexturedItem item:team.getResource().keySet()){
-                ItemBuilder itemStack = item.getItemBuilder().setDisplayName(String.valueOf(team.getResource().get(item)));
-                contents.set(1,i,ClickableItem.of((itemStack.build()),e -> e.setCancelled(true)));
-                i++;
+
+                Ressource.getRessource(item).ifPresent(ressource -> {
+                    ItemBuilder itemStack = item.getItemBuilder()
+                            .setDisplayName(game.translate(ressource.getName(),
+                                    String.valueOf(team.getResource().get(item))));
+                    contents.set(1, i.get(),ClickableItem.empty(itemStack.build()));
+                    i.getAndIncrement();
+                });
+
             }
         });
 
