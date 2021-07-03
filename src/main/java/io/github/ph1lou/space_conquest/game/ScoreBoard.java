@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ScoreBoard {
 
@@ -53,7 +54,7 @@ public class ScoreBoard {
 
     public void updateTeamGameBoard(Team team){
 
-        List<String> scoreBoard = new ArrayList<>(scoreBoardGame);
+        List<String> scoreBoard = new ArrayList<>(this.scoreBoardGame);
         List<String> scoreBoardResult = new ArrayList<>();
 
         for(String line:scoreBoard){
@@ -67,15 +68,19 @@ public class ScoreBoard {
 
     public void updatePlayerGameBoard(FastBoard fastBoard) {
         Player player = fastBoard.getPlayer();
-        game.getTeam(player).ifPresent(team -> {
-            List<String> scoreBoard = new ArrayList<>(team.getScoreBoard());
-            List<String> scoreBoardResult = new ArrayList<>();
-            for(String line:scoreBoard){
-                line=line.replace("&kill&",game.getKills().getOrDefault(player.getUniqueId(),0)+"");
-                scoreBoardResult.add(line);
-            }
-            fastBoard.updateLines(scoreBoardResult);
-        });
+
+        List<String> scoreBoard = new ArrayList<>(game.getTeam(player).isPresent() ?
+                game.getTeam(player).get().getScoreBoard() :
+                this.scoreBoardGame.stream()
+                        .map(s -> s.replace("&team&","Spectateur"))
+                        .map(s -> s.replace("&color&","Paillettes"))
+                        .collect(Collectors.toList()));
+        List<String> scoreBoardResult = new ArrayList<>();
+        for(String line:scoreBoard){
+            line=line.replace("&kill&",game.getKills().getOrDefault(player.getUniqueId(),0)+"");
+            scoreBoardResult.add(line);
+        }
+        fastBoard.updateLines(scoreBoardResult);
     }
 
     public void updateScoreBoard(){

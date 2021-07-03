@@ -135,18 +135,6 @@ public class ConfigMenu implements InventoryProvider {
 
             if(!game.isTournament()){
 
-                contents.set(0,1,ClickableItem.of((teamSize.build()),e -> {
-                    if(e.isRightClick()){
-                        if(game.getTeamSize()>1){
-                            game.setTeamSize(game.getTeamSize()-1);
-                        }
-                    }
-                    else if(e.isLeftClick()){
-                        game.setTeamSize(game.getTeamSize()+1);
-                    }
-
-                }));
-
                 ItemBuilder baseNumber = new ItemBuilder(Material.STONE_BUTTON);
 
                 baseNumber.setDisplayName(game.translate("space-conquest.gui.config-menu.iron-area",game.getZoneNumber()));
@@ -163,6 +151,20 @@ public class ConfigMenu implements InventoryProvider {
                     }
 
                 }));
+
+                contents.set(0,1,ClickableItem.of((teamSize.build()),e -> {
+                    if(e.isRightClick()){
+                        if(game.getTeamSize()>1){
+                            game.setTeamSize(game.getTeamSize()-1);
+                        }
+                    }
+                    else if(e.isLeftClick()){
+                        game.setTeamSize(game.getTeamSize()+1);
+                    }
+
+                }));
+
+
 
                 ItemBuilder playerMaxSize = new ItemBuilder(Material.STONE_BUTTON);
 
@@ -263,7 +265,7 @@ public class ConfigMenu implements InventoryProvider {
                     }))
                     .open(player)));
 
-            contents.set(3, 4, ClickableItem.of((new ItemBuilder(Material.GREEN_STAINED_GLASS).setDisplayName("Lancez la Partie").build()), e -> Start.INVENTORY.open(player)));
+            contents.set(3, 4, ClickableItem.of((new ItemBuilder(Material.GREEN_STAINED_GLASS).setDisplayName(game.translate("space-conquest.gui.start.name")).build()), e -> Start.INVENTORY.open(player)));
         }
         else {
             contents.set(0,1,null);

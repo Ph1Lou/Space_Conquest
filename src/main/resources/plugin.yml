@@ -10,3 +10,5 @@ commands:
     description: pour forcer la fin de game
   t:
     description: chat de team
+  load:
+    description: reload la db

@@ -232,7 +232,7 @@ public class Area {
             othersTeamTotal+=1.05;
         }
 
-        return Math.min(othersTeamTotal,1) < teamTotal.get();
+        return Math.max(othersTeamTotal,0.5) < teamTotal.get();
 
     }
 

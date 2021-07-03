@@ -5,6 +5,7 @@ import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.MapLoader;
 import io.github.ph1lou.space_conquest.database.DataBaseManager;
 import io.github.ph1lou.space_conquest.database.DbConnection;
+import io.github.ph1lou.space_conquest.database.dto.PlayerDTO;
 import io.github.ph1lou.space_conquest.enums.State;
 import io.github.ph1lou.space_conquest.listeners.GameListener;
 import io.github.ph1lou.space_conquest.listeners.LobbyListener;
@@ -30,6 +31,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.IllegalFormatException;
@@ -38,6 +40,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class GameManager {
 
@@ -283,9 +286,11 @@ public class GameManager {
             fastBoard.updateTitle(this.translate("space-conquest.title"));
             newGame.getFastBoard().put(player.getUniqueId(),fastBoard);
             player.getInventory().addItem(itemStack);
-            if(newGame.isTournament()){
-                newGame.join(player);
-            }
+            Bukkit.getScheduler().scheduleSyncDelayedTask(main,() -> {
+                if(newGame.isTournament()){
+                    newGame.join(player);
+                }
+            });
         });
 
         this.getMapLoader().deleteMap();
@@ -338,26 +343,48 @@ public class GameManager {
                 Main main = JavaPlugin.getPlugin(Main.class);
 
                 main.getPlayerDTOS().stream()
-                        .filter(playerDTO -> playerDTO.getName().equals(player.getName()))
+                        .filter(playerDTO -> player.getName().equals(playerDTO.getName()))
                         .findFirst()
                         .ifPresent(playerDTO -> {
-                            String teamName = playerDTO.getTeam();
-                            teamName=teamName.substring(0,Math.min(teamName.length(),16));
+                            String teamName=playerDTO.getTeam().substring(0,Math.min(playerDTO.getTeam().length(),13));
 
                             Optional<? extends Team> team = this.getTeams()
-                                    .stream().filter(team1 -> team1.getName().equals(playerDTO.getName()))
+                                    .stream().filter(team1 -> team1.getName().equals(teamName))
                                     .findFirst();
 
-                            if(!team.isPresent()){
-                                Team team1 = new Team(this,teamName);
-                                team1.addPlayer(player);
-                                team1.setFounder(player.getUniqueId());
-                                this.registerTeam(team1);
-                            }
-                            else {
-                                team.get().addPlayer(player);
-                                if(playerDTO.isCaptain() && team.get().getMembers().contains(player.getUniqueId())){ //Si assez de monde
-                                    team.get().setFounder(player.getUniqueId());
+                            if(!team.isPresent()) {
+                                List<PlayerDTO> playerDTOS = Bukkit.getOnlinePlayers()
+                                        .stream()
+                                        .map(player1 -> main.getPlayerDTOS().stream()
+                                                .filter(playerDTO1 -> player1.getName().equals(playerDTO1.getName()))
+                                                .findFirst())
+                                        .filter(Optional::isPresent)
+                                        .map(Optional::get)
+                                        .filter(playerDTO1 -> playerDTO1.getTeam().equals(playerDTO.getTeam()))
+                                        .collect(Collectors.toList());
+                                if (playerDTOS.size() >= 3) {
+
+                                    Team team1 = new Team(this, teamName);
+                                    playerDTOS.forEach(playerDTO1 -> {
+                                        Player player1 = Bukkit.getPlayer(playerDTO1.getName());
+                                        if(player1 != null){
+                                            team1.addPlayer(player1);
+                                            if(playerDTO1.isCaptain()){
+                                                team1.setFounder(player1.getUniqueId());
+                                            }
+                                        }
+                                    });
+
+                                    if(team1.getFounder() == null){
+                                        Player player1 = Bukkit.getPlayer(playerDTOS.get(0).getName());
+                                        if(player1 != null){
+                                            team1.setFounder(player1.getUniqueId());
+                                        }
+                                        else{
+                                            throw new Error("Problem Founder");
+                                        }
+                                    }
+                                    this.registerTeam(team1);
                                 }
                             }
                         });
@@ -365,7 +392,65 @@ public class GameManager {
         }
     }
 
+    public void leave(Player player) {
+
+        if(this.isState(State.LOBBY) && this.isTournament()){
+
+            Main main = JavaPlugin.getPlugin(Main.class);
+            PlayerDTO playerDTO = main.getPlayerDTOS().stream()
+                    .filter(playerDTO1 -> player.getName().equals(playerDTO1.getName()))
+                    .findFirst().orElse(null);
+
+            if(playerDTO == null) return;
+
+            this.getTeam(player)
+                    .ifPresent(team1 -> {
+                        List<PlayerDTO> playerDTOS = Bukkit.getOnlinePlayers()
+                                .stream()
+                                .map(player1 -> main.getPlayerDTOS().stream()
+                                        .filter(playerDTO1 -> player1.getName().equals(playerDTO1.getName()))
+                                        .findFirst())
+                                .filter(Optional::isPresent)
+                                .map(Optional::get)
+                                .filter(playerDTO1 -> playerDTO1.getTeam().equals(playerDTO.getTeam()))
+                                .collect(Collectors.toList());
+
+                        if (playerDTOS.size() > 3) {
+
+                            playerDTOS.stream()
+                                    .filter(playerDTO1 -> Bukkit.getPlayer(playerDTO1.getName()) != null)
+                                    .filter(playerDTO1 -> !this.getTeam(Bukkit.getPlayer(playerDTO1.getName())).isPresent())
+                                    .findFirst()
+                                    .ifPresent(playerDTO1 -> {
+                                        Player player1 = Bukkit.getPlayer(playerDTO1.getName());
+                                        team1.removePlayer(player);
+                                        team1.addPlayer(player1);
+                                        if(playerDTO1.isCaptain()){
+                                            team1.setFounder(player1.getUniqueId());
+                                        }
+                                    });
+                        }
+                        else{
+                            new ArrayList<>(team1.getMembers())
+                                    .stream().map(Bukkit::getPlayer)
+                                    .filter(Objects::nonNull)
+                                    .forEach(team1::removePlayer);
+                        }
+                    });
+
+
+        }
+    }
+
     public void sendScore(Team team) {
+
+        this.teams.stream().sorted(Comparator.comparingInt(value -> value.getResource()
+                .getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,0)))
+                .forEach(team1 -> Bukkit.broadcastMessage(this.translate(
+                "space-conquest.team.point",
+                team1.getName(),
+                team1.getResource()
+                .getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,0))));
 
         if(!this.isTournament()) return;
 
@@ -389,12 +474,13 @@ public class GameManager {
 
             teamId = resultSet.getInt(1);
 
-            preparedStatement = connection.prepareStatement("INSERT INTO games VALUES (?, ?, ?, ?)",
+            preparedStatement = connection.prepareStatement("INSERT INTO games VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, 0);
             preparedStatement.setInt(2, teamId);
             preparedStatement.setInt(3, this.getTimer());
             preparedStatement.setTimestamp(4, new Timestamp(new Date().getTime()));
+            preparedStatement.setString(5, this.gameName);
             preparedStatement.executeUpdate();
             ResultSet rs = preparedStatement.getGeneratedKeys();
             if(!rs.next()){
@@ -407,8 +493,6 @@ public class GameManager {
 
 
             this.teams.forEach(team1 -> {
-                Bukkit.broadcastMessage(this.translate("space-conquest.team.point",team1.getName(),team1.getResource()
-                        .getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,0)));
 
                 try {
                     PreparedStatement preparedStatement1 = connection.prepareStatement("SELECT id FROM teams WHERE name=?");

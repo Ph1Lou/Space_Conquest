@@ -100,7 +100,7 @@ public class GameTask extends BukkitRunnable {
                 if (area.isMiddle()) {
                     area.setOwnerTeam(team);
                 }
-                if(area.isBase() && area.getOwnerTeam()!=null && !area.getOwnerTeam().equals(team)){
+                else if(area.isBase() && area.getOwnerTeam()!=null && !area.getOwnerTeam().equals(team)){
                     Bukkit.getOnlinePlayers()
                             .stream()
                             .filter(player1 -> {

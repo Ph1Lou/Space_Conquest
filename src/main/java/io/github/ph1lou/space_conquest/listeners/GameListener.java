@@ -2,6 +2,7 @@ package io.github.ph1lou.space_conquest.listeners;
 
 import io.github.ph1lou.space_conquest.game.Area;
 import io.github.ph1lou.space_conquest.game.GameManager;
+import io.github.ph1lou.space_conquest.game.Team;
 import io.github.ph1lou.space_conquest.gui.Ressources;
 import io.github.ph1lou.space_conquest.gui.Rank;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -30,6 +31,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class GameListener implements Listener {
@@ -81,7 +83,21 @@ public class GameListener implements Listener {
     public void onEntityInteract(NPCRightClickEvent event) {
         Player player = event.getClicker();
         player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 10);
-        Ressources.INVENTORY.open(player);
+
+        Team team = game.getTeam(player).orElse(null);
+
+        if(team != null){
+            Ressources.getInventory().open(player);
+        }
+        else {
+            game.getTeams().stream()
+                    .filter(team1 -> team1.getNpc().equals(event.getNPC()))
+                    .findFirst()
+                    .ifPresent(team1 -> Ressources.getInventory(team1).open(player));
+
+        }
+
+
     }
 
     @EventHandler
@@ -266,29 +282,35 @@ public class GameListener implements Listener {
             return;
         }
 
-        game.getTeam(player1).ifPresent(team -> {
+        event.setCancelled(true);
+        Location location = block.getLocation();
+        location.setY(location.getBlockY()-2);
 
-            event.setCancelled(true);
-            Location location = block.getLocation();
-            location.setY(location.getBlockY()-2);
+        if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)) return;
 
+        for(Area area:game.getAreas()){
+            if(area.getMiddle().equals(location)){
 
-            if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)) return;
+                if(area.isMiddle()){
+                    Rank.INVENTORY.open(player1);
+                }
+                else{
+                    Optional<Team> teamOptional = game.getTeam(player1);
 
-            for(Area area:game.getAreas()){
-                if(area.getMiddle().equals(location)){
-                    if(area.isMiddle()){
-                        Rank.INVENTORY.open(player1);
+                    if(teamOptional.isPresent()){
+                        if(teamOptional.get().equals(area.getOwnerTeam())){
+                            Ressources.getInventory().open(player1);
+                        }
+                        else {
+                            player1.sendMessage(game.translate("space-conquest.game.beacon.no-control"));
+                        }
                     }
-                    else if(team.equals(area.getOwnerTeam())){
-                        Ressources.INVENTORY.open(player1);
-                    }
-                    else {
-                        player1.sendMessage(game.translate("space-conquest.game.beacon.no-control"));
+                    else if(area.isBase()){
+                        Ressources.getInventory(area.getOwnerTeam()).open(player1);
                     }
                 }
             }
-        });
+        }
     }
 
     @EventHandler

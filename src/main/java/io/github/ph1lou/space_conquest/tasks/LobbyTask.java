@@ -39,8 +39,10 @@ public class LobbyTask extends BukkitRunnable {
         if(this.game.isState(State.GAME)){
 
             game.start();
+            Bukkit.broadcastMessage(game.translate("space-conquest.gui.start.start"));
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class),() -> {
+
                 game.getTeams().forEach(team -> team.getMembers().forEach(uuid -> {
                     Player player1 = Bukkit.getPlayer(uuid);
                     if(player1!=null){

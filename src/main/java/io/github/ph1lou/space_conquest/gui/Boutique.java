@@ -25,7 +25,6 @@ public class Boutique implements InventoryProvider {
             .size(4, 9)
             .title(JavaPlugin.getPlugin(Main.class).getLangManager().getTranslation("space-conquest.gui.boutique.title"))
             .closeable(true)
-            .parent(Ressources.INVENTORY)
             .build();
 
     @Override
@@ -34,14 +33,14 @@ public class Boutique implements InventoryProvider {
         GameManager game = JavaPlugin.getPlugin(Main.class).getCurrentGame();
 
         contents.set(0,0,
-                ClickableItem.of((TexturedItem.BLUE_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.ressources.title"))
-                        .build()),e -> Ressources.INVENTORY.open(player)));
+                ClickableItem.of(TexturedItem.BLUE_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.ressources.title"))
+                        .build(),e -> Ressources.getInventory().open(player)));
         contents.set(0,2,
                 ClickableItem.of((TexturedItem.RED_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.boutique.title"))
                         .build()),e -> Boutique.INVENTORY.open(player)));
         contents.set(0,4,
                 ClickableItem.of((TexturedItem.YELLOW_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.upgrade.name"))
-                        .build()),e -> Upgrade.INVENTORY.open(player)));
+                        .build()),e -> Upgrade.getInventory().open(player)));
         contents.set(0,6,
                 ClickableItem.of((TexturedItem.GREEN_BUTTON.getItemBuilder().setDisplayName(game.translate("space-conquest.gui.special-artefact.title"))
                         .build()),e -> SpecialArtefact.INVENTORY.open(player)));

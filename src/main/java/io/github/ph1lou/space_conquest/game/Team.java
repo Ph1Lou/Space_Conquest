@@ -271,4 +271,8 @@ public class Team {
                 .filter(Objects::nonNull)
                 .forEach(player -> player.sendMessage(game.translate(translate)));
     }
+
+    public NPC getNpc() {
+        return npc;
+    }
 }

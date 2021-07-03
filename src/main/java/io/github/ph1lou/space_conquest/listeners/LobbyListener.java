@@ -42,11 +42,9 @@ public class LobbyListener implements Listener {
                 game.translate("space-conquest.title"),
                 game.translate("space-conquest.credit")+"Ph1Lou");
 
-        if(game.getTeam(player).isPresent() || game.isState(State.LOBBY)){
-            FastBoard fastboard = new FastBoard(player);
-            fastboard.updateTitle(game.translate("space-conquest.title"));
-            game.getFastBoard().put(player.getUniqueId(), fastboard);
-        }
+        FastBoard fastboard = new FastBoard(player);
+        fastboard.updateTitle(game.translate("space-conquest.title"));
+        game.getFastBoard().put(player.getUniqueId(), fastboard);
 
         if(!game.isState(State.LOBBY)){
             if(!game.getTeam(player).isPresent()){
@@ -81,7 +79,7 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
-        game.join(event.getPlayer());
+        Bukkit.getScheduler().scheduleSyncDelayedTask(game.getMain(), () -> game.join(event.getPlayer()),1);
     }
 
 
@@ -90,6 +88,9 @@ public class LobbyListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event){
 
         Player player = event.getPlayer();
+
+        game.leave(player);
+
 
         FastBoard board = game.getFastBoard().remove(player.getUniqueId());
 

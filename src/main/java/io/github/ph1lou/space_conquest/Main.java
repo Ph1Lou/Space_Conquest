@@ -1,6 +1,7 @@
 package io.github.ph1lou.space_conquest;
 
 import fr.minuskube.inv.InventoryManager;
+import io.github.ph1lou.space_conquest.commands.LoadData;
 import io.github.ph1lou.space_conquest.commands.Stop;
 import io.github.ph1lou.space_conquest.commands.TeamChat;
 import io.github.ph1lou.space_conquest.database.DataBaseManager;
@@ -43,13 +44,17 @@ public class Main extends JavaPlugin {
         this.currentGame= new GameManager(this);
         Objects.requireNonNull(getCommand("stop")).setExecutor(new Stop(this));
         Objects.requireNonNull(getCommand("t")).setExecutor(new TeamChat(this));
+        Objects.requireNonNull(getCommand("load")).setExecutor(new LoadData(this));
+
     }
 
-    private void loadDatas() {
+    public void loadDatas() {
 
         DataBaseManager dataBaseManager = new DataBaseManager(this);
 
         DbConnection playerConnection = dataBaseManager.getDataBaseConnection();
+
+        this.playerDTOS.clear();
 
         try {
             Connection connection = playerConnection.getConnection();

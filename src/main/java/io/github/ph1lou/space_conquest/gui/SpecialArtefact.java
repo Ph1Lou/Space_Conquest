@@ -27,7 +27,6 @@ public class SpecialArtefact implements InventoryProvider {
             .title(JavaPlugin.getPlugin(Main.class).getLangManager()
                     .getTranslation("space-conquest.gui.special-artefact.title"))
             .closeable(true)
-            .parent(Ressources.INVENTORY)
             .build();
 
     @Override
@@ -38,7 +37,7 @@ public class SpecialArtefact implements InventoryProvider {
         contents.set(0,0,
                 ClickableItem.of((TexturedItem.BLUE_BUTTON.getItemBuilder()
                         .setDisplayName(game.translate("space-conquest.gui.ressources.title"))
-                        .build()),e -> Ressources.INVENTORY.open(player)));
+                        .build()),e -> Ressources.getInventory().open(player)));
         contents.set(0,2,
                 ClickableItem.of((TexturedItem.RED_BUTTON.getItemBuilder()
                         .setDisplayName(game.translate("space-conquest.gui.boutique.title"))
@@ -46,7 +45,7 @@ public class SpecialArtefact implements InventoryProvider {
         contents.set(0,4,
                 ClickableItem.of((TexturedItem.YELLOW_BUTTON.getItemBuilder()
                         .setDisplayName(game.translate("space-conquest.gui.upgrade.name"))
-                        .build()),e -> Upgrade.INVENTORY.open(player)));
+                        .build()),e -> Upgrade.getInventory().open(player)));
         contents.set(0,6,
                 ClickableItem.of((TexturedItem.GREEN_BUTTON.getItemBuilder()
                         .setDisplayName(game.translate("space-conquest.gui.special-artefact.title"))

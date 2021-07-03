@@ -73,7 +73,8 @@
       },
       "start": {
         "name": "Lancer la Partie",
-        "back": "Revenir au menu des équipes"
+        "back": "Revenir au menu des équipes",
+        "start": "Space §bConquest§r] La Partie Commence dans 10 secondes, la map se génère"
       },
       "upgrade": {
         "name": "Menu des §bAméliorations",
@@ -196,6 +197,7 @@
       }
 
     },
+
     "title": "Space §bConquest",
     "credit": "Plugin et Concept par §b",
 
