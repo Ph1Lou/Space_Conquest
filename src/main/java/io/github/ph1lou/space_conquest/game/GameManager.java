@@ -3,9 +3,6 @@ package io.github.ph1lou.space_conquest.game;
 import fr.mrmicky.fastboard.FastBoard;
 import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.MapLoader;
-import io.github.ph1lou.space_conquest.database.DataBaseManager;
-import io.github.ph1lou.space_conquest.database.DbConnection;
-import io.github.ph1lou.space_conquest.database.dto.PlayerDTO;
 import io.github.ph1lou.space_conquest.enums.State;
 import io.github.ph1lou.space_conquest.listeners.GameListener;
 import io.github.ph1lou.space_conquest.listeners.LobbyListener;
@@ -21,18 +18,11 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.IllegalFormatException;
 import java.util.List;
@@ -40,7 +30,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class GameManager {
 
@@ -68,7 +57,6 @@ public class GameManager {
     private int playerSize = 0;
     private final MapLoader mapLoader;
     private final boolean training;
-    private final boolean tournament;
     private int countDown=30;
     private final int teamAutoStart;
 
@@ -83,7 +71,6 @@ public class GameManager {
             team.unregister();
         }
         this.training = main.getConfig().getBoolean("training");
-        this.tournament = main.getConfig().getBoolean("tournament");
         this.teamAutoStart = main.getConfig().getInt("number_team_auto_start");
         LobbyTask start = new LobbyTask(this);
         start.runTaskTimer(main, 0, 5);
@@ -222,7 +209,7 @@ public class GameManager {
 
     public void start() {
 
-        if(this.isTournament()){
+        if(this.isTraining()){
             switch (this.getTeams().size()){
                 case 5:
                     this.setZoneNumber(15);
@@ -256,8 +243,8 @@ public class GameManager {
         this.playerSize = playerSize;
     }
 
-    public Map<UUID, FastBoard> getFastBoard() {
-        return this.fastBoard;
+    public Collection<? extends FastBoard> getFastBoard() {
+        return this.fastBoard.values();
     }
 
     public Map<UUID, Integer> getKills() {
@@ -282,15 +269,8 @@ public class GameManager {
             GameManager newGame = this.main.getCurrentGame();
             player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
-            FastBoard fastBoard = new FastBoard(player);
-            fastBoard.updateTitle(this.translate("space-conquest.title"));
-            newGame.getFastBoard().put(player.getUniqueId(),fastBoard);
+            newGame.registerBoard(player);
             player.getInventory().addItem(itemStack);
-            Bukkit.getScheduler().scheduleSyncDelayedTask(main,() -> {
-                if(newGame.isTournament()){
-                    newGame.join(player);
-                }
-            });
         });
 
         this.getMapLoader().deleteMap();
@@ -302,10 +282,6 @@ public class GameManager {
 
     public boolean isTraining() {
         return training;
-    }
-
-    public boolean isTournament() {
-        return tournament;
     }
 
     public void initStart() {
@@ -334,113 +310,6 @@ public class GameManager {
         return teamAutoStart;
     }
 
-    public void join(Player player) {
-
-        if(this.isState(State.LOBBY) && this.isTournament()){
-
-            if(this.getTeams().size()<this.getTeamNumber()){
-
-                Main main = JavaPlugin.getPlugin(Main.class);
-
-                main.getPlayerDTOS().stream()
-                        .filter(playerDTO -> player.getName().equals(playerDTO.getName()))
-                        .findFirst()
-                        .ifPresent(playerDTO -> {
-                            String teamName=playerDTO.getTeam().substring(0,Math.min(playerDTO.getTeam().length(),13));
-
-                            Optional<? extends Team> team = this.getTeams()
-                                    .stream().filter(team1 -> team1.getName().equals(teamName))
-                                    .findFirst();
-
-                            if(!team.isPresent()) {
-                                List<PlayerDTO> playerDTOS = Bukkit.getOnlinePlayers()
-                                        .stream()
-                                        .map(player1 -> main.getPlayerDTOS().stream()
-                                                .filter(playerDTO1 -> player1.getName().equals(playerDTO1.getName()))
-                                                .findFirst())
-                                        .filter(Optional::isPresent)
-                                        .map(Optional::get)
-                                        .filter(playerDTO1 -> playerDTO1.getTeam().equals(playerDTO.getTeam()))
-                                        .collect(Collectors.toList());
-                                if (playerDTOS.size() >= 3) {
-
-                                    Team team1 = new Team(this, teamName);
-                                    playerDTOS.forEach(playerDTO1 -> {
-                                        Player player1 = Bukkit.getPlayer(playerDTO1.getName());
-                                        if(player1 != null){
-                                            team1.addPlayer(player1);
-                                            if(playerDTO1.isCaptain()){
-                                                team1.setFounder(player1.getUniqueId());
-                                            }
-                                        }
-                                    });
-
-                                    if(team1.getFounder() == null){
-                                        Player player1 = Bukkit.getPlayer(playerDTOS.get(0).getName());
-                                        if(player1 != null){
-                                            team1.setFounder(player1.getUniqueId());
-                                        }
-                                        else{
-                                            throw new Error("Problem Founder");
-                                        }
-                                    }
-                                    this.registerTeam(team1);
-                                }
-                            }
-                        });
-            }
-        }
-    }
-
-    public void leave(Player player) {
-
-        if(this.isState(State.LOBBY) && this.isTournament()){
-
-            Main main = JavaPlugin.getPlugin(Main.class);
-            PlayerDTO playerDTO = main.getPlayerDTOS().stream()
-                    .filter(playerDTO1 -> player.getName().equals(playerDTO1.getName()))
-                    .findFirst().orElse(null);
-
-            if(playerDTO == null) return;
-
-            this.getTeam(player)
-                    .ifPresent(team1 -> {
-                        List<PlayerDTO> playerDTOS = Bukkit.getOnlinePlayers()
-                                .stream()
-                                .map(player1 -> main.getPlayerDTOS().stream()
-                                        .filter(playerDTO1 -> player1.getName().equals(playerDTO1.getName()))
-                                        .findFirst())
-                                .filter(Optional::isPresent)
-                                .map(Optional::get)
-                                .filter(playerDTO1 -> playerDTO1.getTeam().equals(playerDTO.getTeam()))
-                                .collect(Collectors.toList());
-
-                        if (playerDTOS.size() > 3) {
-
-                            playerDTOS.stream()
-                                    .filter(playerDTO1 -> Bukkit.getPlayer(playerDTO1.getName()) != null)
-                                    .filter(playerDTO1 -> !this.getTeam(Bukkit.getPlayer(playerDTO1.getName())).isPresent())
-                                    .findFirst()
-                                    .ifPresent(playerDTO1 -> {
-                                        Player player1 = Bukkit.getPlayer(playerDTO1.getName());
-                                        team1.removePlayer(player);
-                                        team1.addPlayer(player1);
-                                        if(playerDTO1.isCaptain()){
-                                            team1.setFounder(player1.getUniqueId());
-                                        }
-                                    });
-                        }
-                        else{
-                            new ArrayList<>(team1.getMembers())
-                                    .stream().map(Bukkit::getPlayer)
-                                    .filter(Objects::nonNull)
-                                    .forEach(team1::removePlayer);
-                        }
-                    });
-
-
-        }
-    }
 
     public void sendScore(Team team) {
 
@@ -457,85 +326,18 @@ public class GameManager {
                     Bukkit.broadcastMessage(this.translate(
                             "space-conquest.team.point",team1.getName(),ressources));
                 });
+    }
 
-        if(!this.isTournament()) return;
+    public void registerBoard(Player player) {
+        FastBoard fastboard = new FastBoard(player);
+        fastboard.updateTitle(this.translate("space-conquest.title"));
+        this.fastBoard.put(player.getUniqueId(),fastboard);
+    }
 
-        DataBaseManager dataBaseManager = new DataBaseManager(JavaPlugin.getPlugin(Main.class));
-
-        DbConnection playerConnection = dataBaseManager.getDataBaseConnection();
-
-        try {
-
-            int teamId;
-
-            Connection connection = playerConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT id FROM teams WHERE name=?");
-            preparedStatement.setString(1,team.getName());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (!resultSet.next()) {
-                Bukkit.getLogger().warning("Team id not found");
-                return;
-
-            }
-
-            teamId = resultSet.getInt(1);
-
-            preparedStatement = connection.prepareStatement("INSERT INTO games VALUES (?, ?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, 0);
-            preparedStatement.setInt(2, teamId);
-            preparedStatement.setInt(3, this.getTimer());
-            preparedStatement.setTimestamp(4, new Timestamp(new Date().getTime()));
-            preparedStatement.setString(5, this.gameName);
-            preparedStatement.executeUpdate();
-            ResultSet rs = preparedStatement.getGeneratedKeys();
-            if(!rs.next()){
-                Bukkit.getLogger().warning("Game id not generated");
-                return;
-            }
-
-            int gameId = rs.getInt(1);
-
-
-
-            this.teams.forEach(team1 -> {
-
-                try {
-                    PreparedStatement preparedStatement1 = connection.prepareStatement("SELECT id FROM teams WHERE name=?");
-                    preparedStatement1.setString(1,team1.getName());
-                    ResultSet resultSet1 = preparedStatement1.executeQuery();
-
-                    if (resultSet1.next()) {
-
-                        int teamId1 = resultSet.getInt(1);
-
-                        PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO points VALUES (?, ?, ?)");
-
-                        int ressources = team1.getResource().getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,0);
-
-                        if(team1.equals(team)){
-                            ressources = ressources *5/4;
-                        }
-                        preparedStatement2.setInt(1,teamId1);
-                        preparedStatement2.setInt(2,gameId);
-                        preparedStatement2.setInt(3,ressources);
-                        preparedStatement2.executeUpdate();
-                    }
-
-
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-
-            });
-
+    public void unregistered(UUID uuid) {
+        FastBoard fastboard = this.fastBoard.remove(uuid);
+        if(fastboard!=null){
+            fastboard.delete();
         }
-        catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-
-        dataBaseManager.close();
     }
 }

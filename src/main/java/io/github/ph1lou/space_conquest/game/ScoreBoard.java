@@ -95,7 +95,7 @@ public class ScoreBoard {
             }
         }
 
-        for(FastBoard fastBoard:game.getFastBoard().values()){
+        for(FastBoard fastBoard:game.getFastBoard()){
             if(game.isState(State.LOBBY)){
                 fastBoard.updateLines(scoreBoardLobby);
             }

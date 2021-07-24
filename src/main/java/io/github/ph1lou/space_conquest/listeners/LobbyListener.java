@@ -1,6 +1,5 @@
 package io.github.ph1lou.space_conquest.listeners;
 
-import fr.mrmicky.fastboard.FastBoard;
 import io.github.ph1lou.space_conquest.enums.State;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
@@ -15,7 +14,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 
 public class LobbyListener implements Listener {
@@ -42,9 +46,9 @@ public class LobbyListener implements Listener {
                 game.translate("space-conquest.title"),
                 game.translate("space-conquest.credit")+"Ph1Lou");
 
-        FastBoard fastboard = new FastBoard(player);
-        fastboard.updateTitle(game.translate("space-conquest.title"));
-        game.getFastBoard().put(player.getUniqueId(), fastboard);
+
+        game.registerBoard(player);
+        event.getPlayer().setResourcePack("https://www.dropbox.com/s/pn5fjn95qc9wfw8/Space_Conquest%20V1.zip?dl=1");
 
         if(!game.isState(State.LOBBY)){
             if(!game.getTeam(player).isPresent()){
@@ -78,30 +82,15 @@ public class LobbyListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event){
-        Bukkit.getScheduler().scheduleSyncDelayedTask(game.getMain(), () -> game.join(event.getPlayer()),1);
-    }
-
-
-
-    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
 
         Player player = event.getPlayer();
 
-        game.leave(player);
-
-
-        FastBoard board = game.getFastBoard().remove(player.getUniqueId());
-
-        if(board!=null){
-            board.delete();
-        }
+        game.unregistered(player.getUniqueId());
 
         if(!game.isState(State.LOBBY)) return;
 
         game.getTeam(player).ifPresent(team -> team.removePlayer(player));
-
     }
 
 

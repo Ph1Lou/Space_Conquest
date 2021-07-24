@@ -1,12 +1,8 @@
 package io.github.ph1lou.space_conquest;
 
 import fr.minuskube.inv.InventoryManager;
-import io.github.ph1lou.space_conquest.commands.LoadData;
 import io.github.ph1lou.space_conquest.commands.Stop;
 import io.github.ph1lou.space_conquest.commands.TeamChat;
-import io.github.ph1lou.space_conquest.database.DataBaseManager;
-import io.github.ph1lou.space_conquest.database.DbConnection;
-import io.github.ph1lou.space_conquest.database.dto.PlayerDTO;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.LanguageManager;
 import org.bukkit.Bukkit;
@@ -17,12 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Main extends JavaPlugin {
@@ -30,12 +20,10 @@ public class Main extends JavaPlugin {
     private InventoryManager invManager;
     private GameManager currentGame;
     private LanguageManager languageManager;
-    private final List<PlayerDTO> playerDTOS = new ArrayList<>();
 
     @Override
     public void onEnable() {
         this.invManager = new InventoryManager(this);
-        this.loadDatas();
         this.saveDefaultConfig();
 
         this.invManager.init();
@@ -44,36 +32,7 @@ public class Main extends JavaPlugin {
         this.currentGame= new GameManager(this);
         Objects.requireNonNull(getCommand("stop")).setExecutor(new Stop(this));
         Objects.requireNonNull(getCommand("t")).setExecutor(new TeamChat(this));
-        Objects.requireNonNull(getCommand("load")).setExecutor(new LoadData(this));
 
-    }
-
-    public void loadDatas() {
-
-        DataBaseManager dataBaseManager = new DataBaseManager(this);
-
-        DbConnection playerConnection = dataBaseManager.getDataBaseConnection();
-
-        this.playerDTOS.clear();
-
-        try {
-            Connection connection = playerConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT minecraft_username as pseudo,captain, t.name as team  FROM players JOIN teams t on t.id = players.team;");
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                this.playerDTOS.add(new PlayerDTO(
-                        resultSet.getString("pseudo"),
-                        resultSet.getBoolean("captain"),
-                        resultSet.getString("team"))
-                );
-            }
-        }
-        catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        finally {
-            dataBaseManager.close();
-        }
     }
 
     public void setWorld() {
@@ -135,7 +94,4 @@ public class Main extends JavaPlugin {
         return invManager;
     }
 
-    public List<? extends PlayerDTO> getPlayerDTOS() {
-        return playerDTOS;
-    }
 }

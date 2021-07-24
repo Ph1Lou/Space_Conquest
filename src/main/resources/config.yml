@@ -15,8 +15,4 @@ default_lobby: true
 training: false
 tournament: false
 number_team_auto_start: 4
-host:
-user:
-pass:
-db_name:
-port:
+
