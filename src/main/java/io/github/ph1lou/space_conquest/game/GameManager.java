@@ -444,13 +444,19 @@ public class GameManager {
 
     public void sendScore(Team team) {
 
-        this.teams.stream().sorted(Comparator.comparingInt(value -> value.getResource()
+        this.teams.stream().sorted(Comparator.comparingInt(value -> -value.getResource()
                 .getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,0)))
-                .forEach(team1 -> Bukkit.broadcastMessage(this.translate(
-                "space-conquest.team.point",
-                team1.getName(),
-                team1.getResource()
-                .getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,0))));
+                .forEach(team1 -> {
+
+                    int ressources = team1.getResource()
+                            .getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,0);
+                    if(team1.equals(team)){
+                        ressources = ressources*5/4;
+                    }
+
+                    Bukkit.broadcastMessage(this.translate(
+                            "space-conquest.team.point",team1.getName(),ressources));
+                });
 
         if(!this.isTournament()) return;
 
@@ -496,7 +502,7 @@ public class GameManager {
 
                 try {
                     PreparedStatement preparedStatement1 = connection.prepareStatement("SELECT id FROM teams WHERE name=?");
-                    preparedStatement1.setString(1,team.getName());
+                    preparedStatement1.setString(1,team1.getName());
                     ResultSet resultSet1 = preparedStatement1.executeQuery();
 
                     if (resultSet1.next()) {
@@ -505,9 +511,14 @@ public class GameManager {
 
                         PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO points VALUES (?, ?, ?)");
 
+                        int ressources = team1.getResource().getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,0);
+
+                        if(team1.equals(team)){
+                            ressources = ressources *5/4;
+                        }
                         preparedStatement2.setInt(1,teamId1);
                         preparedStatement2.setInt(2,gameId);
-                        preparedStatement2.setInt(3,team1.getResource().getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,0));
+                        preparedStatement2.setInt(3,ressources);
                         preparedStatement2.executeUpdate();
                     }
 

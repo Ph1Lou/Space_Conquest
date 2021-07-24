@@ -25,6 +25,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -161,6 +162,11 @@ public class GameListener implements Listener {
 
         Player player = event.getPlayer();
         ItemStack itemStack = event.getItem();
+
+        if(event.getHand() != null && event.getHand().equals(EquipmentSlot.OFF_HAND)){
+            return;
+        }
+
 
         if(itemStack==null) return;
 
