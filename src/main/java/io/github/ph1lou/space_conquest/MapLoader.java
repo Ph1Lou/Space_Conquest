@@ -9,13 +9,13 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.trait.SkinTrait;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
-import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 import org.bukkit.entity.EntityType;
 
 import java.io.File;
@@ -108,8 +108,6 @@ public class MapLoader {
         return generateCircle( location, size, material,isBase, false);
     }
 
-
-
     public Area generateCircle(Location location, int size, Material material, boolean isBase, boolean isMiddle){
 
         World world = game.getWorld();
@@ -168,9 +166,6 @@ public class MapLoader {
 
         return area;
     }
-
-
-
 
     public void deleteMap() {
 

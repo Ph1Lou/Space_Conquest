@@ -3,10 +3,10 @@ package io.github.ph1lou.space_conquest.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
+import net.minecraft.nbt.NBTTagCompound;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -128,24 +128,24 @@ public class ItemBuilder {
     }
 
     public ItemBuilder addNBTTag(String key, boolean value) {
-        net.minecraft.server.v1_16_R3.ItemStack nmsItem = CraftItemStack.asNMSCopy(this.stack);
-        NBTTagCompound compound = nmsItem.getOrCreateTag();
+        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(this.stack);
+        NBTTagCompound compound = nmsItem.v();
 
-        compound.setBoolean(key,value);
+        compound.a(key,value);
 
-        nmsItem.setTag(compound);
+        nmsItem.c(compound);
 
         this.stack = CraftItemStack.asBukkitCopy(nmsItem);
         return this;
     }
 
     public ItemBuilder addNBTTag(String key, Integer value) {
-        net.minecraft.server.v1_16_R3.ItemStack nmsItem = CraftItemStack.asNMSCopy(this.stack);
-        NBTTagCompound compound = nmsItem.getOrCreateTag();
+        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(this.stack);
+        NBTTagCompound compound = nmsItem.v();
 
-        compound.setInt(key,value);
+        compound.a(key,value);
 
-        nmsItem.setTag(compound);
+        nmsItem.c(compound);
 
         this.stack = CraftItemStack.asBukkitCopy(nmsItem);
         return this;

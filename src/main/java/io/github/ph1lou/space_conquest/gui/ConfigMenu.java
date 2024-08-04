@@ -17,6 +17,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,42 +45,45 @@ public class ConfigMenu implements InventoryProvider {
         itemStack.setDisplayName(game.translate("space-conquest.gui.config-menu.create"));
 
         contents.set(0,0,ClickableItem.of((itemStack.build()),e -> new AnvilGUI.Builder()
-                .onComplete((player2, text) -> {
+                .onClick((slot, stateSnapshot) -> {
+                    if(slot == AnvilGUI.Slot.OUTPUT) {
 
-                    if(game.isState(State.LOBBY)){
-                        if(game.getTeams().size()<game.getTeamNumber()){
+                        if (game.isState(State.LOBBY)) {
+                            if (game.getTeams().size() < game.getTeamNumber()) {
 
-                            text=text.substring(0,Math.min(text.length(),16));
-                            if(text.length()>0 && text.charAt(0)==' '){
-                                text=text.replaceFirst(" ","");
+                                String text = stateSnapshot.getText();
+                                text = text.substring(0, Math.min(text.length(), 16));
+                                if (text.length() > 0 && text.charAt(0) == ' ') {
+                                    text = text.replaceFirst(" ", "");
+                                }
+                                Team team = new Team(game, text);
+                                team.addPlayer(stateSnapshot.getPlayer());
+                                team.setFounder(stateSnapshot.getPlayer().getUniqueId());
+                                game.registerTeam(team);
+
+                                if (game.isTraining() && game.getTeams().size() >= game.getTeamAutoStart()) {
+                                    game.initStart();
+                                }
+                            } else {
+                                stateSnapshot.getPlayer().sendMessage(game.translate("space-conquest.gui.config-menu.max"));
                             }
-                            Team team = new Team(game,text);
-                            team.addPlayer(player2);
-                            team.setFounder(player2.getUniqueId());
-                            game.registerTeam(team);
-
-                            if(game.isTraining() && game.getTeams().size()>= game.getTeamAutoStart()){
-                                game.initStart();
-                            }
+                        } else {
+                            stateSnapshot.getPlayer().sendMessage(game.translate("space-conquest.gui.config-menu.already-launch"));
                         }
-                        else {
-                            player2.sendMessage(game.translate("space-conquest.gui.config-menu.max"));
-                        }
+                        return Arrays.asList(
+                                AnvilGUI.ResponseAction.close(),
+                                AnvilGUI.ResponseAction.run(() -> {
+                                    if(game.isState(State.LOBBY)){
+                                        ConfigMenu.INVENTORY.open(stateSnapshot.getPlayer());
+                                    }
+                                }));
                     }
-                    else {
-                        player2.sendMessage(game.translate("space-conquest.gui.config-menu.already-launch"));
-                    }
-                    return AnvilGUI.Response.close();
+                    return Collections.emptyList();
                 })
                 .title(game.translate("space-conquest.gui.config-menu.input-title"))
-                .item(new ItemStack(Material.GREEN_CONCRETE_POWDER))
+                .itemOutput(new ItemStack(Material.GREEN_CONCRETE_POWDER))
                 .plugin(main)
                 .text(" ")
-                .onClose(player1 -> Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
-                    if(game.isState(State.LOBBY)){
-                        ConfigMenu.INVENTORY.open(player1);
-                    }
-                }))
                 .open(player)
         ));
         contents.set(0,8,ClickableItem.of((new ItemBuilder(Material.BARRIER)
@@ -244,19 +249,23 @@ public class ConfigMenu implements InventoryProvider {
             gameName.setDisplayName(game.translate("space-conquest.gui.config-menu.change-game-name"));
 
             contents.set(0, 4, ClickableItem.of((gameName.build()), e -> new AnvilGUI.Builder()
-                    .onComplete((player2, text) -> {
-                        game.setGameName(text);
-                        return AnvilGUI.Response.close();
+                    .onClick((slot, stateSnapshot) -> {
+                        if(slot == AnvilGUI.Slot.OUTPUT){
+                            game.setGameName(stateSnapshot.getText());
+                            return Arrays.asList(
+                                    AnvilGUI.ResponseAction.close(),
+                                    AnvilGUI.ResponseAction.run(() -> {
+                                        if(game.isState(State.LOBBY)){
+                                            ConfigMenu.INVENTORY.open(stateSnapshot.getPlayer());
+                                        }
+                                    }));
+                        }
+                        return Collections.emptyList();
                     })
                     .title(game.translate("space-conquest.gui.config-menu.change-game-name"))
-                    .item(new ItemStack(Material.GREEN_CONCRETE_POWDER))
+                    .itemOutput(new ItemStack(Material.GREEN_CONCRETE_POWDER))
                     .plugin(main)
                     .text(game.getGameName())
-                    .onClose(player1 -> Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
-                        if(game.isState(State.LOBBY)){
-                            ConfigMenu.INVENTORY.open(player1);
-                        }
-                    }))
                     .open(player)));
 
             contents.set(3, 4, ClickableItem.of((new ItemBuilder(Material.GREEN_STAINED_GLASS).setDisplayName(game.translate("space-conquest.gui.start.name")).build()), e -> Start.INVENTORY.open(player)));
@@ -281,22 +290,28 @@ public class ConfigMenu implements InventoryProvider {
             contents.set(3,6,ClickableItem.of((new ItemBuilder(Material.ACACIA_SIGN).
                     setDisplayName(game.translate("space-conquest.gui.config-menu.rename-team")).
                     build()),e -> new AnvilGUI.Builder()
-                    .onComplete((player2, text) -> {
-                        if(text.length()>0 && text.charAt(0)==' '){
-                            text=text.replaceFirst(" ","");
+                    .onClick((slot, stateSnapshot) -> {
+                        if(slot == AnvilGUI.Slot.OUTPUT){
+                            String text = stateSnapshot.getText();
+                            if(text.length()>0 && text.charAt(0)==' '){
+                                text=text.replaceFirst(" ","");
+                            }
+                            team.setName(text.substring(0,Math.min(text.length(),16)));
+                            return Arrays.asList(
+                                    AnvilGUI.ResponseAction.close(),
+                                    AnvilGUI.ResponseAction.run(() -> {
+                                        if(game.isState(State.LOBBY)){
+                                            ConfigMenu.INVENTORY.open(stateSnapshot.getPlayer());
+                                        }
+                                    }));
                         }
-                        team.setName(text.substring(0,Math.min(text.length(),16)));
-                        return AnvilGUI.Response.close();
+
+                        return Collections.emptyList();
                     })
                     .title(game.translate("space-conquest.gui.config-menu.rename-team"))
-                    .item(new ItemStack(Material.GREEN_CONCRETE_POWDER))
+                    .itemOutput(new ItemStack(Material.GREEN_CONCRETE_POWDER))
                     .text(team.getName())
                     .plugin(main)
-                    .onClose(player1 -> Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
-                        if(game.isState(State.LOBBY)){
-                            ConfigMenu.INVENTORY.open(player1);
-                        }
-                    }))
                     .open(player)));
 
 

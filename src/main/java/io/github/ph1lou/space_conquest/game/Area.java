@@ -3,7 +3,7 @@ package io.github.ph1lou.space_conquest.game;
 import io.github.ph1lou.space_conquest.enums.TowerMode;
 import io.github.ph1lou.space_conquest.utils.Laser;
 import io.github.ph1lou.space_conquest.utils.TexturedItem;
-import net.minecraft.server.v1_16_R3.Tuple;
+import net.minecraft.util.Tuple;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -65,7 +65,7 @@ public class Area {
         this.size=size;
         this.isMiddle=isMiddle;
         this.generatorType = generatorType;
-        this.laser = new Laser(this.middle.clone().add(new Vector(0.5,this.isBase?
+        this.laser = new Laser.GuardianLaser(this.middle.clone().add(new Vector(0.5,this.isBase?
                 0
                 :
                 this.isMiddle ?
@@ -78,6 +78,7 @@ public class Area {
                         20,0.5)));
         this.laser.start();
     }
+
 
     public void initNeighbours(){
         this.neighbours.addAll(game.getAreas().stream()

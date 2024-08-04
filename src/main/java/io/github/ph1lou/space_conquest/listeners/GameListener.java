@@ -10,7 +10,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Lightable;
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -170,20 +170,20 @@ public class GameListener implements Listener {
 
         if(itemStack==null) return;
 
-        net.minecraft.server.v1_16_R3.ItemStack item = CraftItemStack.asNMSCopy(itemStack);
+        net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(itemStack);
 
-        if(item.getTag()==null){
+        if(item.v()==null){
             return;
         }
 
-        if(item.getTag().getBoolean("propulsion")){
+        if(item.v().e("propulsion")){
 
             player.setVelocity(new Vector(0,8,0));
             player.getInventory().removeItem(itemStack);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,300,0,false,false));
             event.setCancelled(true);
         }
-        else if(item.getTag().getBoolean("no-gravity")){
+        else if(item.v().e("no-gravity")){
 
             if(event.getAction().equals(Action.RIGHT_CLICK_AIR)){
                 int i=6;
@@ -208,7 +208,7 @@ public class GameListener implements Listener {
 
         }
 
-        else if(item.getTag().getBoolean("levitation")){
+        else if(item.v().e("levitation")){
 
             if(itemStack.getAmount()==1){
                 player.getInventory().removeItem(itemStack);
@@ -229,7 +229,7 @@ public class GameListener implements Listener {
             event.setCancelled(true);
             player.sendMessage(game.translate("space-conquest.game.message.use"));
         }
-        else if(item.getTag().getBoolean("explosion")){
+        else if(item.v().e("explosion")){
 
             if(itemStack.getAmount()==1){
                 player.getInventory().removeItem(itemStack);
@@ -255,7 +255,7 @@ public class GameListener implements Listener {
             }
             event.setCancelled(true);
         }
-        else if(item.getTag().getBoolean("fire-charge")){
+        else if(item.v().e("fire-charge")){
 
             Action action = event.getAction();
             if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {

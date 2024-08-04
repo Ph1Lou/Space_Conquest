@@ -24,10 +24,10 @@ public class FileUtils_ {
 
         if (!file.exists()) {
             if (file.getParentFile().mkdirs()) {
-                System.out.println("[WereWolfPlugin] Create Parent Directory for " + file.getName());
+                System.out.println("[SpaceConquest] Create Parent Directory for " + file.getName());
             }
             if (file.createNewFile()) {
-                System.out.println("[WereWolfPlugin] Create " + file.getName());
+                System.out.println("[SpaceConquest] Create " + file.getName());
             }
         }
     }
@@ -72,7 +72,7 @@ public class FileUtils_ {
 
         if (source == null) return;
 
-        System.out.println("[WereWolfPlugin] Copying ->" + source + "\n\tto ->" + destination);
+        System.out.println("[SpaceConquest] Copying ->" + source + "\n\tto ->" + destination);
         File file = new File(destination);
 
         try {

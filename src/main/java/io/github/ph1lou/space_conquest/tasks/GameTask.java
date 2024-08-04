@@ -6,7 +6,7 @@ import io.github.ph1lou.space_conquest.game.Area;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
 import io.github.ph1lou.space_conquest.utils.TexturedItem;
-import net.minecraft.server.v1_16_R3.Tuple;
+import net.minecraft.util.Tuple;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
