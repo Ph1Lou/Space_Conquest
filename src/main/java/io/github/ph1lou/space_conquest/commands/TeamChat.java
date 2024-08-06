@@ -25,9 +25,7 @@ public class TeamChat implements CommandExecutor {
 
         GameManager game = main.getCurrentGame();
 
-        if(!(sender instanceof Player)) return true;
-
-        Player player = (Player) sender;
+        if(!(sender instanceof Player player)) return true;
 
         Team team = game.getTeam(player).orElse(null);
 

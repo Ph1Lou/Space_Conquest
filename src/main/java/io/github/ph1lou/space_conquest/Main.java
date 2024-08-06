@@ -10,12 +10,15 @@ import org.bukkit.Difficulty;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 
 public class Main extends JavaPlugin {
+
+    public static final String KEY = "space-conquest";
 
     private InventoryManager invManager;
     private GameManager currentGame;
@@ -32,7 +35,6 @@ public class Main extends JavaPlugin {
         this.currentGame= new GameManager(this);
         Objects.requireNonNull(getCommand("stop")).setExecutor(new Stop(this));
         Objects.requireNonNull(getCommand("t")).setExecutor(new TeamChat(this));
-
     }
 
     public void setWorld() {
@@ -93,5 +95,4 @@ public class Main extends JavaPlugin {
     public InventoryManager getInvManager() {
         return invManager;
     }
-
 }

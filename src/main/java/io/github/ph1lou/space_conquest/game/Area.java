@@ -1,7 +1,8 @@
 package io.github.ph1lou.space_conquest.game;
 
+import fr.skytasul.guardianbeam.Laser;
+import io.github.ph1lou.space_conquest.Main;
 import io.github.ph1lou.space_conquest.enums.TowerMode;
-import io.github.ph1lou.space_conquest.utils.Laser;
 import io.github.ph1lou.space_conquest.utils.TexturedItem;
 import net.minecraft.util.Tuple;
 import org.bukkit.Bukkit;
@@ -11,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -65,18 +67,23 @@ public class Area {
         this.size=size;
         this.isMiddle=isMiddle;
         this.generatorType = generatorType;
-        this.laser = new Laser.GuardianLaser(this.middle.clone().add(new Vector(0.5,this.isBase?
-                0
-                :
-                this.isMiddle ?
-                        20
-                        :
-                        3,0.5)),
-                this.middle.clone().add(new Vector(0.5,this.isMiddle || this.isBase?
-                        -20
-                        :
-                        20,0.5)));
-        this.laser.start();
+        try {
+            this.laser = new Laser.GuardianLaser(this.middle.clone().add(new Vector(0.5,this.isBase?
+                    0
+                    :
+                    this.isMiddle ?
+                            20
+                            :
+                            3,0.5)),
+                    this.middle.clone().add(new Vector(0.5,this.isMiddle || this.isBase?
+                            -20
+                            :
+                            20,0.5)), Integer.MAX_VALUE, 20);
+            this.laser.start(JavaPlugin.getPlugin(Main.class));
+
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -250,7 +257,11 @@ public class Area {
     }
 
     public void setMode(TowerMode mode) {
-        this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,20,0.5)));
+        try {
+            this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,20,0.5)));
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
         this.target = null;
         Collections.shuffle(this.neighbours);
         this.mode = mode;
@@ -295,12 +306,20 @@ public class Area {
 
             if(this.target!=null){
                 if(!this.getOwnerTeam().equals(this.target.getOwnerTeam())){
-                    this.laser.moveEnd(this.target.getMiddle().add(new Vector(0.5,2,0.5)));
+                    try {
+                        this.laser.moveEnd(this.target.getMiddle().add(new Vector(0.5,2,0.5)));
+                    } catch (ReflectiveOperationException e) {
+                        throw new RuntimeException(e);
+                    }
                     this.target.progressCaptureAuto(this.getOwnerTeam());
                     return;
                 }
                 else{
-                    this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,20,0.5)));
+                    try {
+                        this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,20,0.5)));
+                    } catch (ReflectiveOperationException e) {
+                        throw new RuntimeException(e);
+                    }
                     this.target=null;
                 }
             }
@@ -344,13 +363,21 @@ public class Area {
                     .filter(player -> player.getLocation().distance(this.getMiddle())<30)
                     .findFirst()
                     .ifPresent(player -> {
-                        this.laser.moveEnd((player.getEyeLocation().add(new Vector(0,-1,0))));
+                        try {
+                            this.laser.moveEnd((player.getEyeLocation().add(new Vector(0,-1,0))));
+                        } catch (ReflectiveOperationException e) {
+                            throw new RuntimeException(e);
+                        }
                         player.damage(1);
                         present.set(true);
                     });
 
             if(!present.get()){
-                this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,20,0.5)));
+                try {
+                    this.laser.moveEnd(this.getMiddle().add(new Vector(0.5,20,0.5)));
+                } catch (ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

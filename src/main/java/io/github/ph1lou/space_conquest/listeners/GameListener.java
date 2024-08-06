@@ -1,5 +1,7 @@
 package io.github.ph1lou.space_conquest.listeners;
 
+import io.github.ph1lou.space_conquest.Main;
+import io.github.ph1lou.space_conquest.enums.SpecialItem;
 import io.github.ph1lou.space_conquest.game.Area;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.game.Team;
@@ -10,7 +12,6 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Lightable;
-import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,6 +28,8 @@ import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
@@ -150,8 +153,7 @@ public class GameListener implements Listener {
     @EventHandler
     public void onHitFireBall(ProjectileHitEvent event) {
 
-        if(event.getEntity() instanceof Fireball) {
-            Fireball fireball = (Fireball) event.getEntity();
+        if(event.getEntity() instanceof Fireball fireball) {
             Location location = fireball.getLocation();
             fireball.getWorld().createExplosion(location, 5f);
         }
@@ -170,20 +172,21 @@ public class GameListener implements Listener {
 
         if(itemStack==null) return;
 
-        net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(itemStack);
+        ItemMeta itemMeta = itemStack.getItemMeta();
 
-        if(item.v()==null){
+        if(itemMeta==null){
             return;
         }
+        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
 
-        if(item.v().e("propulsion")){
+        if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.PROPULSION.getKey()))){
 
             player.setVelocity(new Vector(0,8,0));
             player.getInventory().removeItem(itemStack);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,300,0,false,false));
             event.setCancelled(true);
         }
-        else if(item.v().e("no-gravity")){
+        else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.NO_GRAVITY.getKey()))){
 
             if(event.getAction().equals(Action.RIGHT_CLICK_AIR)){
                 int i=6;
@@ -208,7 +211,7 @@ public class GameListener implements Listener {
 
         }
 
-        else if(item.v().e("levitation")){
+        else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.LEVITATION.getKey()))){
 
             if(itemStack.getAmount()==1){
                 player.getInventory().removeItem(itemStack);
@@ -229,7 +232,7 @@ public class GameListener implements Listener {
             event.setCancelled(true);
             player.sendMessage(game.translate("space-conquest.game.message.use"));
         }
-        else if(item.v().e("explosion")){
+        else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.EXPLOSION.getKey()))){
 
             if(itemStack.getAmount()==1){
                 player.getInventory().removeItem(itemStack);
@@ -255,7 +258,7 @@ public class GameListener implements Listener {
             }
             event.setCancelled(true);
         }
-        else if(item.v().e("fire-charge")){
+        else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.FIRE_CHARGE.getKey()))){
 
             Action action = event.getAction();
             if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {

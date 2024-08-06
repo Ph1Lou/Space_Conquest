@@ -210,15 +210,11 @@ public class GameManager {
     public void start() {
 
         if(this.isTraining()){
-            switch (this.getTeams().size()){
-                case 5:
-                    this.setZoneNumber(15);
-                    break;
-                case 6 :
-                    this.setZoneNumber(18);
-                    break;
-                default:
-                    break;
+            switch (this.getTeams().size()) {
+                case 5 -> this.setZoneNumber(15);
+                case 6 -> this.setZoneNumber(18);
+                default -> {
+                }
             }
         }
 

@@ -5,6 +5,7 @@ import fr.minuskube.inv.SmartInventory;
 import fr.minuskube.inv.content.InventoryContents;
 import fr.minuskube.inv.content.InventoryProvider;
 import io.github.ph1lou.space_conquest.Main;
+import io.github.ph1lou.space_conquest.enums.SpecialItem;
 import io.github.ph1lou.space_conquest.game.GameManager;
 import io.github.ph1lou.space_conquest.utils.ItemBuilder;
 import io.github.ph1lou.space_conquest.utils.TexturedItem;
@@ -79,7 +80,7 @@ public class SpecialArtefact implements InventoryProvider {
             contents.set(1,3, ClickableItem.of((propulsion.build()), e -> team.spend(300,TexturedItem.EMERALD_RESSOURCE,
                     () -> player.getInventory().addItem(TexturedItem.PROPULSOR.getItemBuilder()
                             .setDisplayName(game.translate("space-conquest.gui.special-artefact.propulser.item-name"))
-                            .addNBTTag("propulsion",true)
+                            .addNBTTag(SpecialItem.PROPULSION.getKey(), true)
                             .build()))));
 
             ItemBuilder levitation = TexturedItem.LEVITATOR.getItemBuilder();
@@ -91,7 +92,7 @@ public class SpecialArtefact implements InventoryProvider {
                     if(team.getResource().get(TexturedItem.EMERALD_RESSOURCE)>=300){
                         player.getInventory().addItem(TexturedItem.LEVITATOR.getItemBuilder()
                                 .setDisplayName(game.translate("space-conquest.gui.special-artefact.levitation.item-name"))
-                                .addNBTTag("levitation",true)
+                                .addNBTTag(SpecialItem.LEVITATION.getKey(),true)
                                 .build());
                         team.getResource().put(TexturedItem.EMERALD_RESSOURCE,team.getResource().get(TexturedItem.EMERALD_RESSOURCE)-300);
                     }
@@ -127,7 +128,7 @@ public class SpecialArtefact implements InventoryProvider {
             contents.set(3,3, ClickableItem.of((bigTnt.build()), e -> team.spend(500,TexturedItem.EMERALD_RESSOURCE,
                     () ->    player.getInventory().addItem(TexturedItem.DETONATOR.getItemBuilder()
                             .setDisplayName(game.translate("space-conquest.gui.special-artefact.explosion.item-name"))
-                            .addNBTTag("explosion",true)
+                            .addNBTTag(SpecialItem.EXPLOSION.getKey(), true)
                             .build()))));
 
             ItemBuilder fireCharge = TexturedItem.FIRE_CHARGE.getItemBuilder();
@@ -137,7 +138,7 @@ public class SpecialArtefact implements InventoryProvider {
                     () ->   player.getInventory()
                             .addItem(TexturedItem.FIRE_CHARGE.getItemBuilder()
                                     .setDisplayName(game.translate("space-conquest.gui.special-artefact.fire-charge.item-name"))
-                                    .addNBTTag("fire-charge",true).build()))));
+                                    .addNBTTag(SpecialItem.FIRE_CHARGE.getKey(), true).build()))));
 
             ItemBuilder gravityBlock = new ItemBuilder(Material.REDSTONE_LAMP);
             gravityBlock.setDisplayName(game.translate("space-conquest.gui.special-artefact.no-gravity.name",
@@ -148,7 +149,7 @@ public class SpecialArtefact implements InventoryProvider {
             contents.set(3,7, ClickableItem.of((gravityBlock.build()), e -> team.spend(1000,TexturedItem.IRON_RESSOURCE,
                     () ->    player.getInventory().addItem(new ItemBuilder(Material.REDSTONE_LAMP)
                             .setDisplayName(game.translate("space-conquest.gui.special-artefact.no-gravity.item-name"))
-                            .addNBTTag("no-gravity",true)
+                            .addNBTTag(SpecialItem.NO_GRAVITY.getKey(), true)
                             .build()))));
 
             ItemBuilder swapArrow = TexturedItem.REVERSE_ARROW.getItemBuilder();

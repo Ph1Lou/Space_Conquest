@@ -3,16 +3,17 @@ package io.github.ph1lou.space_conquest.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.nbt.NBTTagCompound;
+import io.github.ph1lou.space_conquest.Main;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -58,8 +59,6 @@ public class ItemBuilder {
         return this;
     }
 
-
-
     public ItemBuilder setAmount(int amount) {
         stack.setAmount(amount);
         return this;
@@ -70,17 +69,10 @@ public class ItemBuilder {
         return this;
     }
 
-
-
     public ItemBuilder setDisplayName(String displayname) {
         ItemMeta meta = getItemMeta();
         meta.setDisplayName(displayname);
         setItemMeta(meta);
-        return this;
-    }
-
-    public ItemBuilder setItemStack (ItemStack stack) {
-        this.stack = stack;
         return this;
     }
 
@@ -115,7 +107,6 @@ public class ItemBuilder {
         return this;
     }
 
-
     public ItemBuilder addItemFlag(ItemFlag flag) {
         ItemMeta meta = getItemMeta();
         meta.addItemFlags(flag);
@@ -128,26 +119,17 @@ public class ItemBuilder {
     }
 
     public ItemBuilder addNBTTag(String key, boolean value) {
-        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(this.stack);
-        NBTTagCompound compound = nmsItem.v();
-
-        compound.a(key,value);
-
-        nmsItem.c(compound);
-
-        this.stack = CraftItemStack.asBukkitCopy(nmsItem);
+        ItemMeta meta = getItemMeta();
+        NamespacedKey namespacedKey = new NamespacedKey(Main.KEY, key);
+        meta.getPersistentDataContainer().set(namespacedKey, PersistentDataType.BOOLEAN, value);
+        setItemMeta(meta);
         return this;
     }
 
-    public ItemBuilder addNBTTag(String key, Integer value) {
-        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(this.stack);
-        NBTTagCompound compound = nmsItem.v();
-
-        compound.a(key,value);
-
-        nmsItem.c(compound);
-
-        this.stack = CraftItemStack.asBukkitCopy(nmsItem);
+    public ItemBuilder setCustomModelData(Integer value) {
+        ItemMeta meta = getItemMeta();
+        meta.setCustomModelData(value);
+        setItemMeta(meta);
         return this;
     }
 }

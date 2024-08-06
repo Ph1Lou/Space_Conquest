@@ -62,17 +62,11 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerDamageWithSwapArrow(EntityDamageByEntityEvent event){
 
-        if(!(event.getEntity() instanceof Player)) return;
+        if(!(event.getEntity() instanceof Player player)) return;
 
-        Player player = (Player) event.getEntity();
+        if(!(event.getDamager() instanceof Arrow arrow)) return;
 
-        if(!(event.getDamager() instanceof Arrow)) return;
-
-        Arrow arrow = (Arrow) event.getDamager();
-
-        if(!(arrow.getShooter() instanceof Player)) return;
-
-        Player shooter = (Player) arrow.getShooter();
+        if(!(arrow.getShooter() instanceof Player shooter)) return;
 
         boolean find =false;
 
