@@ -78,7 +78,9 @@ public class Area {
                     this.middle.clone().add(new Vector(0.5,this.isMiddle || this.isBase?
                             -20
                             :
-                            20,0.5)), Integer.MAX_VALUE, 20);
+                            20,0.5)),
+                    Integer.MAX_VALUE,
+                    20);
             this.laser.start(JavaPlugin.getPlugin(Main.class));
 
         } catch (ReflectiveOperationException e) {

@@ -30,6 +30,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
@@ -179,14 +180,14 @@ public class GameListener implements Listener {
         }
         PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
 
-        if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.PROPULSION.getKey()))){
+        if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.PROPULSION.getKey()), PersistentDataType.BOOLEAN)){
 
             player.setVelocity(new Vector(0,8,0));
             player.getInventory().removeItem(itemStack);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,300,0,false,false));
             event.setCancelled(true);
         }
-        else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.NO_GRAVITY.getKey()))){
+        else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.NO_GRAVITY.getKey()), PersistentDataType.BOOLEAN)){
 
             if(event.getAction().equals(Action.RIGHT_CLICK_AIR)){
                 int i=6;
@@ -211,7 +212,7 @@ public class GameListener implements Listener {
 
         }
 
-        else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.LEVITATION.getKey()))){
+        else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.LEVITATION.getKey()), PersistentDataType.BOOLEAN)){
 
             if(itemStack.getAmount()==1){
                 player.getInventory().removeItem(itemStack);
@@ -232,7 +233,7 @@ public class GameListener implements Listener {
             event.setCancelled(true);
             player.sendMessage(game.translate("space-conquest.game.message.use"));
         }
-        else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.EXPLOSION.getKey()))){
+        else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.EXPLOSION.getKey()), PersistentDataType.BOOLEAN)){
 
             if(itemStack.getAmount()==1){
                 player.getInventory().removeItem(itemStack);
@@ -258,7 +259,7 @@ public class GameListener implements Listener {
             }
             event.setCancelled(true);
         }
-        else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.FIRE_CHARGE.getKey()))){
+        else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.FIRE_CHARGE.getKey()), PersistentDataType.BOOLEAN)){
 
             Action action = event.getAction();
             if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
