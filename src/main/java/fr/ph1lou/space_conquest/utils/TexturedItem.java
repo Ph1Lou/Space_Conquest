@@ -19,6 +19,7 @@ public enum TexturedItem {
     SWORD_LEVEL_2(Material.IRON_SWORD,2),
     SWORD_LEVEL_3(Material.DIAMOND_SWORD,2),
     ARROW(Material.ARROW),
+    BOW(Material.BOW),
     SHARPNESS_UPGRADE(Material.GOLDEN_SWORD,2),
     SHEARS(Material.SHEARS,2),
     LEVITATOR(Material.STICK,25),

@@ -8,7 +8,6 @@ import fr.ph1lou.space_conquest.Main;
 import fr.ph1lou.space_conquest.game.GameManager;
 import fr.ph1lou.space_conquest.utils.ItemBuilder;
 import fr.ph1lou.space_conquest.utils.TexturedItem;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -61,7 +60,7 @@ public class Boutique implements InventoryProvider {
         game.getTeam(player).ifPresent(team -> {
             ItemBuilder woodenSword = TexturedItem.SWORD_LEVEL_1.getItemBuilder();
 
-            woodenSword.addEnchant(Enchantment.DAMAGE_ALL,team.getUpgrade().isSharpness());
+            woodenSword.addEnchant(Enchantment.SHARPNESS,team.getUpgrade().isSharpness());
 
 
             ItemStack tempWoodenSword = woodenSword.build().clone();
@@ -72,7 +71,7 @@ public class Boutique implements InventoryProvider {
 
             ItemBuilder ironSword = TexturedItem.SWORD_LEVEL_2.getItemBuilder();
 
-            ironSword.addEnchant(Enchantment.DAMAGE_ALL,team.getUpgrade().isSharpness());
+            ironSword.addEnchant(Enchantment.SHARPNESS,team.getUpgrade().isSharpness());
 
             ItemStack temp = ironSword.build().clone();
 
@@ -82,7 +81,7 @@ public class Boutique implements InventoryProvider {
 
             ItemBuilder diamondSword = TexturedItem.SWORD_LEVEL_3.getItemBuilder();
 
-            diamondSword.addEnchant(Enchantment.DAMAGE_ALL,team.getUpgrade().isSharpness());
+            diamondSword.addEnchant(Enchantment.SHARPNESS,team.getUpgrade().isSharpness());
 
 
             ItemStack tempSword = diamondSword.build().clone();
@@ -91,10 +90,10 @@ public class Boutique implements InventoryProvider {
                     team.getResource().getOrDefault(TexturedItem.DIAMOND_RESSOURCE,0))).build()), e -> team.spend(3000,TexturedItem.DIAMOND_RESSOURCE,
                             () ->  player.getInventory().addItem(tempSword))));
 
-            ItemBuilder bow = new ItemBuilder(Material.BOW);
+            ItemBuilder bow = TexturedItem.BOW.getItemBuilder();
 
 
-            bow.addEnchant(Enchantment.ARROW_DAMAGE,team.getUpgrade().isPower());
+            bow.addEnchant(Enchantment.PUNCH,team.getUpgrade().isPower());
 
             ItemStack tempBow = bow.build().clone();
 

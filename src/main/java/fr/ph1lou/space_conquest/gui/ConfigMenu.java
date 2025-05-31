@@ -53,7 +53,7 @@ public class ConfigMenu implements InventoryProvider {
 
                                 String text = stateSnapshot.getText();
                                 text = text.substring(0, Math.min(text.length(), 16));
-                                if (text.length() > 0 && text.charAt(0) == ' ') {
+                                if (!text.isEmpty() && text.charAt(0) == ' ') {
                                     text = text.replaceFirst(" ", "");
                                 }
                                 Team team = new Team(game, text);
@@ -65,10 +65,10 @@ public class ConfigMenu implements InventoryProvider {
                                     game.initStart();
                                 }
                             } else {
-                                stateSnapshot.getPlayer().sendMessage(game.translate("space-conquest.gui.config-menu.max"));
+                                stateSnapshot.getPlayer().sendMessage(game.translate(true, "space-conquest.gui.config-menu.max"));
                             }
                         } else {
-                            stateSnapshot.getPlayer().sendMessage(game.translate("space-conquest.gui.config-menu.already-launch"));
+                            stateSnapshot.getPlayer().sendMessage(game.translate(true, "space-conquest.gui.config-menu.already-launch"));
                         }
                         return Arrays.asList(
                                 AnvilGUI.ResponseAction.close(),
@@ -293,7 +293,7 @@ public class ConfigMenu implements InventoryProvider {
                     .onClick((slot, stateSnapshot) -> {
                         if(slot == AnvilGUI.Slot.OUTPUT){
                             String text = stateSnapshot.getText();
-                            if(text.length()>0 && text.charAt(0)==' '){
+                            if(!text.isEmpty() && text.charAt(0) == ' '){
                                 text=text.replaceFirst(" ","");
                             }
                             team.setName(text.substring(0,Math.min(text.length(),16)));

@@ -84,15 +84,27 @@ public class GameManager {
         return this.centerSize;
     }
 
-    public String translate(String key, Object... args) {
+    public String translate(boolean prefix, String key, Object... args) {
         LanguageManager languageManager = this.main.getLangManager();
         String translation = languageManager.getTranslation(key);
+
+        if(prefix){
+            translation = languageManager.getTranslation("space-conquest.prefix.default") + " " + translation;
+        }
+
+        if(args.length == 0){
+            return translation;
+        }
         try {
             return String.format(translation, args);
         } catch (IllegalFormatException e) {
             Bukkit.getConsoleSender().sendMessage(String.format("Error while formatting translation (%s)", key.toLowerCase()));
             return translation + " (Format error)";
         }
+    }
+
+    public String translate(String key, Object... args) {
+        return translate(false, key, args);
     }
 
     public List<String> translateArray(String key) {
@@ -319,8 +331,8 @@ public class GameManager {
                         ressources = ressources*5/4;
                     }
 
-                    Bukkit.broadcastMessage(this.translate(
-                            "space-conquest.team.point",team1.getName(),ressources));
+                    Bukkit.broadcastMessage(this.translate(true,
+                            "space-conquest.team.point", team1.getName(), ressources));
                 });
     }
 

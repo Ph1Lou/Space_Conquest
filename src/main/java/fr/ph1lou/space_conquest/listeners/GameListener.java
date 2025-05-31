@@ -224,14 +224,14 @@ public class GameListener implements Listener {
                 if(player1.getLocation().distanceSquared(player.getLocation())<=625){
                     if(!player1.equals(player)){
                         player1.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,200,0,false,false));
-                        player1.sendMessage(game.translate("space-conquest.game.message.sabotage"));
+                        player1.sendMessage(game.translate(true, "space-conquest.game.message.sabotage"));
                         player1.playSound(player.getLocation(),Sound.BLOCK_GLASS_BREAK,10,10);
 
                     }
                 }
             }
             event.setCancelled(true);
-            player.sendMessage(game.translate("space-conquest.game.message.use"));
+            player.sendMessage(game.translate(true, "space-conquest.game.message.use"));
         }
         else if(persistentDataContainer.has(new NamespacedKey(Main.KEY, SpecialItem.EXPLOSION.getKey()), PersistentDataType.BOOLEAN)){
 
@@ -312,7 +312,7 @@ public class GameListener implements Listener {
                             Ressources.getInventory().open(player1);
                         }
                         else {
-                            player1.sendMessage(game.translate("space-conquest.game.beacon.no-control"));
+                            player1.sendMessage(game.translate(true, "space-conquest.game.beacon.no-control"));
                         }
                     }
                     else if(area.isBase()){

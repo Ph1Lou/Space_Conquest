@@ -154,7 +154,7 @@ public class Team {
         leatherLeggings.setColor(getColorTeam().getColor())
                 .setDisplayName(game.translate("space-conquest.team.equipment.leggings"))
                 .setUnbreakable(true)
-                .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,this.upgrade.isProtection());
+                .addEnchant(Enchantment.PROTECTION,this.upgrade.isProtection());
 
         inventory.setLeggings(leatherLeggings.build());
 
@@ -164,10 +164,10 @@ public class Team {
         ItemBuilder leatherBoots=new ItemBuilder(Material.LEATHER_BOOTS)
                 .setColor(getColorTeam().getColor())
                 .setDisplayName(game.translate("space-conquest.team.equipment.boots"))
-                .addEnchant(Enchantment.PROTECTION_FALL,100)
+                .addEnchant(Enchantment.FEATHER_FALLING,100)
                 .addItemFlag(ItemFlag.HIDE_ENCHANTS)
                 .setUnbreakable(true)
-                .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection());
+                .addEnchant(Enchantment.PROTECTION,upgrade.isProtection());
         inventory.setBoots(leatherBoots.build());
 
     }
@@ -177,14 +177,14 @@ public class Team {
         if(this.upgrade.getChestPlate()==1){
             return  new ItemBuilder(Material.IRON_CHESTPLATE)
                     .setDisplayName(game.translate("space-conquest.team.equipment.iron-chest-plate"))
-                    .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,upgrade.isProtection())
+                    .addEnchant(Enchantment.PROTECTION,upgrade.isProtection())
                     .setUnbreakable(true).build();
 
         }
         else if(this.upgrade.getChestPlate()==2){
             return new ItemBuilder(Material.DIAMOND_CHESTPLATE)
                     .setDisplayName(game.translate("space-conquest.team.equipment.diamond-chest-plate"))
-                    .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,this.upgrade.isProtection())
+                    .addEnchant(Enchantment.PROTECTION,this.upgrade.isProtection())
                     .setUnbreakable(true).build();
 
         }
@@ -192,7 +192,7 @@ public class Team {
             return new ItemBuilder(Material.LEATHER_CHESTPLATE)
                     .setColor(getColorTeam().getColor())
                     .setDisplayName(game.translate("space-conquest.team.equipment.leather-chest-plate"))
-                    .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,this.upgrade.isProtection())
+                    .addEnchant(Enchantment.PROTECTION,this.upgrade.isProtection())
                     .setUnbreakable(true).build();
 
         }
@@ -220,7 +220,7 @@ public class Team {
                 player.getInventory().setHelmet(new ItemStack(this.getColorTeam().getBanner()));
             }
             else {
-                player.sendMessage(game.translate("space-conquest.game.message.max"));
+                player.sendMessage(game.translate(true, "space-conquest.game.message.max"));
             }
         }
     }
@@ -258,10 +258,6 @@ public class Team {
         bossBar.setVisible(false);
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
     public void updateNpcChestPlate() {
         this.npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.CHESTPLATE, this.getChestPlate());
     }
@@ -269,7 +265,7 @@ public class Team {
     public void sendMessage(String translate) {
         this.getMembers().stream().map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
-                .forEach(player -> player.sendMessage(game.translate(translate)));
+                .forEach(player -> player.sendMessage(game.translate(true, translate)));
     }
 
     public NPC getNpc() {

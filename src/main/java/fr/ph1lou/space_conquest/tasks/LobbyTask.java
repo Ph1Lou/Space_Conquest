@@ -39,7 +39,7 @@ public class LobbyTask extends BukkitRunnable {
         if(this.game.isState(State.GAME)){
 
             game.start();
-            Bukkit.broadcastMessage(game.translate("space-conquest.gui.start.start"));
+            Bukkit.broadcastMessage(game.translate(true, "space-conquest.gui.start.start"));
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class),() -> {
 

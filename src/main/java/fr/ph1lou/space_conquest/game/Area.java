@@ -68,17 +68,9 @@ public class Area {
         this.isMiddle=isMiddle;
         this.generatorType = generatorType;
         try {
-            this.laser = new Laser.GuardianLaser(this.middle.clone().add(new Vector(0.5,this.isBase?
-                    0
-                    :
-                    this.isMiddle ?
-                            20
-                            :
-                            3,0.5)),
-                    this.middle.clone().add(new Vector(0.5,this.isMiddle || this.isBase?
-                            -20
-                            :
-                            20,0.5)),
+            this.laser = new Laser.GuardianLaser(this.middle.clone().add(new Vector(0.5, this.getStartY(),
+                    0.5)),
+                    this.middle.clone().add(new Vector(0.5, this.getEndY(),0.5)),
                     Integer.MAX_VALUE,
                     20);
             this.laser.start(JavaPlugin.getPlugin(Main.class));
@@ -86,6 +78,15 @@ public class Area {
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private int getEndY() {
+        return this.isMiddle || this.isBase ? -20 : 20;
+    }
+
+    private int getStartY() {
+        return this.isBase ? 0 :
+                this.isMiddle ? 20 : 4;
     }
 
 
@@ -100,7 +101,7 @@ public class Area {
                 .sorted(Comparator.comparingDouble(Tuple::b))
                 .map(Tuple::a)
                 .limit(2)
-                .collect(Collectors.toList()));
+                .toList());
     }
 
     private void progressCaptureAuto(Team team){
@@ -218,11 +219,6 @@ public class Area {
         this.ownerTeam = ownerTeam;
     }
 
-    public int getControlSize() {
-        return this.controlSize;
-    }
-
-
     public boolean isInSuperiority(Team team){
         List<Player> players = this.getPlayerOn();
 
@@ -239,7 +235,7 @@ public class Area {
         if(this.mode == TowerMode.DEFEND_AND_CONQUEST ||
                 this.mode == TowerMode.DEFEND_AND_MINE ||
                 this.mode == TowerMode.DEFEND){
-            othersTeamTotal+=1.05;
+            othersTeamTotal+=1.05f;
         }
 
         return Math.max(othersTeamTotal,0.5) < teamTotal.get();
@@ -348,7 +344,7 @@ public class Area {
                 Location circle = new Location(loc.getWorld(),x,loc.getY(),z);
                 this.getMiddle()
                         .getWorld()
-                        .spawnParticle(Particle.REDSTONE,
+                        .spawnParticle(Particle.DUST,
                                 circle,
                                 2,
                                 new Particle.DustOptions(Color.fromBGR(red, green, blue), 1));

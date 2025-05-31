@@ -30,15 +30,17 @@ public class Start implements InventoryProvider {
 
         GameManager game = JavaPlugin.getPlugin(Main.class).getCurrentGame();
 
-        contents.set(1,3,ClickableItem.of((new ItemBuilder(Material.GREEN_STAINED_GLASS).setDisplayName("Lancer la Partie").build()), e -> {
+        contents.set(1,3,ClickableItem.of((new ItemBuilder(Material.GREEN_STAINED_GLASS).setDisplayName(game.translate("space-conquest.gui.start.name")).build()), e -> {
 
             if(game.isState(State.LOBBY)) {
 
-                if(game.getTeams().size()>0) {
+                if(!game.getTeams().isEmpty()) {
                     game.setState(State.GAME);
+                    INVENTORY.close(player);
+                    player.sendMessage(game.translate(true, "space-conquest.gui.start.click"));
                 }
                 else {
-                    player.sendMessage(game.translate("space-conquest.game.message.no-team"));
+                    player.sendMessage(game.translate(true, "space-conquest.game.message.no-team"));
                 }
             }
         }));

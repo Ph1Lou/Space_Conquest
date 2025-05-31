@@ -54,7 +54,7 @@ public class GameTask extends BukkitRunnable {
                         game.translate("space-conquest.game.victory.subtitle",
                                 team.getName()), 20, 20, 20);
             });
-            Bukkit.broadcastMessage(game.translate("space-conquest.game.victory.message",
+            Bukkit.broadcastMessage(game.translate(true, "space-conquest.game.victory.message",
                     game.translate("space-conquest.game.victory.team",
                             team.getName())));
 

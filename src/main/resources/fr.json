@@ -1,39 +1,43 @@
 {
   "space-conquest": {
-      "team": {
-        "no-team": "[Space §bConquest§r] Vous n'êtes dans aucune équipe",
-        "prefix-chat": "[Team Chat]§r ",
-        "leader": "Commandant %s",
-        "choice": "Choix des §bÉquipes",
-        "name": "%s » ",
-        "point": "[Space §bConquest§r] %s » %d points",
-        "equipment": {
-          "helmet":"Casque Spatial",
-          "leggings": "Combinaison Spatiale",
-          "iron-chest-plate": "Combinaison Spatiale renforcée",
-          "diamond-chest-plate": "Combinaison Spatiale Ultra Renforcée",
-          "leather-chest-plate": "Combinaison Spatiale",
-          "boots": "Bottes Spatiales"
-        },
-        "mining": "L'Équipe %s%s§r mine la Crying Obsidian",
-        "color": {
-          "blue": "Bleu",
-          "cyan": "Cyan",
-          "light_blue": "Bleu Clair",
-          "green": "Vert",
-          "lime": "Lime",
-          "red": "Rouge",
-          "magenta": "Magenta",
-          "pink": "Rose",
-          "purple": "Violet",
-          "yellow": "Jaune",
-          "orange": "Orange",
-          "brown": "Marron",
-          "black": "Noir",
-          "gray": "Gris",
-          "light_gray": "Gris Clair"
-        }
+    "ressources-pack": "https://github.com/Ph1Lou/Space_Conquest/releases/download/ressource-pack-v2/Space_Conquest.V2.zip",
+    "prefix": {
+      "default": "[Space §bConquest§r]"
+    },
+    "team": {
+      "no-team": "Vous n'êtes dans aucune équipe",
+      "prefix-chat": "[Team Chat]§r ",
+      "leader": "Commandant %s",
+      "choice": "Choix des §bÉquipes",
+      "name": "%s » ",
+      "point": "%s » %d points",
+      "equipment": {
+        "helmet":"Casque Spatial",
+        "leggings": "Combinaison Spatiale",
+        "iron-chest-plate": "Combinaison Spatiale renforcée",
+        "diamond-chest-plate": "Combinaison Spatiale Ultra Renforcée",
+        "leather-chest-plate": "Combinaison Spatiale",
+        "boots": "Bottes Spatiales"
       },
+      "mining": "L'Équipe %s%s§r mine la Crying Obsidian",
+      "color": {
+        "blue": "Bleu",
+        "cyan": "Cyan",
+        "light_blue": "Bleu Clair",
+        "green": "Vert",
+        "lime": "Lime",
+        "red": "Rouge",
+        "magenta": "Magenta",
+        "pink": "Rose",
+        "purple": "Violet",
+        "yellow": "Jaune",
+        "orange": "Orange",
+        "brown": "Marron",
+        "black": "Noir",
+        "gray": "Gris",
+        "light_gray": "Gris Clair"
+      }
+    },
     "gui": {
       "beacon": {
         "name": "Gestion §bTourelles",
@@ -74,41 +78,42 @@
       "start": {
         "name": "Lancer la Partie",
         "back": "Revenir au menu des équipes",
-        "start": "Space §bConquest§r] La Partie Commence dans 10 secondes, la map se génère"
+        "start": "La Partie Commence dans 10 secondes, la map se génère",
+        "click": "Lancement déclenché"
       },
       "upgrade": {
         "name": "Menu des §bAméliorations",
         "iron-chest-plate": {
           "name": "§bAmélioration Plastron Renforcé§r Coût 10000 Fers (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration §bPlastron Renforcé§f débloquée"
+          "message": "Amélioration §bPlastron Renforcé§f débloquée"
         },
         "diamond-chest-plate": {
           "name": "§bAmélioration Plastron Ultra Renforcé§r Coût 20000 Diamants (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration §bUltra Renforcé§f débloquée"
+          "message": "Amélioration §bUltra Renforcé§f débloquée"
         },
         "protection-1": {
           "name": "§bAmélioration Protection I§r Coût 10000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration §bProtection I§f débloquée"
+          "message": "Amélioration §bProtection I§f débloquée"
         },
         "protection-2": {
           "name": "§bAmélioration Protection II§r Coût 20000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration §bProtection II§f débloquée"
+          "message": "Amélioration §bProtection II§f débloquée"
         },
         "sharpness-1": {
           "name": "§bAmélioration Tranchant I§r Coût 10000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration §bTranchant I§f débloquée"
+          "message": "Amélioration §bTranchant I§f débloquée"
         },
         "sharpness-2": {
           "name": "§bAmélioration Tranchant II§r Coût 20000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration §bTranchant II§f débloquée"
+          "message": "Amélioration §bTranchant II§f débloquée"
         },
         "power-1": {
           "name": "§bAmélioration Puissance I§r Coût 10000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration §bPuissance I§f débloquée"
+          "message": "Amélioration §bPuissance I§f débloquée"
         },
         "power-2": {
           "name": "§bAmélioration Puissance§r Coût 20000 Ors (§b%d en banque)",
-          "message": "[Space §bConquest§r] Amélioration §bPuissance II§f débloquée"
+          "message": "Amélioration §bPuissance II§f débloquée"
         }
       },
       "config-menu": {
@@ -193,9 +198,7 @@
           "name": "§bFlèche de permutation§r Coût 500 Émeraudes (§b%d en banque)",
           "item-name": "§bFlèche de permutation"
         }
-
       }
-
     },
 
     "title": "Space §bConquest",
@@ -203,13 +206,13 @@
 
     "game": {
       "beacon": {
-        "no-control": "[Space §bConquest§r] Vous n'avez pas le contrôle de cette Balise"
+        "no-control": "Vous n'avez pas le contrôle de cette Tourelle"
       },
       "message": {
-        "sabotage": "[Space §bConquest§r] Votre assistance gravitationnelle a été sabotée",
-        "no-team": "[Space §bConquest] Il n'y a pas d'équipes enregistrées",
-        "use": "[Space §bConquest§r] Vous venez de saboter les assistances gravitationnelles de votre périmètre",
-        "max": "[Space §bConquest] Le nombre de joueurs max a été atteint"
+        "sabotage": "Votre assistance gravitationnelle a été sabotée",
+        "no-team": "Il n'y a pas d'équipes enregistrées",
+        "use": "Vous venez de saboter les assistances gravitationnelles de votre périmètre",
+        "max": "Le nombre de joueurs max a été atteint"
       },
       "chat": {
         "global": "[Global Chat] %s : %s",
@@ -218,7 +221,7 @@
       "victory": {
         "title": "Victoire",
         "subtitle": "Équipe %s",
-        "message": "[Space §bConquest] Victoire %s",
+        "message": "Victoire %s",
         "team": "Équipe §b%s"
       }
     },

@@ -4,16 +4,15 @@
 
 # Link :
 
-# Version 1.0
+# Version 1.1
 
 # You are not allowed to claim this plugin as your own.
 
-# Copyright : All Rights Reserved - 2024
+# Copyright : All Rights Reserved - 2025
 
 
 default_lobby: true
 training: false
-tournament: false
 number_team_auto_start: 4
 
 

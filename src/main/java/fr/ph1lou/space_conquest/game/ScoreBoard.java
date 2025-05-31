@@ -104,7 +104,7 @@ public class ScoreBoard {
                 game.getTeam(fastBoard.getPlayer()).ifPresent(team -> fastBoard.getPlayer()
                         .spigot()
                         .sendMessage(ChatMessageType.ACTION_BAR,
-                                TextComponent.fromLegacyText(game.translate("space-conquest.action-bar.message",
+                                TextComponent.fromLegacy(game.translate("space-conquest.action-bar.message",
                                         team.getResource().getOrDefault(TexturedItem.CRYING_OBSIDIAN_RESSOURCE,0),
                                         game.getObjective()))));
 

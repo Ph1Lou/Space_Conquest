@@ -48,10 +48,10 @@ public class LobbyListener implements Listener {
 
 
         game.registerBoard(player);
-        event.getPlayer().setResourcePack("https://www.dropbox.com/s/pn5fjn95qc9wfw8/Space_Conquest%20V1.zip?dl=1");
+        event.getPlayer().setResourcePack(game.translate("space-conquest.ressources-pack"));
 
         if(!game.isState(State.LOBBY)){
-            if(!game.getTeam(player).isPresent()){
+            if(game.getTeam(player).isEmpty()){
                 player.teleport(game.getWorld().getSpawnLocation());
                 player.setGameMode(GameMode.SPECTATOR);
             }
